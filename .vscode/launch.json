@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "เปิดแอปการเรียนรู้",
+      "url": "file://${workspaceFolder}/aware-ai-guardian-academy.html",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
