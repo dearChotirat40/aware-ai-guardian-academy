@@ -479,6 +479,10 @@ select.inp{appearance:none; -webkit-appearance:none; cursor:pointer;
 .chatfab{position:absolute; bottom:18px; right:18px; z-index:45; display:flex; align-items:center; gap:8px;
   background:var(--yellow); border:3px solid var(--ink); border-radius:999px; padding:8px 18px 8px 10px;
   box-shadow:0 5px 0 var(--ink); cursor:pointer; font-weight:700; font-size:16px; color:var(--ink)}
+.chatdock{flex:0 0 auto; display:flex; justify-content:flex-end; padding:7px 16px 11px;
+  background:rgba(255,255,255,.96); border-top:1px solid rgba(61,133,184,.18)}
+.chatdock .chatfab{position:static; margin:0; padding:5px 15px 5px 7px; font-size:15px}
+.chatdock .chatfab .buddyimg{width:42px !important; height:42px !important}
 .chatfab:hover{transform:translateY(-3px); box-shadow:0 8px 0 var(--ink)}
 .chatfab .face{font-size:28px}
 .buddyimg{border-radius:50%; border:2.5px solid var(--blue-line); background:#EAF4FD; object-fit:cover; object-position:top}
@@ -2613,7 +2617,7 @@ function render() {
     try { appEl.insertAdjacentHTML('afterbegin', rankStripHtml()); } catch(e) {}
     if (state.view !== 'chat') {
       try { appEl.insertAdjacentHTML('beforeend',
-        '<button class="chatfab noprint" onclick="openChat()" title="ถามผู้ช่วยชวนคิด"><img class="buddyimg" style="width:56px;height:56px" src="' + BUDDY_IMG + '" alt=""> ถามผู้ช่วย</button>'); } catch(e) {}
+        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามผู้ช่วยชวนคิด"><img class="buddyimg" src="' + BUDDY_IMG + '" alt=""> ถามผู้ช่วย</button></div>'); } catch(e) {}
     }
   }
 }
