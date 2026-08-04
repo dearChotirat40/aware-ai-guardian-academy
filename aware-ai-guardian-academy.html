@@ -320,6 +320,13 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .inp::placeholder{color:#B8A88E}
 .field{text-align:left; margin-bottom:14px}
 .field label{display:block; font-size:15px; font-weight:700; color:var(--ink-soft); margin:0 0 6px 4px}
+.password-wrap{position:relative}
+.password-wrap .inp{padding-right:58px}
+.password-eye{position:absolute; top:50%; right:9px; transform:translateY(-50%); width:42px; height:42px;
+  display:flex; align-items:center; justify-content:center; padding:0; cursor:pointer; color:var(--blue-deep);
+  background:transparent; border:0; border-radius:10px; font-size:22px; line-height:1}
+.password-eye:hover{background:var(--blue)}
+.password-eye:focus-visible{outline:3px solid rgba(47,126,172,.25); outline-offset:1px}
 .login-card{width:100%; max-width:560px; padding:28px}
 .login-profile{display:flex; align-items:center; gap:18px; background:var(--white);
   border:2px dashed #E3D5B8; border-radius:16px; padding:16px 18px; margin-bottom:18px}
@@ -349,6 +356,7 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .teacher-corner .tc-title{font-size:13px; font-weight:700; color:var(--blue-deep); margin-bottom:7px}
 .teacher-corner .tc-row{display:flex; gap:6px; align-items:center}
 .teacher-corner .inp{padding:8px 10px; font-size:14px; border-radius:10px}
+.teacher-corner .password-wrap .inp{padding-right:50px}
 .teacher-corner .btn{padding:6px 10px; font-size:13px; border-radius:10px; box-shadow:0 2px 0 var(--ink)}
 .prompt-hero{width:100%; max-width:980px; margin:0 auto 16px; overflow:visible; padding:10px}
 .prompt-hero img{display:block; width:100%; min-height:220px; max-height:360px; object-fit:contain; height:auto; border-radius:12px; border:2.5px solid var(--ink);
@@ -1926,6 +1934,19 @@ function toggleTeacherLogin() {
   }
 }
 
+function togglePasswordVisibility(inputId, button) {
+  var inp = document.getElementById(inputId);
+  if (!inp) return;
+  var showing = inp.type === 'text';
+  inp.type = showing ? 'password' : 'text';
+  if (button) {
+    button.textContent = showing ? '👁️' : '🙈';
+    button.setAttribute('aria-label', showing ? 'ดูรหัสผ่าน' : 'ซ่อนรหัสผ่าน');
+    button.setAttribute('aria-pressed', showing ? 'false' : 'true');
+  }
+  inp.focus();
+}
+
 function teacherSystemStatusHtml() {
   var sheet = sheetConfigured() ? 'พร้อมส่งขึ้น Google Sheet' : 'ยังไม่เชื่อม Google Sheet';
   var firebase = firebaseStatusLabel();
@@ -3229,7 +3250,7 @@ function renderLogin() {
           '<p class="tc-title">สำหรับคุณครูผู้ดูแลห้องเรียน</p>' +
           '<p class="soft tiny" style="margin-bottom:8px;text-align:left">กรอกรหัสผ่านครูเพื่อเปิดข้อมูลนักเรียนทั้งห้อง</p>' +
           '<div class="tc-row" style="display:flex;gap:6px">' +
-            '<input id="teacher-pin" class="inp" type="password" minlength="8" autocomplete="current-password" aria-label="รหัสผ่านครู" placeholder="รหัสผ่านครู" onkeydown="if(event.key===\'Enter\') teacherLoginInput()">' +
+            '<div class="password-wrap" style="flex:1"><input id="teacher-pin" class="inp" type="password" minlength="8" autocomplete="current-password" aria-label="รหัสผ่านครู" placeholder="รหัสผ่านครู" onkeydown="if(event.key===\'Enter\') teacherLoginInput()"><button type="button" class="password-eye" aria-label="ดูรหัสผ่าน" aria-pressed="false" onclick="togglePasswordVisibility(\'teacher-pin\',this)">👁️</button></div>' +
             '<button type="button" onclick="teacherLoginInput()" class="btn blueb sm">เข้า</button>' +
           '</div>' +
         '</div>' +
@@ -3247,7 +3268,7 @@ function renderLogin() {
           '<div class="tape tape-yellow"></div>' +
           '<h3 class="ink center" style="font-size:20px;font-weight:700;margin-bottom:16px">🎒 เข้าสู่ระบบนักเรียน</h3>' +
           '<div class="field"><label>กรอกรหัสผ่านเพื่อเข้าสู่ระบบ *</label>' +
-            '<input id="inp-code" class="inp" type="password" inputmode="numeric" maxlength="20" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="กรอกรหัสผ่าน" onkeydown="if(event.key===\'Enter\') doLogin()"></div>' +
+            '<div class="password-wrap"><input id="inp-code" class="inp" type="password" inputmode="numeric" maxlength="20" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="กรอกรหัสผ่าน" onkeydown="if(event.key===\'Enter\') doLogin()"><button type="button" class="password-eye" aria-label="ดูรหัสผ่าน" aria-pressed="false" onclick="togglePasswordVisibility(\'inp-code\',this)">👁️</button></div></div>' +
           '<button onclick="doLogin()" class="btn pinkb" style="width:100%;margin-top:6px">🚪 เข้าสู่ระบบนักเรียน</button>' +
           '<div class="login-live">เชื่อมต่อห้องเรียนออนไลน์แล้ว</div>' +
           '<p class="soft tiny center" style="margin-top:10px">ถามรหัสจากคุณครู 🙋</p>' +
