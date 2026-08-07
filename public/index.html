@@ -1265,7 +1265,7 @@ var TEACHER_PIN_KEY = 'awareai_teacher_pin_v1';
    4. นำ URL มาวางที่ webAppUrl ด้านล่าง และวางลิงก์ชีตที่ sheetUrl
 ===================================================== */
 var GOOGLE_SHEET = {
-  webAppUrl: '',   // ← วาง URL Web App ที่ลงท้ายด้วย /exec
+  webAppUrl: 'https://script.google.com/macros/s/AKfycbxUOwWoqvugUw5F492vFjY8S9fCYi9MPGjOIQNB_jEP2jDVmtd3T8E0H5XBbukj3J1vwg/exec',
   sheetUrl:  ''    // ← (ไม่บังคับ) ลิงก์ Google Sheet สำหรับปุ่ม "เปิดชีต"
 };
 
@@ -2556,6 +2556,7 @@ function sheetPayload() {
     stars: st.stars, done: st.done,
     l1: (lp[0] && lp[0].stars) || 0, l2: (lp[1] && lp[1].stars) || 0,
     l3: (lp[2] && lp[2].stars) || 0, l4: (lp[3] && lp[3].stars) || 0,
+    l5: (lp[4] && lp[4].stars) || 0,
     l1pre: lessonAssessmentLabel(lp[0], 'pre'), l1post: lessonAssessmentLabel(lp[0], 'post'),
     l2pre: lessonAssessmentLabel(lp[1], 'pre'), l2post: lessonAssessmentLabel(lp[1], 'post'),
     l3pre: lessonAssessmentLabel(lp[2], 'pre'), l3post: lessonAssessmentLabel(lp[2], 'post'),
