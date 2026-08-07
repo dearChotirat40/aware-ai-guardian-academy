@@ -3574,7 +3574,10 @@ function renderTeacher() {
         '<h3 class="t-mint" style="font-weight:700;margin-bottom:8px">📊 รายงานผ่าน Google Sheet / Excel</h3>' +
         (sheetConfigured()
           ? '<p class="small" style="margin-bottom:10px">🟢 <b>เชื่อมต่อแล้ว!</b> คะแนนของนักเรียนทุกคน (ที่มีเน็ต) จะวิ่งขึ้นชีตให้อัตโนมัติแบบเรียลไทม์ อัปเดตทับแถวเดิมตามรหัสนักเรียน ไม่มีแถวซ้ำ</p>' +
-            (GOOGLE_SHEET.sheetUrl ? '<a href="' + GOOGLE_SHEET.sheetUrl + '" target="_blank" rel="noopener"><button class="btn mintb sm">📊 เปิด Google Sheet</button></a>' : '<p class="soft tiny">ใส่ลิงก์ชีตที่ตัวแปร sheetUrl เพื่อให้มีปุ่มเปิดชีตตรงนี้</p>')
+            '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+              '<button onclick="copyPlainText(GOOGLE_SHEET.webAppUrl, \'คัดลอกลิงก์เชื่อมต่อ Google Sheet แล้ว ✅\')" class="btn whiteb sm">🔗 คัดลอกลิงก์เชื่อมต่อ</button>' +
+              (GOOGLE_SHEET.sheetUrl ? '<a href="' + GOOGLE_SHEET.sheetUrl + '" target="_blank" rel="noopener"><button class="btn mintb sm">📊 เปิด Google Sheet</button></a>' : '<span class="soft tiny">หากต้องการปุ่มเปิดตาราง ให้เพิ่มลิงก์ไฟล์ Google Sheet</span>') +
+            '</div>'
           : '<p class="small" style="margin-bottom:8px">ตั้งค่าครั้งเดียว ~3 นาที แล้วคะแนนนักเรียน<b>ทุกเครื่อง</b>จะวิ่งขึ้นชีตอัตโนมัติ:</p>' +
             '<p class="small" style="line-height:2">1️⃣ สร้าง Google Sheet เปล่า → เมนู <b>ส่วนขยาย → Apps Script</b><br>' +
             '2️⃣ ลบโค้ดเดิม แล้ววางโค้ดด้านล่างนี้ (กดปุ่มคัดลอกได้เลย)<br>' +
@@ -4917,12 +4920,6 @@ function renderSendReport() {
         '<button onclick="copyReportCode()" class="btn mintb sm">📋 คัดลอกโค้ด</button>' +
         '<button onclick="downloadReportFile()" class="btn blueb sm">💾 ดาวน์โหลดเป็นไฟล์</button>' +
       '</div>' +
-      (sheetConfigured()
-        ? '<div class="pcard mint" style="margin-top:20px"><div class="tape tape-mint"></div>' +
-          '<p style="font-weight:600;line-height:1.9">🟢 <b class="t-mint">เชื่อมต่อ Google Sheet ของครูแล้ว</b> — คะแนนของเราถูกส่งขึ้นชีตให้อัตโนมัติทุกครั้งที่มีความคืบหน้าใหม่' +
-          (sheetLastSent ? ' <span class="soft small">(ส่งล่าสุด ' + sheetLastSent + ')</span>' : '') + '</p>' +
-          '<button onclick="sendToSheetNow()" class="btn mintb sm" style="margin-top:10px">🔄 ส่งขึ้นชีตเดี๋ยวนี้</button></div>'
-        : '') +
       '<div class="pcard yellow" style="margin-top:20px">' +
         '<div class="tape tape-yellow"></div>' +
         '<p class="ink" style="font-weight:700;margin-bottom:8px">📖 วิธีส่งให้คุณครู (เลือกอย่างใดอย่างหนึ่ง)</p>' +
