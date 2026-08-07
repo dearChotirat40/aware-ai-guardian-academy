@@ -98,6 +98,7 @@ button:disabled{cursor:not-allowed; opacity:.55}
   border-radius:16px; background:#fff; box-shadow:0 4px 0 rgba(73,91,126,.16),0 8px 14px rgba(54,73,112,.12)}
 .login-main-icon{border-radius:24px; background:#fff}
 .login-student-illustration{display:block;width:clamp(105px,15vh,150px);height:clamp(105px,15vh,150px);margin:-5px auto 8px;object-fit:contain;border-radius:18px;background:#fff;box-shadow:0 4px 0 rgba(73,91,126,.14),0 8px 14px rgba(54,73,112,.1)}
+.header-section-icon{display:block;width:58px;height:58px;object-fit:contain;border-radius:12px;background:#fff;box-shadow:0 3px 0 rgba(73,91,126,.14)}
 @media(max-width:760px){.login-student-illustration{width:min(132px,36vw);height:min(132px,36vw)}}
 @media(min-width:761px) and (max-height:700px){.login-student-illustration{width:clamp(76px,12vh,105px);height:clamp(76px,12vh,105px);margin-bottom:5px}}
 .functionbar{width:100%; max-width:980px; display:grid; grid-template-columns:repeat(auto-fit,minmax(142px,1fr)); gap:10px; margin:0 0 16px}
@@ -3321,7 +3322,7 @@ function renderLogin() {
       '<div class="pcard yellow pop login-card">' +
           '<div class="tape tape-yellow"></div>' +
           '<h3 class="ink center" style="font-size:20px;font-weight:700;margin-bottom:16px">🎒 เข้าสู่ระบบนักเรียน</h3>' +
-          '<img class="login-student-illustration" src="./lesson-content-icon.png" alt="บทเรียนและเนื้อหา">' +
+          '<img class="login-student-illustration" src="./login-icon.png" alt="เข้าสู่ระบบ">' +
           '<div class="field"><label>กรอกรหัสผ่านเพื่อเข้าสู่ระบบ *</label>' +
             '<div class="password-wrap"><input id="inp-code" class="inp" type="password" inputmode="text" maxlength="20" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="กรอกรหัสผ่าน" onkeydown="if(event.key===\'Enter\') doLogin()"><button type="button" class="password-eye" aria-label="ดูรหัสผ่าน" aria-pressed="false" onclick="togglePasswordVisibility(\'inp-code\',this)">👁️</button></div></div>' +
           '<button onclick="doLogin()" class="btn pinkb" style="width:100%;margin-top:6px">🚪 เข้าสู่ระบบนักเรียน</button>' +
@@ -4260,7 +4261,7 @@ function renderLessonList() {
   appEl.innerHTML =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
-        '<div style="font-size:32px">📚</div>' +
+        '<img class="header-section-icon" src="./lesson-content-icon.png" alt="บทเรียนและเนื้อหา">' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">ห้องเรียนผู้พิทักษ์</h2>' +
         '<p class="soft tiny">แต่ละบทคือ 1 ภารกิจจำลอง · ผ่านคะแนนระหว่างบท 80% เพื่อรับ 1 ดาว</p></div>' +
       '</div>' +
