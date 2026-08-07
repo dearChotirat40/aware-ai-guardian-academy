@@ -1239,7 +1239,7 @@ var APPS_SCRIPT_CODE = [
 "function doPost(e) {",
 "  var d = JSON.parse(e.postData.contents);",
 "  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];",
-"  var headers = ['รหัส','ชื่อ','ห้อง','เลขที่','เพศ','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวรวม','บทที่เรียนจบ',",
+"  var headers = ['รหัส','ชื่อแทน','ห้อง','เลขที่','เพศ','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวรวม','บทที่เรียนจบ',",
 "    'ดาวบทที่ 1','คะแนนระหว่างบทที่ 1',",
 "    'ดาวบทที่ 2','คะแนนระหว่างบทที่ 2',",
 "    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
@@ -1652,12 +1652,23 @@ var currentId = null;
 
 function defaultRosterCopy() {
   return STUDENT_ROSTER.map(function(r){
-    return { code:String(r.code), name:r.name, room:r.room || '', num:String(r.num || ''), gender:r.gender === 'f' ? 'f' : 'm' };
+    return { code:String(r.code), name:studentAlias(r), room:r.room || '', num:String(r.num || ''), gender:r.gender === 'f' ? 'f' : 'm' };
   });
 }
 function activeRoster() {
   if (!Array.isArray(db.roster)) db.roster = defaultRosterCopy();
   return db.roster;
+}
+function studentAlias(person) {
+  person = person || {};
+  var num = String(person.num || '').trim();
+  var code = String(person.code || '').trim();
+  var isTest = person._testAccount === true || person.room === 'ห้องทดสอบ' || code === '9001' || code === '9002';
+  if (isTest) {
+    var testNo = num || (code === '9002' ? '2' : '1');
+    return 'ผู้ทดสอบ ' + testNo;
+  }
+  return num ? 'นักเรียนเลขที่ ' + num : 'นักเรียน';
 }
 function loadDB() {
   try {
@@ -1794,7 +1805,6 @@ function saveProgress() {
   s.badgeIds = state.badges.map(function(b){ return b.id; });
   s.pStars = sessionPStars.slice();
   s.assessments = liveAssessments || s.assessments || newAssessments();
-  if (sessionInfo && sessionInfo.name) s.name = sessionInfo.name;
   if (sessionInfo && sessionInfo.renamed) s.renamed = true;
   s._updatedAt = Date.now();
   s.last = new Date().toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
@@ -1809,7 +1819,7 @@ function applyStudent(id) {
   if (!s.pStars || s.pStars.length !== PROMPT_CHALLENGES.length) {
     s.pStars = PROMPT_CHALLENGES.map(function(){ return 0; });
   }
-  sessionInfo = { name:s.name, room:s.room || '', num:s.num || '', gender:s.gender || 'm', code:s.code || '', renamed: !!s.renamed };
+  sessionInfo = { name:studentAlias(s), room:s.room || '', num:s.num || '', gender:s.gender || 'm', code:s.code || '', renamed:false };
   sessionPStars = s.pStars.slice();
   s.assessments = s.assessments || newAssessments();
   lessonProgress = (s.lp && s.lp.length === lessons.length) ? s.lp.map(normalizeLessonProgress) : newLessonProgress();
@@ -1840,7 +1850,7 @@ function previewStudent() {
   var r = roster[i];
   img.src = avatarSrc(r);
   img.style.opacity = '1';
-  if (info) info.innerHTML = '<b>' + escChat(r.name) + '</b><br>ห้อง ' + escChat(r.room || '-') + ' เลขที่ ' + escChat(r.num || '-');
+  if (info) info.innerHTML = '<b>' + escChat(studentAlias(r)) + '</b><br>ห้อง ' + escChat(r.room || '-') + ' เลขที่ ' + escChat(r.num || '-');
 }
 
 function doLogin() {
@@ -2019,7 +2029,7 @@ function teacherRosterHtml() {
     var hasData = !!db.students['roster_' + r.code];
     return '<tr>' +
       '<td>' + escChat(r.num || '-') + '</td>' +
-      '<td><b>' + escChat(r.name) + '</b><br><span class="soft tiny">' + (hasData ? 'มีข้อมูลการเรียน' : 'ยังไม่เริ่มเรียน') + '</span></td>' +
+      '<td><b>' + escChat(studentAlias(r)) + '</b><br><span class="soft tiny">' + (hasData ? 'มีข้อมูลการเรียน' : 'ยังไม่เริ่มเรียน') + '</span></td>' +
       '<td>' + escChat(r.room || '-') + '</td>' +
       '<td>' + (r.gender === 'f' ? 'หญิง' : 'ชาย') + '</td>' +
       '<td><b>' + escChat(r.code) + '</b></td>' +
@@ -2033,11 +2043,11 @@ function teacherRosterHtml() {
   return '<section class="pcard plain noprint teacher-manager">' +
     '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
       '<div><h3 class="ink" style="font-weight:700">จัดการนักเรียน</h3>' +
-      '<p class="soft tiny">เพิ่ม แก้ไขชื่อ/รหัส ลบรายชื่อ และดูความคืบหน้ารายบุคคล</p></div>' +
+      '<p class="soft tiny">ใช้ชื่อแทนเพื่อความเป็นส่วนตัว เพิ่มหรือแก้ไขรหัส และดูความคืบหน้ารายบุคคล</p></div>' +
       '<span class="prompt-level">' + roster.length + ' คน</span>' +
     '</div>' +
     '<div class="teacher-form-grid">' +
-      '<div class="field"><label>ชื่อ–นามสกุล *</label><input id="tm-name" class="inp" value="' + escPromptAttr(editing.name) + '" placeholder="ชื่อ–นามสกุลนักเรียน"></div>' +
+      '<div class="field"><label>ชื่อแทน</label><input id="tm-name" class="inp" value="' + escPromptAttr(editIndex >= 0 ? studentAlias(editing) : 'กำหนดอัตโนมัติจากเลขที่') + '" readonly></div>' +
       '<div class="field"><label>รหัสเข้าเรียน *</label><input id="tm-code" class="inp" value="' + escPromptAttr(editing.code) + '" maxlength="20" placeholder="เช่น 10009"></div>' +
       '<div class="field"><label>ห้อง</label><input id="tm-room" class="inp" value="' + escPromptAttr(editing.room) + '" placeholder="เช่น ม.4/2"></div>' +
       '<div class="field"><label>เลขที่</label><input id="tm-num" class="inp" value="' + escPromptAttr(editing.num) + '" maxlength="6" placeholder="เลขที่"></div>' +
@@ -2056,7 +2066,7 @@ function teacherRosterHtml() {
       '<button type="button" onclick="teacherResetRoster()" class="btn pinkb sm">🗑 ล้างรายชื่อทั้งหมด</button>' +
     '</div>' +
     '<div class="twrap" style="margin-top:10px"><table class="ttable">' +
-      '<tr><th>เลขที่</th><th>ชื่อ</th><th>ห้อง</th><th>เพศ</th><th>รหัสเข้าเรียน</th><th>จัดการ</th></tr>' +
+      '<tr><th>เลขที่</th><th>ชื่อแทน</th><th>ห้อง</th><th>เพศ</th><th>รหัสเข้าเรียน</th><th>จัดการ</th></tr>' +
       (rows || '<tr><td colspan="6" class="soft center">ยังไม่มีรายชื่อนักเรียน</td></tr>') +
     '</table></div>' +
     '<p class="soft tiny" style="margin-top:8px">ข้อมูลรายชื่อบันทึกในเบราว์เซอร์เครื่องนี้ หากเปลี่ยนรหัส ระบบจะย้ายความคืบหน้าเดิมไปยังรหัสใหม่ให้</p>' +
@@ -2065,7 +2075,7 @@ function teacherRosterHtml() {
 
 function emptyStudentFromRoster(r) {
   return {
-    name:r.name, room:r.room || '', num:r.num || '', gender:r.gender || 'm', code:r.code,
+    name:studentAlias(r), room:r.room || '', num:r.num || '', gender:r.gender || 'm', code:r.code,
     lp:newLessonProgress(), score:0, unlockedLevel:0, badgeIds:[],
     pStars:PROMPT_CHALLENGES.map(function(){ return 0; }), assessments:newAssessments(), last:'-'
   };
@@ -2080,12 +2090,11 @@ function teacherCancelRosterEdit() {
   render();
 }
 function teacherSaveRosterStudent() {
-  var name = (document.getElementById('tm-name').value || '').trim();
   var code = (document.getElementById('tm-code').value || '').trim();
   var room = (document.getElementById('tm-room').value || '').trim();
   var num = (document.getElementById('tm-num').value || '').trim();
   var gender = document.getElementById('tm-gender').value === 'f' ? 'f' : 'm';
-  if (!name) { alert('กรอกชื่อ–นามสกุลนักเรียนก่อน'); return; }
+  var name = studentAlias({ code:code, room:room, num:num });
   if (!/^[0-9A-Za-zก-๙_-]{3,20}$/.test(code)) {
     alert('รหัสเข้าเรียนต้องมี 3–20 ตัว ใช้ภาษาไทย อังกฤษ ตัวเลข _ หรือ -');
     return;
@@ -2130,7 +2139,7 @@ function teacherRemoveRosterStudent(index) {
   var roster = activeRoster();
   var r = roster[index];
   if (!r) return;
-  if (!confirm('ลบนักเรียน “' + r.name + '” และข้อมูลความคืบหน้าทั้งหมด? การลบไม่สามารถย้อนกลับได้')) return;
+  if (!confirm('ลบ “' + studentAlias(r) + '” และข้อมูลความคืบหน้าทั้งหมด? การลบไม่สามารถย้อนกลับได้')) return;
   var id = 'roster_' + r.code;
   roster.splice(index, 1);
   delete db.students[id];
@@ -2225,7 +2234,7 @@ function teacherStudentDetailHtml() {
     '<div class="student-detail-head">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="avimg" style="width:64px;height:64px" src="' + avatarSrc(s) + '" alt="">' +
-        '<div><h3 class="ink" style="font-weight:700">' + escChat(s.name) + '</h3>' +
+        '<div><h3 class="ink" style="font-weight:700">' + escChat(studentAlias(s)) + '</h3>' +
         '<p class="soft tiny">ห้อง ' + escChat(s.room || '-') + ' · เลขที่ ' + escChat(s.num || '-') + ' · รหัส ' + escChat(s.code || '-') + '</p></div>' +
       '</div>' +
       '<div class="teacher-row-actions">' +
@@ -2263,7 +2272,7 @@ function copyPlainText(text, doneText) {
 
 function copyStudentInstruction() {
   var text = 'นักเรียนเปิด “เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์ เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4” แล้วทำตามนี้\\n' +
-    '1) เลือกชื่อของตัวเองและใส่รหัสประจำตัวนักเรียน\\n' +
+    '1) กรอกรหัสผ่านที่ได้รับจากคุณครูเพื่อเข้าสู่ระบบ\\n' +
     '2) ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย\\n' +
     '3) เรียนเนื้อหาแต่ละบท แล้วทำแบบทดสอบระหว่างบทให้ผ่าน 80% เพื่อเก็บดาว\\n' +
     '4) เมื่อเรียนครบ ทำแบบทดสอบหลังเรียนรวม 1 ครั้ง และทำภารกิจพรอมต์/เกมสถานการณ์';
@@ -2294,7 +2303,7 @@ function buildReportCode() {
   var s = currentStudent();
   if (!s) return '';
   var payload = {
-    c: s.code || '', n: s.name, r: s.room || '', u: s.num || '', g: s.gender || 'm',
+    c: s.code || '', n: studentAlias(s), r: s.room || '', u: s.num || '', g: s.gender || 'm',
     lp: (s.lp || []).map(function(p){ p = normalizeLessonProgress(p); return [p.stars || 0, p.videoDone ? 1 : 0, p.slidesDone ? 1 : 0, p.quizDone ? 1 : 0, p.preDone ? 1 : 0, p.preScore || 0, p.postScore || 0]; }),
     sc: s.score || 0, ul: s.unlockedLevel || 0, b: s.badgeIds || [], p: s.pStars || [], a: s.assessments || newAssessments(),
     t: new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })
@@ -2380,7 +2389,7 @@ function downloadReportFile() {
     var blob = new Blob([code], { type: 'text/plain;charset=utf-8;' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'รายงาน_' + s.name.replace(/\s+/g, '_') + '.txt';
+    a.download = 'รายงาน_' + studentAlias(s).replace(/\s+/g, '_') + '.txt';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
   } catch(e) { alert('เบราว์เซอร์นี้ไม่รองรับการดาวน์โหลดไฟล์'); }
@@ -2421,7 +2430,7 @@ function sheetPayload() {
   var journeyStars = studentJourneyStars(s);
   var gem = gemLevelForStars(journeyStars);
   return {
-    code: s.code || (s.num || '') + '_' + s.name, name: s.name, room: s.room || '-', num: s.num || '-',
+    code: s.code || (s.num || '') + '_' + studentAlias(s), name: studentAlias(s), room: s.room || '-', num: s.num || '-',
     gender: s.gender === 'f' ? 'หญิง' : 'ชาย',
     gem: gem.name, levelBonus: gem.bonus, journeyStars: journeyStars,
     stars: st.stars, done: st.done,
@@ -2893,14 +2902,12 @@ function renderSettings() {
         '<div class="pcard yellow center" style="margin-bottom:18px">' +
           '<div class="tape tape-yellow"></div>' +
           '<img class="avimg" style="width:110px;height:110px;border-width:3px;margin-bottom:8px" src="' + avatarSrc(s) + '" alt="โปรไฟล์">' +
-          '<p class="ink" style="font-weight:700;font-size:20px">' + s.name + '</p>' +
+          '<p class="ink" style="font-weight:700;font-size:20px">' + studentAlias(s) + '</p>' +
           '<p class="soft small">ห้อง ' + (s.room || '-') + ' · เลขที่ ' + (s.num || '-') + ' · รหัส ' + (s.code || '-') + '</p>' +
         '</div>' +
         '<div class="pcard plain" style="margin-bottom:18px">' +
-          '<h3 class="ink" style="font-weight:700;margin-bottom:10px">✏️ เปลี่ยนชื่อที่แสดง</h3>' +
-          '<p class="soft small" style="margin-bottom:10px">ชื่อนี้จะแสดงในหน้าหลัก อันดับห้อง แผนที่เมือง และรายงานของครู</p>' +
-          '<input id="inp-newname" class="inp" type="text" maxlength="40" value="' + s.name.replace(/"/g, '&quot;') + '">' +
-          '<button onclick="changeName()" class="btn mintb sm" style="width:100%;margin-top:12px">💾 บันทึกชื่อใหม่</button>' +
+          '<h3 class="ink" style="font-weight:700;margin-bottom:10px">🛡️ ชื่อแทนเพื่อความเป็นส่วนตัว</h3>' +
+          '<p class="soft small">ระบบไม่ใช้ชื่อจริงของนักเรียน หน้าเรียน อันดับ และรายงานจะแสดงเฉพาะชื่อแทนหรือเลขที่เท่านั้น</p>' +
         '</div>' +
         '<div class="pcard pink">' +
           '<h3 class="ink" style="font-weight:700;margin-bottom:10px">🚪 ออกจากระบบ</h3>' +
@@ -2912,17 +2919,7 @@ function renderSettings() {
 }
 
 function changeName() {
-  var inp = document.getElementById('inp-newname');
-  var name = (inp ? inp.value : '').trim();
-  if (name.length < 2) { alert('ชื่อสั้นเกินไป ขออย่างน้อย 2 ตัวอักษร'); return; }
-  var s = currentStudent();
-  if (!s) return;
-  s.name = name;
-  s.renamed = true;   // จำไว้ว่าตั้งชื่อเองแล้ว จะไม่ถูกชื่อในรายชื่อครูเขียนทับตอนล็อกอินครั้งหน้า
-  if (sessionInfo) { sessionInfo.name = name; sessionInfo.renamed = true; }
-  saveProgress();
-  alert('เปลี่ยนชื่อเรียบร้อย! สวัสดี "' + name + '" ✅');
-  render();
+  alert('ระบบกำหนดชื่อแทนอัตโนมัติเพื่อความเป็นส่วนตัวของนักเรียน');
 }
 
 /* ==================== ผู้ช่วยชวนคิด (แชทบอท) ==================== */
@@ -3107,7 +3104,7 @@ function rankedStudents() {
     var s = db.students[id];
     return { id: id, s: s, st: studentStats(s), gem:gemLevelForStars(studentJourneyStars(s)), pts: rankPoints(s) };
   }).sort(function(a, b){
-    return (b.pts - a.pts) || (b.st.stars - a.st.stars) || a.s.name.localeCompare(b.s.name, 'th');
+    return (b.pts - a.pts) || (b.st.stars - a.st.stars) || studentAlias(a.s).localeCompare(studentAlias(b.s), 'th');
   });
 }
 function myRank() {
@@ -3160,7 +3157,7 @@ function renderLeaderboard() {
         return '<div class="pcard ' + podColors[i] + ' podcard pop" style="animation-delay:.' + (i + 1) + 's' + (isMe ? ';outline:3px dashed var(--blue-deep)' : '') + '">' +
           '<span class="medal">' + medals[i] + '</span>' +
           '<img class="avimg" src="' + avatarSrc(r.s) + '" alt="">' +
-          '<p class="ink" style="font-weight:700;font-size:16px;line-height:1.4">' + r.s.name + (isMe ? ' 👈' : '') + '</p>' +
+          '<p class="ink" style="font-weight:700;font-size:16px;line-height:1.4">' + studentAlias(r.s) + (isMe ? ' 👈' : '') + '</p>' +
           '<p class="soft tiny">ห้อง ' + (r.s.room || '-') + '</p>' +
           '<p class="t-orange" style="font-weight:700;font-size:20px;margin-top:6px">' + r.pts + ' คะแนน</p>' +
           '<p class="soft tiny">' + gemShapeHtml(r.gem, 'mini') + ' ' + r.gem.name + ' · ⭐' + studentJourneyStars(r.s) + '</p>' +
@@ -3175,7 +3172,7 @@ function renderLeaderboard() {
       '<div class="rankno">' + (i + 4) + '</div>' +
       '<img class="avimg" style="width:54px;height:54px;flex-shrink:0" src="' + avatarSrc(r.s) + '" alt="">' +
       '<div style="flex:1;min-width:0">' +
-        '<p class="ink" style="font-weight:700">' + r.s.name + (isMe ? ' 👈 เรา' : '') + '</p>' +
+        '<p class="ink" style="font-weight:700">' + studentAlias(r.s) + (isMe ? ' 👈 เรา' : '') + '</p>' +
         '<p class="soft tiny">' + r.gem.name + ' · ⭐ ' + studentJourneyStars(r.s) + '/' + journeyTotal() + ' · โบนัส +' + r.gem.bonus + '</p>' +
       '</div>' +
       '<div class="t-orange" style="font-weight:700;font-size:19px;white-space:nowrap">' + r.pts + ' คะแนน</div>' +
@@ -3321,7 +3318,7 @@ function teacherSupabaseDashboardHtml() {
   var avg = total ? Math.round(totalPct / total) : 0;
   var leaders = rankedStudents().slice(0, 5).map(function(r, i){
     return '<div class="rankrow" style="padding:9px 12px"><div class="rankno">' + (['🥇','🥈','🥉'][i] || (i + 1)) + '</div>' +
-      '<div style="flex:1"><b>' + escChat(r.s.name) + '</b><br><span class="soft tiny">เลขที่ ' + escChat(r.s.num || '-') + ' · ⭐ ' + studentJourneyStars(r.s) + ' · 🎖️ ' + r.st.achievements + '</span></div>' +
+      '<div style="flex:1"><b>' + escChat(studentAlias(r.s)) + '</b><br><span class="soft tiny">เลขที่ ' + escChat(r.s.num || '-') + ' · ⭐ ' + studentJourneyStars(r.s) + ' · 🎖️ ' + r.st.achievements + '</span></div>' +
       '<b class="t-orange">' + r.pts + '</b></div>';
   }).join('');
   return '<section class="pcard blue" style="margin-bottom:20px">' +
@@ -3358,7 +3355,7 @@ function renderTeacher() {
     return '<tr>' +
       '<td><div style="display:flex;align-items:center;gap:8px">' +
         '<img class="avimg" style="width:46px;height:46px;flex-shrink:0" src="' + avatarSrc(s) + '" alt="">' +
-        '<div><b>' + escChat(s.name) + '</b><br><span class="soft tiny">ห้อง ' + escChat(s.room || '-') + ' เลขที่ ' + escChat(s.num || '-') + (s.code ? ' · รหัส ' + escChat(s.code) : '') + '</span></div>' +
+        '<div><b>' + escChat(studentAlias(s)) + '</b><br><span class="soft tiny">ห้อง ' + escChat(s.room || '-') + ' เลขที่ ' + escChat(s.num || '-') + (s.code ? ' · รหัส ' + escChat(s.code) : '') + '</span></div>' +
       '</div></td>' +
       '<td class="t-orange" style="font-weight:700">' + gemShapeHtml(gem, 'mini') + ' ' + gem.name + '<br><span class="soft tiny">⭐ ' + studentJourneyStars(s) + '/' + journeyTotal() + ' · โบนัส +' + gem.bonus + '</span></td>' +
       '<td style="line-height:1.9">' + (perLesson || '-') + '</td>' +
@@ -3444,7 +3441,7 @@ function copyAppsScript() {
 function delStudent(id) {
   var s = db.students[id];
   if (!s) return;
-  if (!confirm('ล้างข้อมูลความคืบหน้าของ “' + s.name + '”? รายชื่อและรหัสเข้าเรียนจะยังคงอยู่')) return;
+  if (!confirm('ล้างข้อมูลความคืบหน้าของ “' + studentAlias(s) + '”? รายชื่อและรหัสเข้าเรียนจะยังคงอยู่')) return;
   delete db.students[id];
   var rosterItem = activeRoster().find(function(r){ return 'roster_' + r.code === id; });
   if (rosterItem) db.students[id] = emptyStudentFromRoster(rosterItem);
@@ -3456,7 +3453,7 @@ function delStudent(id) {
 }
 
 function exportCSV() {
-  var head = ['ชื่อ','ห้อง','เลขที่','เพศ','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','ดาวบทเรียน (เต็ม ' + maxStars() + ')','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
+  var head = ['ชื่อแทน','ห้อง','เลขที่','เพศ','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','ดาวบทเรียน (เต็ม ' + maxStars() + ')','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
   lessons.forEach(function(ls, i){
     head.push('ดาวบทที่ ' + (i + 1) + ' (' + ls.short + ')');
     head.push('คะแนนระหว่างบทที่ ' + (i + 1));
@@ -3469,7 +3466,7 @@ function exportCSV() {
     var journeyStars = studentJourneyStars(s);
     var gem = gemLevelForStars(journeyStars);
     var gtxt = s.gender === 'f' ? 'หญิง' : (s.gender === 'm' ? 'ชาย' : '-');
-    var row = [s.name, s.room || '-', s.num || '-', gtxt, gem.name, gem.bonus, journeyStars, st.stars, st.done];
+    var row = [studentAlias(s), s.room || '-', s.num || '-', gtxt, gem.name, gem.bonus, journeyStars, st.stars, st.done];
     lessons.forEach(function(_, i){
       var p = (s.lp && s.lp[i]) ? normalizeLessonProgress(s.lp[i]) : normalizeLessonProgress();
       row.push(p.stars || 0);
@@ -3494,9 +3491,9 @@ function exportCSV() {
 }
 
 function exportRosterCSV() {
-  var rows = [['เลขที่','ชื่อ–นามสกุล','ห้อง','เพศ','เลขประจำตัวนักเรียน']];
+  var rows = [['เลขที่','ชื่อแทน','ห้อง','เพศ','เลขประจำตัวนักเรียน']];
   activeRoster().forEach(function(r){
-    rows.push([r.num, r.name, r.room, r.gender === 'f' ? 'หญิง' : 'ชาย', r.code]);
+    rows.push([r.num, studentAlias(r), r.room, r.gender === 'f' ? 'หญิง' : 'ชาย', r.code]);
   });
   var csv = rows.map(function(row){
     return row.map(function(v){
@@ -3553,28 +3550,28 @@ function importRosterCSV(input) {
         }
         return -1;
       }
-      var nameCol = column(['ชื่อ–นามสกุล','ชื่อ-นามสกุล','ชื่อ','name','fullname']);
       var codeCol = column(['เลขประจำตัวนักเรียน','รหัสประจำตัวนักเรียน','รหัสเข้าเรียน','รหัสผ่าน','studentid','id','code']);
       var roomCol = column(['ห้อง','ชั้น','room','class']);
       var numCol = column(['เลขที่','number','no']);
       var genderCol = column(['เพศ','gender','sex']);
-      if (nameCol < 0 || codeCol < 0) throw new Error('ต้องมีคอลัมน์ “ชื่อ–นามสกุล” และ “เลขประจำตัวนักเรียน”');
+      if (codeCol < 0) throw new Error('ต้องมีคอลัมน์ “เลขประจำตัวนักเรียน”');
 
       var roster = activeRoster();
       var imported = [], skipped = [];
       rows.slice(1).forEach(function(cols, rowIndex) {
-        var name = String(cols[nameCol] || '').trim();
         var code = String(cols[codeCol] || '').trim();
-        if (!name || !/^[0-9A-Za-zก-๙_-]{3,20}$/.test(code)) {
+        if (!/^[0-9A-Za-zก-๙_-]{3,20}$/.test(code)) {
           skipped.push(rowIndex + 2);
           return;
         }
         var genderText = genderCol >= 0 ? String(cols[genderCol] || '').trim().toLowerCase() : '';
+        var room = roomCol >= 0 ? String(cols[roomCol] || '').trim() : '';
+        var num = numCol >= 0 ? String(cols[numCol] || '').trim() : '';
         var item = {
-          name: name,
+          name: studentAlias({ code:code, room:room, num:num }),
           code: code,
-          room: roomCol >= 0 ? String(cols[roomCol] || '').trim() : '',
-          num: numCol >= 0 ? String(cols[numCol] || '').trim() : '',
+          room: room,
+          num: num,
           gender: /^(f|female|หญิง)$/.test(genderText) ? 'f' : 'm'
         };
         var existingIndex = roster.findIndex(function(r){ return String(r.code) === code; });
@@ -3592,7 +3589,7 @@ function importRosterCSV(input) {
         db.students[id]._updatedAt = Date.now();
         imported.push(id);
       });
-      if (!imported.length) throw new Error('ไม่พบแถวที่นำเข้าได้ กรุณาตรวจชื่อและเลขประจำตัวนักเรียน');
+      if (!imported.length) throw new Error('ไม่พบแถวที่นำเข้าได้ กรุณาตรวจเลขประจำตัวนักเรียน');
       db.rosterUpdatedAt = Date.now();
       saveDB();
       scheduleFirebaseRosterSync();
@@ -4120,7 +4117,7 @@ function quickFunctionButtons() {
 
 function renderHome() {
   var stu = currentStudent();
-  var stuName = stu ? stu.name : 'ผู้พิทักษ์';
+  var stuName = stu ? studentAlias(stu) : 'ผู้พิทักษ์';
   var homeStars = journeySteps();
   appEl.innerHTML =
     '<div class="hdr">' +
@@ -4654,7 +4651,7 @@ function renderSendReport() {
     '<div class="body-area scroll">' +
       '<div class="pcard blue" style="margin-bottom:18px">' +
         '<div class="tape tape-blue"></div>' +
-        '<p style="font-weight:600;line-height:1.9">📦 นี่คือ "โค้ดรายงาน" ของ <b>' + (s ? s.name : '-') + '</b><br>' +
+        '<p style="font-weight:600;line-height:1.9">📦 นี่คือ "โค้ดรายงาน" ของ <b>' + (s ? studentAlias(s) : '-') + '</b><br>' +
         '<span class="soft small">สรุปผล: ⭐ ' + st.stars + '/' + maxStars() + ' ดาว · เรียนจบ ' + st.done + '/' + lessons.length + ' บท · ภารกิจ ' + st.game + '/4 ด่าน · คืบหน้า ' + st.pct + '%</span></p>' +
       '</div>' +
       '<textarea id="rp-code" class="codebox" readonly>' + code + '</textarea>' +
