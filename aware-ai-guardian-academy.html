@@ -94,7 +94,7 @@ button:disabled{cursor:not-allowed; opacity:.55}
   display:flex; flex-direction:column; align-items:center; justify-content:center}
 .menucard:hover{transform:translateY(-2px)}
 .menucard .big{font-size:38px; margin-bottom:8px; display:block}
-.menu-card-img{display:block; width:96px; height:96px; margin:0 auto 7px; object-fit:contain;
+.menu-card-img{display:block; width:clamp(120px,17vw,156px); height:clamp(120px,17vw,156px); margin:0 auto 7px; object-fit:contain;
   border-radius:16px; background:#fff; box-shadow:0 4px 0 rgba(73,91,126,.16),0 8px 14px rgba(54,73,112,.12)}
 .login-main-icon{border-radius:24px; background:#fff}
 .login-student-illustration{display:block;width:clamp(105px,15vh,150px);height:clamp(105px,15vh,150px);margin:-5px auto 8px;object-fit:contain;border-radius:18px;background:#fff;box-shadow:0 4px 0 rgba(73,91,126,.14),0 8px 14px rgba(54,73,112,.1)}
@@ -756,8 +756,9 @@ body::after{
   .scorebox .t-orange{font-size:17px !important}
   .center-view{padding:10px 22px; justify-content:center; overflow-x:hidden; overflow-y:auto}
   .center-view > img.avimg.float{width:64px !important; height:64px !important}
-  .menugrid{grid-template-columns:repeat(4,minmax(0,1fr)); max-width:1100px; gap:14px}
+  .menugrid{grid-template-columns:repeat(3,minmax(0,1fr)); max-width:1100px; gap:18px}
   .menucard{min-height:156px; padding:12px 12px; border-radius:14px}
+  .menu-card-img{width:clamp(118px,14vh,150px);height:clamp(118px,14vh,150px)}
   .menucard .big{font-size:28px; margin-bottom:2px}
   .menucard h3{font-size:17px !important; margin-bottom:2px !important}
   .menucard p{font-size:13px !important; line-height:1.42}
@@ -785,19 +786,21 @@ body::after{
   .app-logo-animated{width:88px; height:88px; margin-bottom:0}
   .menugrid{gap:10px}
   .menucard{min-height:136px; padding:9px 10px}
+  .menu-card-img{width:clamp(100px,13vh,118px);height:clamp(100px,13vh,118px);margin-bottom:3px}
   .menucard .big{font-size:24px}
   .functionbar{margin-bottom:8px}
   .funcbtn{min-height:46px}
   .mascot{display:none}
 }
 @media (min-width:761px) and (max-width:1020px){
-  .menugrid{grid-template-columns:repeat(2,minmax(0,1fr)); max-width:760px}
+  .menugrid{grid-template-columns:repeat(3,minmax(0,1fr)); max-width:920px}
   .menucard{min-height:145px}
   .achievement-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media (min-width:761px) and (max-height:640px){
   body{padding:6px}
   #app{height:calc(100vh - 12px); height:calc(100dvh - 12px); min-height:0}
+  .menu-card-img{width:88px;height:88px}
 }
 @media (max-width:760px){
   #app{height:auto; min-height:100vh}
@@ -807,6 +810,7 @@ body::after{
   .badgegrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .menugrid{grid-template-columns:1fr;gap:12px}
   .menucard{min-height:150px}
+  .menu-card-img{width:min(150px,42vw);height:min(150px,42vw)}
   .grid2{grid-template-columns:1fr}
   .mission{flex-direction:column; align-items:flex-start}
   .mright{width:100%; justify-content:space-between; border-top:2px dashed rgba(120,100,70,.2); padding-top:10px}
