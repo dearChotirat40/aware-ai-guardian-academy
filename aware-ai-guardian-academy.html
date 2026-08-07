@@ -3575,8 +3575,7 @@ function renderTeacher() {
         (sheetConfigured()
           ? '<p class="small" style="margin-bottom:10px">🟢 <b>เชื่อมต่อแล้ว!</b> คะแนนของนักเรียนทุกคน (ที่มีเน็ต) จะวิ่งขึ้นชีตให้อัตโนมัติแบบเรียลไทม์ อัปเดตทับแถวเดิมตามรหัสนักเรียน ไม่มีแถวซ้ำ</p>' +
             '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
-              '<button onclick="copyPlainText(GOOGLE_SHEET.webAppUrl, \'คัดลอกลิงก์เชื่อมต่อ Google Sheet แล้ว ✅\')" class="btn whiteb sm">🔗 คัดลอกลิงก์เชื่อมต่อ</button>' +
-              (GOOGLE_SHEET.sheetUrl ? '<a href="' + GOOGLE_SHEET.sheetUrl + '" target="_blank" rel="noopener"><button class="btn mintb sm">📊 เปิด Google Sheet</button></a>' : '<span class="soft tiny">หากต้องการปุ่มเปิดตาราง ให้เพิ่มลิงก์ไฟล์ Google Sheet</span>') +
+              (GOOGLE_SHEET.sheetUrl ? '<a href="' + GOOGLE_SHEET.sheetUrl + '" target="_blank" rel="noopener" class="btn mintb sm" style="text-decoration:none">📊 เปิด Google Sheet</a>' : '<span class="soft tiny">หากต้องการปุ่มเปิดตาราง ให้เพิ่มลิงก์ไฟล์ Google Sheet</span>') +
             '</div>'
           : '<p class="small" style="margin-bottom:8px">ตั้งค่าครั้งเดียว ~3 นาที แล้วคะแนนนักเรียน<b>ทุกเครื่อง</b>จะวิ่งขึ้นชีตอัตโนมัติ:</p>' +
             '<p class="small" style="line-height:2">1️⃣ สร้าง Google Sheet เปล่า → เมนู <b>ส่วนขยาย → Apps Script</b><br>' +
