@@ -1757,6 +1757,53 @@ var firebaseStudentTimer = null;
 var firebaseRosterTimer = null;
 var secureRankInfo = null;
 var secureLeaderboard = [];
+var secureRankLoading = false;
+var secureRankError = '';
+var secureRankUpdatedAt = 0;
+
+function resetSecureRank() {
+  secureRankInfo = null;
+  secureLeaderboard = [];
+  secureRankLoading = false;
+  secureRankError = '';
+  secureRankUpdatedAt = 0;
+}
+
+function applySecureLeaderboard(rows) {
+  rows = Array.isArray(rows) ? rows : [];
+  var mine = rows.filter(function(r){ return r.is_me; })[0] || null;
+  var nextInfo = mine ? { rank:Number(mine.rank), total:rows.length } : null;
+  var changed = JSON.stringify(rows) !== JSON.stringify(secureLeaderboard) ||
+    JSON.stringify(nextInfo) !== JSON.stringify(secureRankInfo);
+  secureLeaderboard = rows;
+  secureRankInfo = nextInfo;
+  secureRankUpdatedAt = Date.now();
+  return changed;
+}
+
+function refreshSecureLeaderboard(options) {
+  options = options || {};
+  if (!firebaseBackend || !currentId || secureRankLoading) return Promise.resolve(false);
+  var requestedId = currentId;
+  secureRankLoading = true;
+  secureRankError = '';
+  return firebaseBackend.safeLeaderboard().then(function(rows){
+    if (requestedId !== currentId) return false;
+    var changed = applySecureLeaderboard(rows);
+    secureRankLoading = false;
+    if (options.leaderboard && state.view === 'leaderboard') renderLeaderboard(true);
+    if (options.strip && shouldShowStrip()) updateRankStrip();
+    return changed;
+  }).catch(function(err){
+    if (requestedId !== currentId) return false;
+    secureRankLoading = false;
+    secureRankError = 'โหลดอันดับไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่';
+    console.warn('Supabase leaderboard:', err);
+    if (options.leaderboard && state.view === 'leaderboard') renderLeaderboard(true);
+    if (options.strip && shouldShowStrip()) updateRankStrip();
+    return false;
+  });
+}
 
 function firebaseConfigured() {
   return !!(SUPABASE_CONFIG && SUPABASE_CONFIG.url && SUPABASE_CONFIG.publishableKey);
@@ -1881,6 +1928,7 @@ function saveProgress() {
 
 function applyStudent(id) {
   currentId = id;
+  resetSecureRank();
   var s = db.students[id];
   if (!s.pStars || s.pStars.length !== PROMPT_CHALLENGES.length) {
     s.pStars = PROMPT_CHALLENGES.map(function(){ return 0; });
@@ -1898,6 +1946,7 @@ function applyStudent(id) {
     if (c.badge && ids.indexOf(c.badge.id) !== -1) state.badges.push(c.badge);
   }); });
   startStripTimer();
+  refreshSecureLeaderboard({strip:true});
   scheduleSheetSync();
 }
 
@@ -1944,6 +1993,7 @@ function logout() {
   state.promptDrafts = {};
   state.promptMissingDrafts = {};
   currentId = null;
+  resetSecureRank();
   sessionInfo = null;
   sessionPStars = [];
   stopStripTimer();
@@ -2695,10 +2745,21 @@ function rankStripHtml() {
   var total = list.length;
   var meRank = null;
   list.forEach(function(r, i){ if (r.id === currentId) meRank = i + 1; });
+  if (secureRankUpdatedAt) {
+    total = secureLeaderboard.length;
+    meRank = secureRankInfo && secureRankInfo.rank;
+  }
   return '<div id="rankstrip" class="rankstrip noprint" onclick="changeView(\'leaderboard\')" title="แตะเพื่อดูอันดับของเรา">' +
-    '<span class="rs-me">🏆 อันดับของเรา ' + (meRank || '-') + '/' + total + '</span>' +
+    '<span class="rs-me">🏆 อันดับของเรา ' + (meRank || '-') + '/' + (total || '-') + '</span>' +
     '<span class="rs-live"><span class="livedot"></span> LIVE</span>' +
   '</div>';
+}
+
+function updateRankStrip() {
+  var elS = document.getElementById('rankstrip');
+  if (!elS || !shouldShowStrip()) return;
+  var fresh = rankStripHtml();
+  if (elS.outerHTML !== fresh) elS.outerHTML = fresh;
 }
 
 function startStripTimer() {
@@ -2712,10 +2773,8 @@ function stripTick() {
   if (!currentId) { stopStripTimer(); return; }
   if (!shouldShowStrip()) return;
   refreshDbLive();
-  var elS = document.getElementById('rankstrip');
-  if (!elS) return;
-  var fresh = rankStripHtml();
-  if (elS.outerHTML !== fresh) elS.outerHTML = fresh; // อัปเดตเฉพาะแผง ไม่กระทบสิ่งที่กำลังพิมพ์
+  updateRankStrip();
+  refreshSecureLeaderboard({strip:true});
 }
 
 function render() {
@@ -3085,8 +3144,10 @@ function changeStudentPassword() {
     delete db.students[oldId];
     db.students[newId] = updated;
     currentId = newId;
+    resetSecureRank();
     if (sessionInfo) { sessionInfo.code = newCode; sessionInfo.nickname = cleanNickname(updated.nickname); }
     saveDB();
+    refreshSecureLeaderboard({strip:true});
     alert('เปลี่ยนรหัสผ่านเรียบร้อย กรุณาใช้รหัสใหม่ในการเข้าสู่ระบบครั้งถัดไป ✅');
     renderSettings();
   }).catch(function(err){
@@ -3239,17 +3300,7 @@ function refreshDbLive() {
 }
 function lbTick() {
   if (state.view !== 'leaderboard') { stopLbTimer(); return; }
-  if (firebaseBackend && currentId) {
-    firebaseBackend.safeLeaderboard().then(function(rows){
-      var mine = rows.filter(function(r){ return r.is_me; })[0] || null;
-      var nextRank = mine ? { rank:mine.rank, total:rows.length } : null;
-      if (JSON.stringify(rows) !== JSON.stringify(secureLeaderboard)) {
-        secureLeaderboard = rows;
-        secureRankInfo = nextRank;
-        if (state.view === 'leaderboard') render();
-      }
-    }).catch(function(){});
-  }
+  refreshSecureLeaderboard({leaderboard:true});
   refreshDbLive();
   var snap = JSON.stringify(db.students);
   if (snap !== lbSnapshot) {
@@ -3288,21 +3339,17 @@ function myRank() {
   return null;
 }
 
-function renderLeaderboard() {
+function renderLeaderboard(skipLoad) {
   refreshDbLive();
+  if (!skipLoad) refreshSecureLeaderboard({leaderboard:true});
   var rank = secureRankInfo && secureRankInfo.rank;
   var totalRanked = secureRankInfo && secureRankInfo.total;
-  if (firebaseBackend && currentId) firebaseBackend.safeLeaderboard().then(function(rows){
-    secureLeaderboard = rows;
-    var mine = rows.filter(function(r){ return r.is_me; })[0];
-    secureRankInfo = mine ? {rank:mine.rank,total:rows.length} : null;
-  }).catch(function(){});
   var medalsSafe = ['🥇','🥈','🥉'];
-  var boardHtml = secureLeaderboard.map(function(r, i){
+  var boardHtml = secureLeaderboard.map(function(r){
     return '<div class="rankrow' + (r.is_me ? ' me' : '') + '">' +
-      '<div class="rankno" style="font-size:25px">' + (medalsSafe[i] || r.rank) + '</div>' +
-      '<div style="flex:1;min-width:0"><p class="ink" style="font-weight:700">' + escChat(r.alias) + (r.is_me ? ' 👈 เรา' : '') + '</p>' +
-      '<p class="soft tiny">💎 ' + escChat(r.gem) + ' · ⭐ ' + r.stars + ' · 🎖️ ' + r.badges + ' เหรียญ</p></div>' +
+      '<div class="rankno" style="font-size:25px">' + (medalsSafe[r.rank - 1] || r.rank) + '</div>' +
+      '<div style="flex:1;min-width:0"><p class="ink" style="font-weight:700">' + escChat(r.alias || 'นักเรียน') + (r.is_me ? ' 👈 เรา' : '') + '</p>' +
+      '<p class="soft tiny">💎 ' + escChat(r.gem || 'เริ่มต้น') + ' · ⭐ ' + r.stars + ' · 🎖️ ' + r.badges + ' เหรียญ</p></div>' +
       '<div class="t-orange" style="font-weight:700;font-size:19px;white-space:nowrap">' + r.points + ' คะแนน</div></div>';
   }).join('');
   lbSnapshot = JSON.stringify(db.students);
@@ -3310,13 +3357,15 @@ function renderLeaderboard() {
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px"><div style="font-size:30px">🏆</div>' +
       '<div><h2 class="ink" style="font-size:21px;font-weight:700">อันดับของฉัน</h2>' +
-      '<p class="soft tiny"><span class="livedot"></span> LIVE · แสดงเฉพาะอันดับของผู้ที่เข้าสู่ระบบ · ล่าสุด <span id="lb-time">' + new Date().toLocaleTimeString('th-TH') + '</span></p></div></div>' +
+      '<p class="soft tiny"><span class="livedot"></span> LIVE · คะแนนจริงจากห้องเรียน · อัปเดตทุก 3 วินาที · ล่าสุด <span id="lb-time">' + new Date().toLocaleTimeString('th-TH') + '</span></p></div></div>' +
       '<button onclick="changeView(\'' + (currentId ? 'home' : 'login') + '\')" class="iconbtn" title="กลับ">' + (currentId ? '<img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก">' : '🚪') + '</button>' +
     '</div>' +
     '<div class="body-area scroll">' +
       (currentId && rank
         ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '</div>'
-        : '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>กำลังโหลดอันดับการแข่งขัน...</p></div>') +
+        : secureRankError
+          ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">📡</div><p>' + escChat(secureRankError) + '</p><button onclick="retryLeaderboard()" class="btn blueb sm" style="margin-top:16px">ลองโหลดอันดับอีกครั้ง</button></div>'
+          : '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>กำลังโหลดอันดับจากห้องเรียน...</p></div>') +
     '</div>';
   return;
   lbSnapshot = JSON.stringify(db.students);
@@ -3371,6 +3420,12 @@ function renderLeaderboard() {
         : podiumHtml + rowsHtml) +
       '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = (ดาวห้องเรียน × 10) + (ดาวพรอมต์ × 10) + แต้มภารกิจ + โบนัสระดับอัญมณี (0/5/10/15) · หากเรียนหลายเครื่องให้เชื่อม Google Sheet เพื่อรวมคะแนนอัตโนมัติ</p>' +
     '</div>';
+}
+
+function retryLeaderboard() {
+  secureRankError = '';
+  secureRankUpdatedAt = 0;
+  renderLeaderboard();
 }
 
 /* ---------- ระบบคำใบ้ (ซ่อนไว้ก่อน — โผล่เมื่อคิดนานหรือตอบผิด) ---------- */
