@@ -390,6 +390,9 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .prompt-missing:focus{border-color:var(--blue-deep); box-shadow:0 0 0 3px rgba(47,111,149,.15)}
 .prompt-last{margin-top:12px; padding:10px 12px; border-left:3px solid var(--mint-deep); background:rgba(231,243,237,.6);
   color:var(--ink-soft); font-size:13px; line-height:1.7}
+.mission.prompt-locked{cursor:not-allowed;opacity:.58;filter:grayscale(.18)}
+.mission.prompt-locked:hover{transform:none;box-shadow:var(--shadow)}
+.mission.prompt-locked .mbtn{cursor:not-allowed}
 .chip{display:inline-flex; align-items:center; gap:6px; padding:8px 14px; margin:4px;
   background:var(--white); border:2px solid #E3D5B8; border-radius:999px; font-size:15px; font-weight:600; color:var(--ink)}
 .chip:hover{border-color:var(--pink-deep); background:var(--pink); transform:translateY(-2px)}
@@ -1329,7 +1332,7 @@ var PROMPT_CHALLENGES = [
     better:'คุณคือติวเตอร์คณิตศาสตร์ ช่วยตั้งคำถามทบทวนเรื่อง "ฟังก์ชัน" (โดเมน เรนจ์ และฟังก์ชันประกอบ) สำหรับนักเรียน ม.4 จำนวน 5 ข้อ ไล่จากง่ายไปยาก มีทั้งโจทย์คำนวณและโจทย์สถานการณ์จริง และแยกเฉลยพร้อมวิธีคิดไว้ท้ายสุด'
   },
   {
-    emoji:'📝', title:'ระดับ 3: เขียนพรอมต์ด้วยตนเอง', mode:'free', level:'ท้าทาย',
+    emoji:'📝', title:'ระดับ 3: เขียนพรอมต์ด้วยตนเอง', mode:'free', level:'ยาก',
     mission:'เขียนพรอมต์สั่งให้ AI ช่วยร่าง "ข้อความสุภาพ" ส่งถึงคุณครูเพื่อขอเลื่อนส่งงาน เพราะป่วยจึงทำไม่ทัน',
     hint:'บอกบริบทให้ครบ: ส่งถึงใคร เรื่องอะไร เหตุผลคืออะไร และต้องการโทนแบบไหน ยาวแค่ไหน',
     keywords:['ครู','เลื่อน','ส่งงาน','สุภาพ','ป่วย'],
@@ -3767,22 +3770,35 @@ function promptFormulaCard(compact) {
     '</p></div>';
 }
 
+function promptChallengeUnlocked(index) {
+  if (index <= 0) return true;
+  for (var i = 0; i < index; i++) {
+    if ((sessionPStars[i] || 0) < 1) return false;
+  }
+  return true;
+}
+
 function renderPromptMenu() {
   var s = currentStudent();
   var listHtml = PROMPT_CHALLENGES.map(function(ch, i) {
     var got = sessionPStars[i] || 0;
     var t = themeList[i % themeList.length];
-    return '<div onclick="openChallenge(' + i + ')" class="mission pcard ' + t.card + '">' +
+    var unlocked = promptChallengeUnlocked(i);
+    var status = got > 0
+      ? 'ดีที่สุด: ' + starRow(got)
+      : (unlocked ? 'พร้อมเริ่ม · ผ่านเมื่อได้อย่างน้อย 1 ดาว' : '🔒 ผ่านระดับ ' + i + ' ก่อนเพื่อปลดล็อก');
+    return '<div' + (unlocked ? ' onclick="openChallenge(' + i + ')"' : ' aria-disabled="true"') +
+      ' class="mission pcard ' + t.card + (unlocked ? '' : ' prompt-locked') + '">' +
       '<div class="tape ' + t.tape + '"></div>' +
       '<div class="mleft">' +
         '<div class="mnum">' + ch.emoji + '</div>' +
         '<div><h4 class="mtitle ink">' + ch.title + '</h4>' +
         '<span class="prompt-level">ระดับ ' + (i + 1) + ' · ' + ch.level + '</span>' +
-        '<p class="msub">' + (got > 0 ? 'ดีที่สุด: ' + starRow(got) : 'ยังไม่เคยส่งตรวจ') + '</p></div>' +
+        '<p class="msub">' + status + '</p></div>' +
       '</div>' +
       '<div class="mright">' +
         '<span class="t-orange" style="font-size:18px;font-weight:700">' + starRow(got) + '</span>' +
-        '<button class="mbtn">✍️ ฝึกเลย</button>' +
+        '<button class="mbtn"' + (unlocked ? '' : ' disabled') + '>' + (unlocked ? '✍️ ฝึกเลย' : '🔒 ยังไม่ปลดล็อก') + '</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -3792,7 +3808,7 @@ function renderPromptMenu() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:32px">✍️</div>' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">ห้องฝึกเขียนพรอมต์</h2>' +
-        '<p class="soft tiny">ลากคำมาเติม → เติมส่วนที่หาย → เขียนเอง · ไล่ระดับจากง่ายไปยาก</p></div>' +
+        '<p class="soft tiny">กิจกรรมในบทที่ 2 · เรียงจากง่าย → ปานกลาง → ยาก และต้องผ่านตามลำดับ</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div class="scorebox"><div class="t-orange" style="font-size:20px;font-weight:700">✍️ ' + totalPromptStars() + '/' + maxPromptStars() + '</div><p class="soft tiny">ดาวพรอมต์</p></div>' +
@@ -3802,11 +3818,18 @@ function renderPromptMenu() {
     '<div class="body-area scroll">' +
       promptLineArtBanner() +
       promptFormulaCard(false) +
+      '<div class="pcard yellow" style="margin-bottom:14px;padding:12px 16px"><p class="small" style="font-weight:700">🔐 เริ่มจากระดับง่ายก่อน · ได้อย่างน้อย 1 ดาวเพื่อปลดล็อกระดับถัดไป</p></div>' +
       '<div style="padding:4px 8px 4px 4px">' + listHtml + '</div>' +
     '</div>';
 }
 
 function openChallenge(i) {
+  i = Number(i);
+  if (!PROMPT_CHALLENGES[i]) return;
+  if (!promptChallengeUnlocked(i)) {
+    alert('ระดับนี้ยังล็อกอยู่ กรุณาผ่านระดับ ' + i + ' ก่อน โดยได้อย่างน้อย 1 ดาว');
+    return;
+  }
   state.currentChallenge = i;
   state.aiResult = null;
   state.checking = false;
@@ -3954,6 +3977,12 @@ function collectPromptExerciseText(ch, challengeIndex) {
 function renderPromptWork() {
   var i = state.currentChallenge;
   var ch = PROMPT_CHALLENGES[i];
+  if (!ch || !promptChallengeUnlocked(i)) {
+    state.currentChallenge = null;
+    state.view = 'prompt';
+    renderPromptMenu();
+    return;
+  }
   var t = themeList[i % themeList.length];
   var s = currentStudent();
   var best = sessionPStars[i] || 0;
@@ -3964,6 +3993,12 @@ function renderPromptWork() {
     resultHtml = '<div class="pcard plain center" style="margin-top:18px"><div class="wiggle" style="font-size:36px">🤖</div><p class="soft" style="font-weight:600;margin-top:6px">AI กำลังตรวจพรอมต์ของเรา... รอสักครู่นะ</p></div>';
   } else if (state.aiResult) {
     var r = state.aiResult;
+    var nextHtml = '';
+    if (r.stars >= 1 && i < PROMPT_CHALLENGES.length - 1) {
+      nextHtml = '<div class="center" style="margin-top:12px"><button onclick="openChallenge(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปต่อระดับ ' + (i + 2) + ' · ' + PROMPT_CHALLENGES[i + 1].level + '</button></div>';
+    } else if (r.stars >= 1 && i === PROMPT_CHALLENGES.length - 1) {
+      nextHtml = '<div class="center" style="margin-top:12px"><button onclick="changeView(\'prompt\')" class="btn mintb sm">🏆 ผ่านครบทั้ง 3 ระดับแล้ว</button></div>';
+    }
     var goodHtml = (r.good || []).map(function(g){ return '<p class="small" style="line-height:1.9">💚 ' + g + '</p>'; }).join('');
     var impHtml = (r.improve || []).map(function(g){ return '<p class="small" style="line-height:1.9">🔧 ' + g + '</p>'; }).join('');
     resultHtml = journeyBanner() +
@@ -3976,6 +4011,7 @@ function renderPromptWork() {
         (impHtml ? '<div class="innerbox" style="margin-bottom:10px"><p class="t-orange tiny" style="font-weight:700;margin-bottom:4px">ปรับอีกนิดจะเยี่ยมเลย</p>' + impHtml + '</div>' : '') +
         (r.better ? '<div class="innerbox"><p class="t-blue tiny" style="font-weight:700;margin-bottom:4px">✨ ตัวอย่างพรอมต์ฉบับปรับปรุง</p><p class="small" style="line-height:1.9">' + r.better + '</p></div>' : '') +
         '<p class="soft tiny" style="margin-top:10px">' + r.modeNote + (best > r.stars ? ' · ดาวที่ดีที่สุดของโจทย์นี้ยังเป็น ' + starRow(best) : '') + '</p>' +
+        nextHtml +
       '</div>';
   }
 
