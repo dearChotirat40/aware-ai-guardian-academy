@@ -145,6 +145,27 @@ button:disabled{cursor:not-allowed; opacity:.55}
   padding:8px 16px; border-radius:10px; font-size:15px; font-weight:600; box-shadow:0 2px 0 rgba(32,42,51,.28)}
 .mright{display:flex; align-items:center; gap:12px}
 
+/* Lesson submenu */
+.lesson-submenu-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 2px 12px}
+.lesson-submenu-heading h3{font-size:20px;font-weight:700;margin:0}
+.lesson-submenu-heading p{font-size:13px;color:var(--ink-soft);margin:2px 0 0}
+.lesson-submenu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;padding:2px 4px 16px}
+.lesson-submenu-item{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:14px;min-height:205px;width:100%;padding:20px;text-align:left;color:var(--ink);font:inherit;cursor:pointer;overflow:hidden}
+.lesson-submenu-item:hover:not(:disabled){transform:translateY(-3px);filter:saturate(1.04)}
+.lesson-submenu-item:disabled{cursor:not-allowed;opacity:.58;filter:grayscale(.18);border-style:dashed}
+.lesson-submenu-item:disabled:hover{transform:none}
+.lesson-submenu-top{display:flex;align-items:flex-start;gap:13px}
+.lesson-submenu-number{display:flex;align-items:center;justify-content:center;flex:0 0 52px;width:52px;height:52px;border-radius:13px;background:var(--white);border:2px solid rgba(32,42,51,.2);font-size:20px;font-weight:700;box-shadow:0 3px 0 rgba(32,42,51,.18)}
+.lesson-submenu-title{font-size:18px;font-weight:700;line-height:1.45;margin:1px 0 5px}
+.lesson-submenu-status{font-size:13px;line-height:1.65;color:var(--ink-soft)}
+.lesson-submenu-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px;border-top:2px dashed rgba(90,76,52,.2)}
+.lesson-submenu-action{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:7px 12px;border-radius:10px;background:var(--white);border:1.5px solid rgba(32,42,51,.45);font-size:13px;font-weight:700;box-shadow:0 2px 0 rgba(32,42,51,.2)}
+.lesson-submenu-item:disabled .lesson-submenu-action{box-shadow:none}
+.lesson-inner-menu{margin-bottom:22px;padding:14px 14px 4px;border:2px solid #D8D0BF;border-radius:15px;background:rgba(255,255,255,.72);box-shadow:0 3px 0 rgba(83,97,123,.15)}
+.lesson-inner-menu-label{display:flex;align-items:center;gap:10px;margin:0 2px 12px;font-size:16px;font-weight:700;color:var(--ink)}
+.lesson-inner-menu-label span{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:var(--yellow);border:1.5px solid var(--yellow-deep)}
+.lesson-inner-menu .tabbar{margin-bottom:12px}
+
 /* Tabs */
 .tabbar{display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap}
 .tab{flex:1; min-width:140px; padding:12px 10px; border-radius:14px; text-align:center; font-weight:700; font-size:16px;
@@ -817,6 +838,11 @@ body::after{
   .menu-card-img{width:min(150px,42vw);height:min(150px,42vw)}
   .grid2{grid-template-columns:1fr}
   .mission{flex-direction:column; align-items:flex-start}
+  .lesson-submenu-grid{grid-template-columns:1fr;gap:12px;padding-left:0;padding-right:0}
+  .lesson-submenu-item{min-height:180px;padding:17px}
+  .lesson-submenu-heading{align-items:flex-start;flex-direction:column}
+  .lesson-inner-menu{padding:12px 10px 2px}
+  .lesson-inner-menu .tab{min-width:calc(50% - 6px);font-size:14px}
   .mright{width:100%; justify-content:space-between; border-top:2px dashed rgba(120,100,70,.2); padding-top:10px}
   h1.title{font-size:30px !important}
   .login-card{max-width:100%; padding:22px}
@@ -4401,27 +4427,30 @@ function renderLessonList() {
     else if (p.slidesDone || p.videoDone) status = 'เลือกดูสื่อแล้ว · รอทำแบบทดสอบระหว่างบท';
     else if (p.slideSeen > 0) status = 'กำลังเรียนอยู่...';
     else status = 'ยังไม่เริ่มเรียน';
-    return '<div' + (unlocked ? ' onclick="openLesson(' + i + ')"' : ' aria-disabled="true"') +
-      ' class="mission pcard ' + t.card + (unlocked ? '' : ' lesson-locked') + '">' +
+    var actionText = p.quizDone ? '🔁 ทบทวนบทเรียน' : (unlocked ? 'เลือกเมนูย่อย ›' : '🔒 ยังไม่ปลดล็อก');
+    return '<button type="button" class="lesson-submenu-item pcard ' + t.card + '"' +
+      (unlocked ? ' onclick="openLesson(' + i + ')"' : ' disabled') +
+      ' aria-label="บทที่ ' + (i + 1) + ' ' + ls.title + '">' +
       '<div class="tape ' + t.tape + '"></div>' +
-      '<div class="mleft">' +
-        '<div class="mnum">' + (p.quizDone ? '✅' : (unlocked ? t.emoji : '🔒')) + '</div>' +
-        '<div><h4 class="mtitle ink">' + ls.title + '</h4>' +
-        '<p class="msub">' + status + '</p></div>' +
+      '<div class="lesson-submenu-top">' +
+        '<div class="lesson-submenu-number">' + (p.quizDone ? '✅' : (unlocked ? (i + 1) : '🔒')) + '</div>' +
+        '<div><p class="tiny ' + t.deep + '" style="font-weight:700;margin-bottom:2px">บทที่ ' + (i + 1) + '</p>' +
+        '<h4 class="lesson-submenu-title ink">' + ls.title + '</h4>' +
+        '<p class="lesson-submenu-status">' + status + '</p></div>' +
       '</div>' +
-      '<div class="mright">' +
+      '<div class="lesson-submenu-footer">' +
         '<span class="t-orange" style="font-size:18px;font-weight:700">' + lessonStarRow(p.stars) + '</span>' +
-        '<button class="mbtn"' + (unlocked ? '' : ' disabled') + '>' + (p.quizDone ? '🔁 ทบทวน' : (unlocked ? '▶️ เริ่มภารกิจ' : '🔒 ยังไม่ปลดล็อก')) + '</button>' +
+        '<span class="lesson-submenu-action">' + actionText + '</span>' +
       '</div>' +
-    '</div>';
+    '</button>';
   }).join('');
 
   appEl.innerHTML =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="header-section-icon" src="./lesson-content-icon.png" alt="บทเรียนและเนื้อหา">' +
-        '<div><h2 class="ink" style="font-size:21px;font-weight:700">ห้องเรียนผู้พิทักษ์</h2>' +
-        '<p class="soft tiny">แต่ละบทคือ 1 ภารกิจจำลอง · ผ่านคะแนนระหว่างบท 80% เพื่อรับ 1 ดาว</p></div>' +
+        '<div><h2 class="ink" style="font-size:21px;font-weight:700">บทเรียนและเนื้อหา</h2>' +
+        '<p class="soft tiny">เลือกบทเรียน แล้วเลือกเมนูย่อยภายในแต่ละบท</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div class="scorebox"><div class="t-orange" style="font-size:20px;font-weight:700">⭐ ' + totalStars() + '/' + maxStars() + '</div><p class="soft tiny">ดาวสะสม</p></div>' +
@@ -4432,7 +4461,8 @@ function renderLessonList() {
       '<div class="pcard yellow" style="margin-bottom:6px">' +
         '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย จากนั้นทำภารกิจจำลอง เลือกดูสื่ออย่างน้อย 1 รูปแบบ และทำแบบทดสอบระหว่างบทให้ผ่าน 80% เพื่อรับดาว ภายหลังเรียนครบจึงทำแบบทดสอบหลังเรียนรวม</p>' +
       '</div>' +
-      '<div style="padding:4px 8px 4px 4px">' + listHtml + '</div>' +
+      '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>กดเลือกบทที่ต้องการเพื่อเปิดเมนูย่อย</p></div><span class="chip">ปลดล็อกทีละบท</span></div>' +
+      '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
     '</div>';
 }
 
@@ -4497,12 +4527,15 @@ function lessonMissionHtml(ls, t) {
 }
 function lessonTabBar(p) {
   var quizUnlocked = p.videoDone || p.slidesDone;
-  return '<div class="tabbar">' +
+  return '<div class="lesson-inner-menu">' +
+    '<p class="lesson-inner-menu-label"><span>☰</span>เลือกเมนูย่อยในบทนี้</p>' +
+    '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
     '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">ภารกิจจำลอง</button>' +
     '<button class="tab ' + (state.lessonTab === 'slides' ? 'active' : (p.slidesDone ? 'done' : '')) + '" onclick="setTab(\'slides\')">🖼️ สไลด์/อินโฟกราฟิก ' + (p.slidesDone ? '✅' : '') + '</button>' +
     '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : (p.videoDone ? 'done' : '')) + '" onclick="setTab(\'video\')">🎬 คลิปสั้น ' + (p.videoDone ? '✅' : '') + '</button>' +
     (state.currentLesson === 1 ? '<button class="tab ' + (totalPromptStars() > 0 ? 'done' : '') + '" onclick="changeView(\'prompt\')">✍️ ฝึกเขียนพรอมต์ ' + (totalPromptStars() > 0 ? '⭐' + totalPromptStars() : '') + '</button>' : '') +
-    '<button class="tab ' + (state.lessonTab === 'quiz' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (quizUnlocked ? '📝 ระหว่างบท' : '🔒 ระหว่างบท') + (p.quizDone ? ' ' + lessonStarRow(p.stars) : '') + '</button>' +
+    '<button class="tab ' + (state.lessonTab === 'quiz' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท') + (p.quizDone ? ' ' + lessonStarRow(p.stars) : '') + '</button>' +
+    '</div>' +
   '</div>';
 }
 function setTab(tab) {
