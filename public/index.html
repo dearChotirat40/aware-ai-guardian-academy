@@ -1645,7 +1645,8 @@ function normalizeLessonProgress(p) {
 }
 
 /* ---------- ระบบบัญชีนักเรียน + บันทึกความคืบหน้า ---------- */
-var SAVE_KEY = 'awareai_academy_v2';
+/* แยกข้อมูลทดสอบออกจากรายชื่อจริงที่เคยบันทึกในเบราว์เซอร์ */
+var SAVE_KEY = 'awareai_academy_test2_v1';
 var db = { students: {} };
 var currentId = null;
 
