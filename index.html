@@ -94,6 +94,9 @@ button:disabled{cursor:not-allowed; opacity:.55}
   display:flex; flex-direction:column; align-items:center; justify-content:center}
 .menucard:hover{transform:translateY(-2px)}
 .menucard .big{font-size:38px; margin-bottom:8px; display:block}
+.menu-card-img{display:block; width:96px; height:96px; margin:0 auto 7px; object-fit:contain;
+  border-radius:16px; background:#fff; box-shadow:0 4px 0 rgba(73,91,126,.16),0 8px 14px rgba(54,73,112,.12)}
+.login-main-icon{border-radius:24px; background:#fff}
 .functionbar{width:100%; max-width:980px; display:grid; grid-template-columns:repeat(auto-fit,minmax(142px,1fr)); gap:10px; margin:0 0 16px}
 .funcbtn{min-height:66px; display:flex; align-items:center; gap:10px; text-align:left;
   padding:10px 12px; background:var(--white); border:1.5px solid #D8D0BF; border-radius:10px; color:var(--ink);
@@ -3261,7 +3264,7 @@ function renderLogin() {
       '</div>' +
       '<div class="tape tape-pink" style="top:20px;left:40px"></div>' +
       '<div class="tape tape-blue right" style="top:20px;right:40px"></div>' +
-      '<img class="app-logo-animated" src="./app-logo-transparent.png" alt="โลโก้การเรียนรู้เท่าทันปัญญาประดิษฐ์">' +
+      '<img class="app-logo-animated login-main-icon" src="./login-icon.png" alt="ไอคอนเข้าสู่ระบบ">' +
       '<h1 class="app-name-login">' +
         '<span class="app-title-main">เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์</span>' +
         '<span class="app-title-sub">เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4</span>' +
@@ -4061,7 +4064,7 @@ function renderAssessmentResult() {
         '<p class="soft small">คิดเป็น ' + pct + '%</p>' +
         '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">' +
           '<button onclick="changeView(\'home\')" class="btn whiteb sm"><img class="home-icon-img" src="./home-button.png" alt=""> กลับหน้าหลัก</button>' +
-          '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูแดชบอร์ด</button>' +
+          '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -4145,8 +4148,8 @@ function renderHome() {
       '<div class="menugrid">' +
         '<div class="pcard pink menucard pop" style="animation-delay:.05s" onclick="changeView(\'lessons\')">' +
           '<div class="tape tape-pink"></div>' +
-          '<span class="big">📚</span>' +
-          '<h3 class="t-pink" style="font-size:20px;font-weight:700;margin-bottom:6px">ห้องเรียน</h3>' +
+          '<img class="menu-card-img" src="./lesson-content-icon.png" alt="บทเรียนและเนื้อหา">' +
+          '<h3 class="t-pink" style="font-size:20px;font-weight:700;margin-bottom:6px">บทเรียนและเนื้อหา</h3>' +
           '<p class="soft small">เริ่มจากสถานการณ์จำลอง แล้วเลือกใช้สไลด์/อินโฟกราฟิกหรือคลิปสั้นช่วยวิเคราะห์ภารกิจ</p>' +
           '<p class="tiny t-pink" style="margin-top:10px;font-weight:700">ทำสำเร็จแล้ว ' + lessonsCompleted() + '/' + lessons.length + ' ภารกิจ</p>' +
         '</div>' +
@@ -4159,8 +4162,8 @@ function renderHome() {
         '</div>' +
         '<div class="pcard mint menucard pop" style="animation-delay:.35s" onclick="changeView(\'dashboard\')">' +
           '<div class="tape tape-mint"></div>' +
-          '<span class="big">📊</span>' +
-          '<h3 class="t-mint" style="font-size:20px;font-weight:700;margin-bottom:6px">แดชบอร์ด</h3>' +
+          '<img class="menu-card-img" src="./progress-icon.png" alt="ความคืบหน้า">' +
+          '<h3 class="t-mint" style="font-size:20px;font-weight:700;margin-bottom:6px">ความคืบหน้า</h3>' +
           '<p class="soft small">ดูความคืบหน้า ดาว แต้ม และตราสัญลักษณ์ทั้งหมด</p>' +
           '<p class="tiny t-mint" style="margin-top:10px;font-weight:700">ความคืบหน้ารวม ' + overallPercent() + '%</p>' +
         '</div>' +
@@ -4536,7 +4539,7 @@ function renderQuizResult() {
         '<button onclick="startQuiz(\'mid\')" class="btn pinkb sm">🔄 ทำระหว่างบทใหม่</button>' +
         '<button onclick="openLesson(' + i + ')" class="btn whiteb sm">📖 ทบทวนบทเรียน</button>' +
         '<button onclick="changeView(\'lessons\')" class="btn blueb sm">🎯 กลับห้องเรียน</button>' +
-        '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูแดชบอร์ด</button>' +
+        '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>' +
       '</div>' +
       mascotHtml(pct >= 80 ? 'เก่งมากเลย!' : 'สู้ ๆ นะ ทบทวนแล้วลองใหม่ได้!') +
     '</div>';
@@ -4566,7 +4569,7 @@ function renderDashboard() {
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:32px">📊</div>' +
-        '<div><h2 class="ink" style="font-size:21px;font-weight:700">แดชบอร์ดความคืบหน้า</h2>' +
+        '<div><h2 class="ink" style="font-size:21px;font-weight:700">ความคืบหน้าของฉัน</h2>' +
         '<p class="soft tiny">สรุปผลการเรียนและการผจญภัยทั้งหมด</p></div>' +
       '</div>' +
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
@@ -4933,7 +4936,7 @@ function renderGameEnd() {
       '</div>' +
       mascotHtml('ขอให้สอบผ่านทุกคนนะ! โชคดีครับ') +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px">' +
-        '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูแดชบอร์ดรวม</button>' +
+        '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้ารวม</button>' +
         '<button onclick="changeView(\'home\')" class="btn whiteb sm"><img class="home-icon-img" src="./home-button.png" alt=""> กลับหน้าหลัก</button>' +
       '</div>' +
     '</div>';
