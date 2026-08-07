@@ -390,9 +390,10 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .prompt-missing:focus{border-color:var(--blue-deep); box-shadow:0 0 0 3px rgba(47,111,149,.15)}
 .prompt-last{margin-top:12px; padding:10px 12px; border-left:3px solid var(--mint-deep); background:rgba(231,243,237,.6);
   color:var(--ink-soft); font-size:13px; line-height:1.7}
-.mission.prompt-locked{cursor:not-allowed;opacity:.58;filter:grayscale(.18)}
-.mission.prompt-locked:hover{transform:none;box-shadow:var(--shadow)}
-.mission.prompt-locked .mbtn{cursor:not-allowed}
+.mission.prompt-locked,.mission.lesson-locked{cursor:not-allowed;opacity:.58;filter:grayscale(.18)}
+.mission.prompt-locked:hover,.mission.lesson-locked:hover{transform:none;box-shadow:var(--shadow)}
+.mission.prompt-locked .mbtn,.mission.lesson-locked .mbtn{cursor:not-allowed}
+.funcbtn:disabled{cursor:not-allowed;opacity:.55;filter:grayscale(.2);transform:none}
 .chip{display:inline-flex; align-items:center; gap:6px; padding:8px 14px; margin:4px;
   background:var(--white); border:2px solid #E3D5B8; border-radius:999px; font-size:15px; font-weight:600; color:var(--ink)}
 .chip:hover{border-color:var(--pink-deep); background:var(--pink); transform:translateY(-2px)}
@@ -3826,6 +3827,10 @@ function renderPromptMenu() {
 function openChallenge(i) {
   i = Number(i);
   if (!PROMPT_CHALLENGES[i]) return;
+  if (!pretestCompleted()) {
+    alert('กรุณาทำแบบทดสอบก่อนเรียนให้เสร็จก่อนเริ่มกิจกรรมฝึกเขียนพรอมต์');
+    return;
+  }
   if (!promptChallengeUnlocked(i)) {
     alert('ระดับนี้ยังล็อกอยู่ กรุณาผ่านระดับ ' + i + ' ก่อน โดยได้อย่างน้อย 1 ดาว');
     return;
@@ -4147,7 +4152,31 @@ function assessmentTitle(mode) {
 function assessmentIcon(mode) {
   return mode === 'pre' ? '🧭' : '🏁';
 }
+function pretestCompleted() {
+  var s = currentStudent();
+  return !!(s && s.assessments && s.assessments.pre && s.assessments.pre.done);
+}
+function lessonUnlocked(index) {
+  if (!pretestCompleted()) return false;
+  for (var i = 0; i < index; i++) {
+    if (!normalizeLessonProgress(lessonProgress[i]).quizDone) return false;
+  }
+  return index >= 0 && index < lessons.length;
+}
+function allLessonsCompleted() {
+  return lessonProgress.length === lessons.length && lessonProgress.every(function(p){
+    return normalizeLessonProgress(p).quizDone;
+  });
+}
+function posttestUnlocked() {
+  return pretestCompleted() && allLessonsCompleted();
+}
 function startAssessment(mode) {
+  mode = mode === 'post' ? 'post' : 'pre';
+  if (mode === 'post' && !posttestUnlocked()) {
+    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาผ่านบทเรียนและรับดาวให้ครบทั้ง ' + lessons.length + ' บทก่อน');
+    return;
+  }
   state.currentAssessment = mode;
   state.assessmentQuiz = { qIndex:0, correct:0, answered:false, picked:null };
   changeView('assessment');
@@ -4225,6 +4254,9 @@ function renderAssessmentResult() {
   var score = a ? a.score : 0;
   var total = a ? a.total : ASSESSMENT_QUESTIONS.length;
   var pct = Math.round(score / total * 100);
+  var nextAction = mode === 'pre'
+    ? '<button onclick="openLesson(0)" class="btn pinkb sm">📚 เริ่มบทที่ 1</button>'
+    : '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>';
   appEl.innerHTML =
     '<div class="center-view" style="position:relative">' +
       '<div class="pcard ' + (pct >= 70 ? 'mint' : 'yellow') + ' pop" style="max-width:560px;width:100%">' +
@@ -4236,7 +4268,7 @@ function renderAssessmentResult() {
         '<p class="soft small">คิดเป็น ' + pct + '%</p>' +
         '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">' +
           '<button onclick="changeView(\'home\')" class="btn whiteb sm"><img class="home-icon-img" src="./home-button.png" alt=""> กลับหน้าหลัก</button>' +
-          '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>' +
+          nextAction +
         '</div>' +
       '</div>' +
     '</div>';
@@ -4272,14 +4304,16 @@ function continuePrompt() {
 }
 function quickFunctionButtons() {
   var stu = currentStudent();
+  var preDone = pretestCompleted();
+  var postReady = posttestUnlocked();
   var done = journeySteps();
   var total = journeyTotal();
   var pct = total ? Math.round((done / total) * 100) : 0;
   var event = journeyEvent(done);
   return '<div class="home-statusbar">' +
     '<div class="functionbar assessment-actions">' +
-      '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">01</span><span><b>ก่อนเรียน</b><span>' + assessmentLabel(stu, 'pre') + '</span></span></button>' +
-      '<button class="funcbtn" onclick="startAssessment(\'post\')"><span class="fi">02</span><span><b>หลังเรียน</b><span>' + assessmentLabel(stu, 'post') + '</span></span></button>' +
+      '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">' + (preDone ? '✓' : '01') + '</span><span><b>ก่อนเรียน</b><span>' + (preDone ? assessmentLabel(stu, 'pre') + ' · ทำแล้ว' : 'ต้องทำก่อนเริ่มบทที่ 1') + '</span></span></button>' +
+      '<button class="funcbtn" onclick="startAssessment(\'post\')"' + (postReady ? '' : ' disabled') + '><span class="fi">' + (postReady ? '02' : '🔒') + '</span><span><b>หลังเรียน</b><span>' + (postReady ? (assessmentLabel(stu, 'post') === '-' ? 'พร้อมทำเมื่อมั่นใจ' : assessmentLabel(stu, 'post')) : 'ปลดล็อกเมื่อได้ดาวครบ ' + lessons.length + ' บท') + '</span></span></button>' +
     '</div>' +
     '<button class="success-strip" onclick="changeView(\'journey\')" aria-label="ดูความสำเร็จและการเดินทาง">' +
       '<span class="success-head"><b>ความสำเร็จในการเดินทาง</b><span>' + done + '/' + total + ' ภารกิจ · ' + pct + '%</span></span>' +
@@ -4315,7 +4349,7 @@ function renderHome() {
       '<div class="tape tape-blue right" style="top:20px;right:40px"></div>' +
       '<img class="avimg float" style="width:92px;height:92px;border-width:3px;margin-bottom:6px;box-shadow:0 5px 0 rgba(120,100,70,.15)" src="' + avatarSrc(stu) + '" alt="โปรไฟล์">' +
       '<h1 class="title ink" style="font-size:34px;font-weight:700;margin-bottom:6px">สวัสดี ' + stuName + '</h1>' +
-      '<p class="soft" style="margin-bottom:14px">เลือกกิจกรรมการเรียนรู้ที่ต้องการ</p>' +
+      '<p class="soft" style="margin-bottom:14px">' + (pretestCompleted() ? 'เรียนทีละบท เก็บดาวให้ครบ แล้วค่อยทำแบบทดสอบหลังเรียนเมื่อมั่นใจ' : 'เริ่มด้วยแบบทดสอบก่อนเรียน เพื่อปลดล็อกบทที่ 1') + '</p>' +
       quickFunctionButtons() +
       '<div class="menugrid">' +
         '<div class="pcard pink menucard pop" style="animation-delay:.05s" onclick="changeView(\'lessons\')">' +
@@ -4361,22 +4395,26 @@ function renderLessonList() {
   var listHtml = lessons.map(function(ls, i) {
     var t = themeList[i % themeList.length];
     var p = lessonProgress[i];
+    var unlocked = p.quizDone || lessonUnlocked(i);
     var status;
     if (p.quizDone) status = lessonStarRow(p.stars) + ' · ผ่านคะแนนระหว่างบทแล้ว';
+    else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
+    else if (!unlocked) status = '🔒 ผ่านบทที่ ' + i + ' และรับดาวก่อน';
     else if (p.postScore) status = 'ระหว่างบท ' + lessonAssessmentLabel(p, 'post') + ' · ยังไม่ถึง 80%';
     else if (p.slidesDone || p.videoDone) status = 'เลือกดูสื่อแล้ว · รอทำแบบทดสอบระหว่างบท';
     else if (p.slideSeen > 0) status = 'กำลังเรียนอยู่...';
     else status = 'ยังไม่เริ่มเรียน';
-    return '<div onclick="openLesson(' + i + ')" class="mission pcard ' + t.card + '">' +
+    return '<div' + (unlocked ? ' onclick="openLesson(' + i + ')"' : ' aria-disabled="true"') +
+      ' class="mission pcard ' + t.card + (unlocked ? '' : ' lesson-locked') + '">' +
       '<div class="tape ' + t.tape + '"></div>' +
       '<div class="mleft">' +
-        '<div class="mnum">' + (p.quizDone ? '✅' : t.emoji) + '</div>' +
+        '<div class="mnum">' + (p.quizDone ? '✅' : (unlocked ? t.emoji : '🔒')) + '</div>' +
         '<div><h4 class="mtitle ink">' + ls.title + '</h4>' +
         '<p class="msub">' + status + '</p></div>' +
       '</div>' +
       '<div class="mright">' +
         '<span class="t-orange" style="font-size:18px;font-weight:700">' + lessonStarRow(p.stars) + '</span>' +
-        '<button class="mbtn">' + (p.quizDone ? '🔁 ทบทวน' : '▶️ เริ่มภารกิจ') + '</button>' +
+        '<button class="mbtn"' + (unlocked ? '' : ' disabled') + '>' + (p.quizDone ? '🔁 ทบทวน' : (unlocked ? '▶️ เริ่มภารกิจ' : '🔒 ยังไม่ปลดล็อก')) + '</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -4402,6 +4440,14 @@ function renderLessonList() {
 }
 
 function openLesson(i) {
+  i = Number(i);
+  if (!lessons[i]) return;
+  var p = normalizeLessonProgress(lessonProgress[i]);
+  if (!p.quizDone && !lessonUnlocked(i)) {
+    if (!pretestCompleted()) alert('กรุณาทำแบบทดสอบก่อนเรียนให้เสร็จก่อนเริ่มบทที่ 1');
+    else alert('บทนี้ยังไม่ปลดล็อก กรุณาผ่านบทที่ ' + i + ' และรับดาวก่อน');
+    return;
+  }
   state.currentLesson = i;
   state.lessonTab = 'mission';
   state.slideIdx = 0;
@@ -4694,6 +4740,12 @@ function renderQuizResult() {
   if (pct >= 80) { face = '🏆'; msg = 'ผ่านเกณฑ์ 80% แล้ว จบบทนี้สำเร็จ!'; }
   else if (got >= 1) { face = '💪'; msg = 'ยังไม่ถึง 80% กลับไปทบทวนเนื้อหาแล้วทำแบบทดสอบระหว่างบทใหม่ได้ตลอดนะ'; }
   else { face = '🌱'; msg = 'ยังไม่ผ่านเกณฑ์ ทบทวนเนื้อหาอีกครั้ง แล้วลองทำแบบทดสอบระหว่างบทใหม่ได้'; }
+  var nextStepButton = '';
+  if (pct >= 80 && i < lessons.length - 1) {
+    nextStepButton = '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>';
+  } else if (pct >= 80 && i === lessons.length - 1) {
+    nextStepButton = '<button onclick="startAssessment(\'post\')" class="btn mintb sm">🏁 พร้อมแล้ว ทำแบบทดสอบหลังเรียน</button>';
+  }
 
   appEl.innerHTML =
     '<div class="fb-hdr ' + (pct >= 80 ? 'good' : 'bad') + '">' +
@@ -4707,6 +4759,7 @@ function renderQuizResult() {
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(กติกา: 1 เนื้อหา = 1 ภารกิจ ผ่านคะแนนระหว่างบทแล้วได้ 1 ดาว)</p>' +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
+        nextStepButton +
         '<button onclick="startQuiz(\'mid\')" class="btn pinkb sm">🔄 ทำระหว่างบทใหม่</button>' +
         '<button onclick="openLesson(' + i + ')" class="btn whiteb sm">📖 ทบทวนบทเรียน</button>' +
         '<button onclick="changeView(\'lessons\')" class="btn blueb sm">🎯 กลับห้องเรียน</button>' +
@@ -4718,6 +4771,7 @@ function renderQuizResult() {
 
 /* ==================== แดชบอร์ด ==================== */
 function renderDashboard() {
+  var postReady = posttestUnlocked();
   var lessonRows = lessons.map(function(ls, i) {
     var t = themeList[i % themeList.length];
     var p = lessonProgress[i];
@@ -4780,7 +4834,7 @@ function renderDashboard() {
         '<div class="dash-right">' +
           '<div class="center" style="display:flex;flex-direction:column;gap:10px">' +
             '<button onclick="startAssessment(\'pre\')" class="btn whiteb sm" style="width:100%">🧭 ทำแบบทดสอบก่อนเรียน</button>' +
-            '<button onclick="startAssessment(\'post\')" class="btn whiteb sm" style="width:100%">🏁 ทำแบบทดสอบหลังเรียน</button>' +
+            '<button onclick="startAssessment(\'post\')" class="btn whiteb sm" style="width:100%"' + (postReady ? '' : ' disabled') + '>' + (postReady ? '🏁 ทำแบบทดสอบหลังเรียน' : '🔒 หลังเรียน · ผ่านให้ครบ ' + lessons.length + ' บทก่อน') + '</button>' +
             '<button onclick="changeView(\'leaderboard\')" class="btn sm" style="width:100%;background:var(--orange)">🏆 ดูอันดับห้อง (LIVE)</button>' +
             '<button onclick="changeView(\'journey\')" class="btn blueb sm" style="width:100%">🗺️ การเดินทางในเมือง AI</button>' +
             '<button onclick="changeView(\'lessons\')" class="btn pinkb sm" style="width:100%">🎯 ไปห้องเรียน</button>' +
@@ -4967,6 +5021,10 @@ function renderGameMap() {
 }
 
 function startScenario(index) {
+  if (!pretestCompleted()) {
+    alert('กรุณาทำแบบทดสอบก่อนเรียนให้เสร็จก่อนเริ่มภารกิจผจญภัย');
+    return;
+  }
   state.currentScenarioIndex = index;
   resetHint(12);
   changeView('scenario');
