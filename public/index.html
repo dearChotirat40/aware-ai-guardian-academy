@@ -4356,22 +4356,19 @@ function renderHome() {
           '<div class="tape tape-pink"></div>' +
           '<img class="menu-card-img" src="./lesson-content-icon.png" alt="บทเรียนและเนื้อหา">' +
           '<h3 class="t-pink" style="font-size:20px;font-weight:700;margin-bottom:6px">บทเรียนและเนื้อหา</h3>' +
-          '<p class="soft small">เริ่มจากสถานการณ์จำลอง แล้วเลือกใช้สไลด์/อินโฟกราฟิกหรือคลิปสั้นช่วยวิเคราะห์ภารกิจ</p>' +
-          '<p class="tiny t-pink" style="margin-top:10px;font-weight:700">ทำสำเร็จแล้ว ' + lessonsCompleted() + '/' + lessons.length + ' ภารกิจ</p>' +
+          '<p class="small t-pink" style="margin-top:10px;font-weight:700">บทเรียนที่ผ่าน ' + lessonsCompleted() + '/' + lessons.length + '</p>' +
         '</div>' +
         '<div class="pcard blue menucard pop" style="animation-delay:.15s" onclick="changeView(\'tutorial\')">' +
           '<div class="tape tape-blue"></div>' +
           '<img class="menu-card-img" src="./mission-badge.png" alt="ภารกิจผจญภัย">' +
           '<h3 class="t-blue" style="font-size:20px;font-weight:700;margin-bottom:6px">ภารกิจผจญภัย</h3>' +
-          '<p class="soft small">เกมจำลองสถานการณ์ 4 ด่าน เก็บแต้มและตราสัญลักษณ์</p>' +
-          '<p class="tiny t-blue" style="margin-top:10px;font-weight:700">ผ่านแล้ว ' + Math.min(state.unlockedLevel, scenarios.length) + '/' + scenarios.length + ' ด่าน</p>' +
+          '<p class="small t-blue" style="margin-top:10px;font-weight:700">ภารกิจที่ผ่าน ' + Math.min(state.unlockedLevel, scenarios.length) + '/' + scenarios.length + '</p>' +
         '</div>' +
         '<div class="pcard mint menucard pop" style="animation-delay:.35s" onclick="changeView(\'dashboard\')">' +
           '<div class="tape tape-mint"></div>' +
           '<img class="menu-card-img" src="./progress-icon.png" alt="ความคืบหน้า">' +
           '<h3 class="t-mint" style="font-size:20px;font-weight:700;margin-bottom:6px">ความคืบหน้า</h3>' +
-          '<p class="soft small">ดูความคืบหน้า ดาว แต้ม และตราสัญลักษณ์ทั้งหมด</p>' +
-          '<p class="tiny t-mint" style="margin-top:10px;font-weight:700">ความคืบหน้ารวม ' + overallPercent() + '%</p>' +
+          '<p class="small t-mint" style="margin-top:10px;font-weight:700">ทำแล้ว ' + overallPercent() + '%</p>' +
         '</div>' +
       '</div>' +
       mascotHtml('<span class="mascot-mini">✨</span>ตั้งใจเรียนนะ เดี๋ยวดาวเต็มฟ้าเลย!', '') +
