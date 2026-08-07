@@ -27,8 +27,8 @@ begin
 
   select id, data
     into v_old_id, v_data
-  from public.students
-  where user_id = auth.uid()
+  from public.students s
+  where public.owns_student(s.id)
     and coalesce(data->>'code', '') = v_current_code
   limit 1;
 
@@ -56,8 +56,7 @@ begin
   set id = v_new_id,
       data = v_data,
       updated_at = (extract(epoch from now()) * 1000)::bigint
-  where id = v_old_id
-    and user_id = auth.uid();
+  where id = v_old_id;
 
   update public.app_settings
   set data = jsonb_set(
@@ -76,7 +75,7 @@ begin
         true
       ),
       updated_at = (extract(epoch from now()) * 1000)::bigint
-  where id = 'roster';
+  where id in ('roster', 'test_roster');
 
   return jsonb_build_object('id', v_new_id, 'data', v_data);
 end;

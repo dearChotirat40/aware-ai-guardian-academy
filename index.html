@@ -1870,7 +1870,7 @@ function doLogin() {
     saveDB();
     saveProgress();
     changeView('home');
-  }).catch(function(){ alert('รหัสผ่านไม่ถูกต้อง หรือรหัสนี้ถูกผูกกับอุปกรณ์อื่นแล้ว กรุณาติดต่อคุณครู'); });
+  }).catch(function(){ alert('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสหรือติดต่อคุณครู'); });
 }
 function quickLogin(id) {
   if (!db.students[id]) return;
