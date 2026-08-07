@@ -1249,7 +1249,7 @@ var APPS_SCRIPT_CODE = [
 "function doPost(e) {",
 "  var d = JSON.parse(e.postData.contents);",
 "  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];",
-"  var headers = ['รหัส','ชื่อแทน','ห้อง','เลขที่','เพศ','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวรวม','บทที่เรียนจบ',",
+"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวรวม','บทที่เรียนจบ',",
 "    'ดาวบทที่ 1','คะแนนระหว่างบทที่ 1',",
 "    'ดาวบทที่ 2','คะแนนระหว่างบทที่ 2',",
 "    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
@@ -1258,7 +1258,7 @@ var APPS_SCRIPT_CODE = [
 "    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','อัปเดตล่าสุด'];",
 "  if (sh.getLastRow() === 0) sh.appendRow(headers);",
 "  else if (sh.getLastColumn() < headers.length) sh.getRange(1, 1, 1, headers.length).setValues([headers]);",
-"  var row = [String(d.code), d.name, d.room, d.num, d.gender, d.gem, d.levelBonus, d.journeyStars, d.stars, d.done,",
+"  var row = [String(d.code), d.nickname, d.num, d.gem, d.levelBonus, d.journeyStars, d.stars, d.done,",
 "    d.l1, d.l1post, d.l2, d.l2post, d.l3, d.l3post, d.l4, d.l4post, d.l5, d.l5post,",
 "    d.pstars, d.pretest, d.posttest, d.score, d.game, d.badges, d.achievements, d.pct, d.last];",
 "  var last = sh.getLastRow();",
@@ -1276,9 +1276,10 @@ var APPS_SCRIPT_CODE = [
 ].join('\n');
 
 /* =====================================================
-   👥 รายชื่อนักเรียน (คุณครูแก้ไข/เพิ่มรายชื่อตรงนี้)
-   - code   = รหัสประจำตัวนักเรียน (ใช้เป็นรหัสผ่านตอนเข้าสู่ระบบ)
-   - gender = 'm' นักเรียนชาย (โปรไฟล์น้องบอทชาย) / 'f' นักเรียนหญิง (โปรไฟล์น้องบอทหญิง)
+   👥 บัญชีนักเรียน
+   - code = เลขประจำตัวนักเรียน (ใช้เป็นรหัสผ่าน)
+   - num  = เลขที่
+   ชื่อเล่นให้นักเรียนตั้งเองเมื่อเข้าสู่ระบบครั้งแรก
 ===================================================== */
 var STUDENT_ROSTER = []; // รายชื่ออยู่ใน Supabase เท่านั้น ไม่เปิดเผยในไฟล์เว็บสาธารณะ
 
@@ -1662,23 +1663,45 @@ var currentId = null;
 
 function defaultRosterCopy() {
   return STUDENT_ROSTER.map(function(r){
-    return { code:String(r.code), name:studentAlias(r), room:r.room || '', num:String(r.num || ''), gender:r.gender === 'f' ? 'f' : 'm' };
+    return sanitizeRosterItem(r);
   });
 }
 function activeRoster() {
   if (!Array.isArray(db.roster)) db.roster = defaultRosterCopy();
+  db.roster = db.roster.map(sanitizeRosterItem).filter(function(r){ return !!r.code; });
   return db.roster;
 }
+function cleanNickname(value) {
+  var nickname = String(value || '').trim().replace(/\s+/g, ' ');
+  return /^[0-9A-Za-zก-๙._ -]{2,20}$/.test(nickname) ? nickname : '';
+}
+function sanitizeRosterItem(r) {
+  r = r || {};
+  return { code:String(r.code || '').trim(), num:String(r.num || '').trim() };
+}
+function sanitizeStudentRecord(s) {
+  if (!s || typeof s !== 'object') s = {};
+  var nickname = cleanNickname(s.nickname);
+  if (nickname) s.nickname = nickname; else delete s.nickname;
+  s.code = String(s.code || '').trim();
+  s.num = String(s.num || '').trim();
+  delete s.name;
+  delete s.room;
+  delete s.gender;
+  delete s.renamed;
+  return s;
+}
+window.sanitizeStudentRecord = sanitizeStudentRecord;
+window.sanitizeRosterItem = sanitizeRosterItem;
 function studentAlias(person) {
   person = person || {};
+  var nickname = cleanNickname(person.nickname);
+  if (nickname) return nickname;
   var num = String(person.num || '').trim();
-  var code = String(person.code || '').trim();
-  var isTest = person._testAccount === true || person.room === 'ห้องทดสอบ' || code === '9001' || code === '9002';
-  if (isTest) {
-    var testNo = num || (code === '9002' ? '2' : '1');
-    return 'ผู้ทดสอบ ' + testNo;
-  }
   return num ? 'นักเรียนเลขที่ ' + num : 'นักเรียน';
+}
+function hasNickname(person) {
+  return !!cleanNickname(person && person.nickname);
 }
 function loadDB() {
   try {
@@ -1687,9 +1710,13 @@ function loadDB() {
   } catch(e) {}
   if (!db || typeof db !== 'object') db = { students:{} };
   if (!db.students || typeof db.students !== 'object') db.students = {};
+  Object.keys(db.students).forEach(function(id){ db.students[id] = sanitizeStudentRecord(db.students[id]); });
+  if (Array.isArray(db.roster)) db.roster = db.roster.map(sanitizeRosterItem).filter(function(r){ return !!r.code; });
   activeRoster();
 }
 function saveDB() {
+  Object.keys(db.students || {}).forEach(function(id){ db.students[id] = sanitizeStudentRecord(db.students[id]); });
+  if (Array.isArray(db.roster)) db.roster = db.roster.map(sanitizeRosterItem).filter(function(r){ return !!r.code; });
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(db)); } catch(e) {}
 }
 
@@ -1740,7 +1767,7 @@ function mergeFirebaseStudents(cloudStudents) {
   if (!cloudStudents || typeof cloudStudents !== 'object') return false;
   var changed = false;
   Object.keys(cloudStudents).forEach(function(id){
-    var remote = cloudStudents[id];
+    var remote = sanitizeStudentRecord(cloudStudents[id]);
     if (!remote || typeof remote !== 'object') return;
     var local = db.students[id];
     if (!local || (remote._updatedAt || 0) > (local._updatedAt || 0)) {
@@ -1804,8 +1831,8 @@ function saveProgress() {
   var s = db.students[currentId];
   if (!s) {
     s = db.students[currentId] = {
-      name: sessionInfo ? sessionInfo.name : '?', room: sessionInfo ? sessionInfo.room : '',
-      num: sessionInfo ? sessionInfo.num : '', gender: sessionInfo ? sessionInfo.gender : 'm',
+      nickname: sessionInfo ? sessionInfo.nickname : '',
+      num: sessionInfo ? sessionInfo.num : '',
       code: sessionInfo ? sessionInfo.code : '', badgeIds: []
     };
   }
@@ -1815,7 +1842,6 @@ function saveProgress() {
   s.badgeIds = state.badges.map(function(b){ return b.id; });
   s.pStars = sessionPStars.slice();
   s.assessments = liveAssessments || s.assessments || newAssessments();
-  if (sessionInfo && sessionInfo.renamed) s.renamed = true;
   s._updatedAt = Date.now();
   s.last = new Date().toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
   saveDB();
@@ -1829,7 +1855,8 @@ function applyStudent(id) {
   if (!s.pStars || s.pStars.length !== PROMPT_CHALLENGES.length) {
     s.pStars = PROMPT_CHALLENGES.map(function(){ return 0; });
   }
-  sessionInfo = { name:studentAlias(s), room:s.room || '', num:s.num || '', gender:s.gender || 'm', code:s.code || '', renamed:false };
+  sanitizeStudentRecord(s);
+  sessionInfo = { nickname:cleanNickname(s.nickname), num:s.num || '', code:s.code || '' };
   sessionPStars = s.pStars.slice();
   s.assessments = s.assessments || newAssessments();
   lessonProgress = (s.lp && s.lp.length === lessons.length) ? s.lp.map(normalizeLessonProgress) : newLessonProgress();
@@ -1860,7 +1887,7 @@ function previewStudent() {
   var r = roster[i];
   img.src = avatarSrc(r);
   img.style.opacity = '1';
-  if (info) info.innerHTML = '<b>' + escChat(studentAlias(r)) + '</b><br>ห้อง ' + escChat(r.room || '-') + ' เลขที่ ' + escChat(r.num || '-');
+  if (info) info.innerHTML = '<b>' + escChat(studentAlias(r)) + '</b><br>เลขที่ ' + escChat(r.num || '-');
 }
 
 function doLogin() {
@@ -1872,14 +1899,13 @@ function doLogin() {
     db.students[row.id] = row.data;
     applyStudent(row.id);
     saveDB();
-    saveProgress();
-    changeView('home');
+    changeView(hasNickname(row.data) ? 'home' : 'nickname');
   }).catch(function(){ alert('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสหรือติดต่อคุณครู'); });
 }
 function quickLogin(id) {
   if (!db.students[id]) return;
   applyStudent(id);
-  changeView('home');
+  changeView(hasNickname(db.students[id]) ? 'home' : 'nickname');
 }
 function logout() {
   saveProgress();
@@ -1895,6 +1921,66 @@ function logout() {
 }
 function currentStudent() {
   return currentId ? db.students[currentId] : null;
+}
+
+function renderNicknameSetup() {
+  var s = currentStudent();
+  if (!s) { changeView('login'); return; }
+  appEl.innerHTML =
+    '<div class="center-view" style="padding:24px">' +
+      '<div class="pcard yellow pop" style="width:100%;max-width:520px;padding:30px">' +
+        '<div class="tape tape-yellow"></div>' +
+        '<div class="center" style="font-size:50px;margin-bottom:8px">🌟</div>' +
+        '<h2 class="ink center" style="font-size:25px;font-weight:700;margin-bottom:8px">ตั้งชื่อเล่นของเรา</h2>' +
+        '<p class="soft center small" style="line-height:1.8;margin-bottom:18px">ตั้งเพียงครั้งแรก ชื่อเล่นนี้จะแสดงในอันดับและกลับมาใช้ได้ทุกเครื่อง<br>ระบบไม่เก็บชื่อจริง</p>' +
+        '<div class="pcard plain" style="padding:12px 16px;margin-bottom:16px"><p class="soft tiny">เลขที่</p><b class="ink">' + escChat(s.num || '-') + '</b></div>' +
+        '<div class="field"><label>ชื่อเล่น *</label><input id="nickname-input" class="inp" maxlength="20" autocomplete="nickname" placeholder="เช่น ดาวน้อย" value="' + escPromptAttr(cleanNickname(s.nickname)) + '" onkeydown="if(event.key===\'Enter\') saveNickname(false)"></div>' +
+        '<p class="soft tiny" style="margin:-4px 0 14px">ใช้ 2–20 ตัวอักษร ห้ามใส่ชื่อ–นามสกุลจริง</p>' +
+        '<button id="nickname-save-button" type="button" onclick="saveNickname(false)" class="btn pinkb" style="width:100%">บันทึกชื่อเล่นและเริ่มเรียน</button>' +
+      '</div>' +
+    '</div>';
+}
+
+function saveNickname(fromSettings) {
+  var s = currentStudent();
+  var input = document.getElementById('nickname-input');
+  var button = document.getElementById('nickname-save-button');
+  var nickname = cleanNickname(input && input.value);
+  if (!nickname) { alert('ชื่อเล่นต้องมี 2–20 ตัว ใช้ภาษาไทย อังกฤษ ตัวเลข เว้นวรรค จุด _ หรือ -'); return; }
+  if (!firebaseBackend || !firebaseBackend.setStudentNickname) { alert('กำลังเชื่อมต่อห้องเรียน กรุณารอสักครู่แล้วลองใหม่'); return; }
+  var previous = cleanNickname(s && s.nickname);
+  s.nickname = nickname;
+  s._updatedAt = Date.now();
+  if (sessionInfo) sessionInfo.nickname = nickname;
+  saveDB();
+  if (firebaseStudentTimer) { clearTimeout(firebaseStudentTimer); firebaseStudentTimer = null; }
+  if (button) { button.disabled = true; button.textContent = 'กำลังบันทึก...'; }
+  firebaseBackend.setStudentNickname(nickname).then(function(result){
+    result = result || {};
+    var newId = result.id || currentId;
+    if (newId !== currentId) {
+      db.students[newId] = s;
+      delete db.students[currentId];
+      currentId = newId;
+    }
+    s.nickname = cleanNickname((result.data || {}).nickname) || nickname;
+    s._updatedAt = Math.max(s._updatedAt || 0, (result.data || {})._updatedAt || 0);
+    applyStudent(currentId);
+    saveDB();
+    if (fromSettings) {
+      alert('บันทึกชื่อเล่นแล้ว ชื่อนี้จะแสดงในอันดับทุกเครื่อง ✅');
+      renderSettings();
+    } else {
+      changeView('home');
+    }
+  }).catch(function(err){
+    console.warn('Save nickname:', err);
+    if (previous) s.nickname = previous; else delete s.nickname;
+    if (sessionInfo) sessionInfo.nickname = previous;
+    saveDB();
+    if (button) { button.disabled = false; button.textContent = fromSettings ? '💾 บันทึกชื่อเล่น' : 'บันทึกชื่อเล่นและเริ่มเรียน'; }
+    alert('บันทึกชื่อเล่นไม่สำเร็จ กรุณาลองอีกครั้ง');
+  });
 }
 
 function getTeacherPin() {
@@ -2034,18 +2120,17 @@ function teacherLessonMissionGuideHtml() {
 function teacherRosterHtml() {
   var roster = activeRoster();
   var editIndex = typeof state.teacherEditingRoster === 'number' ? state.teacherEditingRoster : -1;
-  var editing = editIndex >= 0 && roster[editIndex] ? roster[editIndex] : { name:'', code:'', room:'ม.4/2', num:'', gender:'m' };
+  var editing = editIndex >= 0 && roster[editIndex] ? roster[editIndex] : { code:'', num:'' };
   var rows = roster.map(function(r, index){
-    var hasData = !!db.students['roster_' + r.code];
+    var student = db.students['roster_' + r.code];
+    var hasData = !!student;
     return '<tr>' +
       '<td>' + escChat(r.num || '-') + '</td>' +
-      '<td><b>' + escChat(studentAlias(r)) + '</b><br><span class="soft tiny">' + (hasData ? 'มีข้อมูลการเรียน' : 'ยังไม่เริ่มเรียน') + '</span></td>' +
-      '<td>' + escChat(r.room || '-') + '</td>' +
-      '<td>' + (r.gender === 'f' ? 'หญิง' : 'ชาย') + '</td>' +
+      '<td><b>' + escChat(studentAlias(student || r)) + '</b><br><span class="soft tiny">' + (hasNickname(student) ? 'นักเรียนตั้งชื่อเล่นแล้ว' : (hasData ? 'รอตั้งชื่อเล่นครั้งแรก' : 'ยังไม่เริ่มเรียน')) + '</span></td>' +
       '<td><b>' + escChat(r.code) + '</b></td>' +
       '<td><div class="teacher-row-actions">' +
         '<button type="button" class="iconbtn" title="ดูความคืบหน้ารายบุคคล" onclick="teacherShowRosterDetail(' + index + ')">◉</button>' +
-        '<button type="button" class="iconbtn" title="แก้ไขชื่อและรหัส" onclick="teacherStartEditStudent(' + index + ')">✎</button>' +
+        '<button type="button" class="iconbtn" title="แก้ไขเลขที่และเลขประจำตัว" onclick="teacherStartEditStudent(' + index + ')">✎</button>' +
         '<button type="button" class="iconbtn" title="ลบนักเรียน" onclick="teacherRemoveRosterStudent(' + index + ')">🗑</button>' +
       '</div></td>' +
     '</tr>';
@@ -2053,18 +2138,12 @@ function teacherRosterHtml() {
   return '<section class="pcard plain noprint teacher-manager">' +
     '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
       '<div><h3 class="ink" style="font-weight:700">จัดการนักเรียน</h3>' +
-      '<p class="soft tiny">ใช้ชื่อแทนเพื่อความเป็นส่วนตัว เพิ่มหรือแก้ไขรหัส และดูความคืบหน้ารายบุคคล</p></div>' +
+      '<p class="soft tiny">เก็บเฉพาะเลขที่และเลขประจำตัว ชื่อเล่นให้นักเรียนตั้งเองเมื่อเข้าสู่ระบบครั้งแรก</p></div>' +
       '<span class="prompt-level">' + roster.length + ' คน</span>' +
     '</div>' +
     '<div class="teacher-form-grid">' +
-      '<div class="field"><label>ชื่อแทน</label><input id="tm-name" class="inp" value="' + escPromptAttr(editIndex >= 0 ? studentAlias(editing) : 'กำหนดอัตโนมัติจากเลขที่') + '" readonly></div>' +
-      '<div class="field"><label>รหัสเข้าเรียน *</label><input id="tm-code" class="inp" value="' + escPromptAttr(editing.code) + '" maxlength="20" placeholder="เช่น 10009"></div>' +
-      '<div class="field"><label>ห้อง</label><input id="tm-room" class="inp" value="' + escPromptAttr(editing.room) + '" placeholder="เช่น ม.4/2"></div>' +
       '<div class="field"><label>เลขที่</label><input id="tm-num" class="inp" value="' + escPromptAttr(editing.num) + '" maxlength="6" placeholder="เลขที่"></div>' +
-      '<div class="field"><label>เพศ</label><select id="tm-gender" class="inp">' +
-        '<option value="m"' + (editing.gender !== 'f' ? ' selected' : '') + '>ชาย</option>' +
-        '<option value="f"' + (editing.gender === 'f' ? ' selected' : '') + '>หญิง</option>' +
-      '</select></div>' +
+      '<div class="field"><label>เลขประจำตัวนักเรียน *</label><input id="tm-code" class="inp" value="' + escPromptAttr(editing.code) + '" maxlength="20" placeholder="ใช้เป็นรหัสผ่าน"></div>' +
     '</div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">' +
       '<button type="button" onclick="teacherSaveRosterStudent()" class="btn mintb sm">' + (editIndex >= 0 ? 'บันทึกการแก้ไข' : 'เพิ่มนักเรียน') + '</button>' +
@@ -2076,16 +2155,16 @@ function teacherRosterHtml() {
       '<button type="button" onclick="teacherResetRoster()" class="btn pinkb sm">🗑 ล้างรายชื่อทั้งหมด</button>' +
     '</div>' +
     '<div class="twrap" style="margin-top:10px"><table class="ttable">' +
-      '<tr><th>เลขที่</th><th>ชื่อแทน</th><th>ห้อง</th><th>เพศ</th><th>รหัสเข้าเรียน</th><th>จัดการ</th></tr>' +
-      (rows || '<tr><td colspan="6" class="soft center">ยังไม่มีรายชื่อนักเรียน</td></tr>') +
+      '<tr><th>เลขที่</th><th>ชื่อเล่น</th><th>เลขประจำตัวนักเรียน</th><th>จัดการ</th></tr>' +
+      (rows || '<tr><td colspan="4" class="soft center">ยังไม่มีบัญชีนักเรียน</td></tr>') +
     '</table></div>' +
-    '<p class="soft tiny" style="margin-top:8px">ข้อมูลรายชื่อบันทึกในเบราว์เซอร์เครื่องนี้ หากเปลี่ยนรหัส ระบบจะย้ายความคืบหน้าเดิมไปยังรหัสใหม่ให้</p>' +
+    '<p class="soft tiny" style="margin-top:8px">ข้อมูลบันทึกในฐานข้อมูลกลาง หากเปลี่ยนเลขประจำตัว ระบบจะย้ายคะแนน อันดับ ชื่อเล่น และข้อที่ทำแล้วไปด้วย</p>' +
   '</section>';
 }
 
 function emptyStudentFromRoster(r) {
   return {
-    name:studentAlias(r), room:r.room || '', num:r.num || '', gender:r.gender || 'm', code:r.code,
+    nickname:cleanNickname(r.nickname), num:r.num || '', code:r.code,
     lp:newLessonProgress(), score:0, unlockedLevel:0, badgeIds:[],
     pStars:PROMPT_CHALLENGES.map(function(){ return 0; }), assessments:newAssessments(), last:'-'
   };
@@ -2101,10 +2180,7 @@ function teacherCancelRosterEdit() {
 }
 function teacherSaveRosterStudent() {
   var code = (document.getElementById('tm-code').value || '').trim();
-  var room = (document.getElementById('tm-room').value || '').trim();
   var num = (document.getElementById('tm-num').value || '').trim();
-  var gender = document.getElementById('tm-gender').value === 'f' ? 'f' : 'm';
-  var name = studentAlias({ code:code, room:room, num:num });
   if (!/^[0-9A-Za-zก-๙_-]{3,20}$/.test(code)) {
     alert('รหัสเข้าเรียนต้องมี 3–20 ตัว ใช้ภาษาไทย อังกฤษ ตัวเลข _ หรือ -');
     return;
@@ -2113,7 +2189,7 @@ function teacherSaveRosterStudent() {
   var editIndex = typeof state.teacherEditingRoster === 'number' ? state.teacherEditingRoster : -1;
   var duplicate = roster.some(function(r, i){ return i !== editIndex && String(r.code) === code; });
   if (duplicate) { alert('รหัสนี้มีนักเรียนใช้อยู่แล้ว กรุณาใช้รหัสอื่น'); return; }
-  var updated = { name:name, code:code, room:room, num:num, gender:gender };
+  var updated = { code:code, num:num };
   if (editIndex >= 0 && roster[editIndex]) {
     var old = roster[editIndex];
     var oldId = 'roster_' + old.code;
@@ -2125,8 +2201,9 @@ function teacherSaveRosterStudent() {
     roster[editIndex] = updated;
     if (db.students[oldId]) {
       var existing = db.students[oldId];
-      existing.name = name; existing.code = code; existing.room = room; existing.num = num; existing.gender = gender;
-      existing.renamed = false;
+      existing.code = code;
+      existing.num = num;
+      sanitizeStudentRecord(existing);
       if (oldId !== newId) {
         db.students[newId] = existing;
         delete db.students[oldId];
@@ -2169,7 +2246,9 @@ function teacherResetAllProgress() {
   var ids = [];
   roster.forEach(function(r) {
     var id = 'roster_' + r.code;
+    var nickname = cleanNickname(db.students[id] && db.students[id].nickname);
     var fresh = emptyStudentFromRoster(r);
+    if (nickname) fresh.nickname = nickname;
     fresh._updatedAt = Date.now();
     db.students[id] = fresh;
     ids.push(id);
@@ -2245,7 +2324,7 @@ function teacherStudentDetailHtml() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="avimg" style="width:64px;height:64px" src="' + avatarSrc(s) + '" alt="">' +
         '<div><h3 class="ink" style="font-weight:700">' + escChat(studentAlias(s)) + '</h3>' +
-        '<p class="soft tiny">ห้อง ' + escChat(s.room || '-') + ' · เลขที่ ' + escChat(s.num || '-') + ' · รหัส ' + escChat(s.code || '-') + '</p></div>' +
+        '<p class="soft tiny">เลขที่ ' + escChat(s.num || '-') + ' · เลขประจำตัว ' + escChat(s.code || '-') + '</p></div>' +
       '</div>' +
       '<div class="teacher-row-actions">' +
         (rosterItem ? '<button type="button" class="iconbtn" title="แก้ไขนักเรียน" onclick="teacherEditDetailStudent()">✎</button>' : '') +
@@ -2313,7 +2392,7 @@ function buildReportCode() {
   var s = currentStudent();
   if (!s) return '';
   var payload = {
-    c: s.code || '', n: studentAlias(s), r: s.room || '', u: s.num || '', g: s.gender || 'm',
+    c: s.code || '', k: cleanNickname(s.nickname), u: s.num || '',
     lp: (s.lp || []).map(function(p){ p = normalizeLessonProgress(p); return [p.stars || 0, p.videoDone ? 1 : 0, p.slidesDone ? 1 : 0, p.quizDone ? 1 : 0, p.preDone ? 1 : 0, p.preScore || 0, p.postScore || 0]; }),
     sc: s.score || 0, ul: s.unlockedLevel || 0, b: s.badgeIds || [], p: s.pStars || [], a: s.assessments || newAssessments(),
     t: new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })
@@ -2329,19 +2408,19 @@ function decodeReportCode(code) {
     if (code.indexOf('AW1.') !== 0) return null;
     var json = decodeURIComponent(escape(atob(code.slice(4))));
     var d = JSON.parse(json);
-    if (!d || !d.n) return null;
+    if (!d || (!d.c && !d.u)) return null;
     return d;
   } catch(e) { return null; }
 }
 
 function mergeStudentReport(d) {
-  var id = 'roster_' + (d.c || d.n);
+  var id = 'roster_' + (d.c || d.u);
   var lp = lessons.map(function(_, i) {
     var a = (d.lp && d.lp[i]) || [0,0,0,0];
     return normalizeLessonProgress({ stars: a[0] || 0, videoDone: !!a[1], slidesDone: !!a[2], quizDone: !!a[3], preDone: !!a[4], preScore: a[5] || 0, postScore: a[6] || a[0] || 0, slideSeen: 0 });
   });
   var pStars = PROMPT_CHALLENGES.map(function(_, i){ return (d.p && d.p[i]) || 0; });
-  var incoming = { name:d.n, room:d.r || '', num:d.u || '', gender:d.g || 'm', code:d.c || '',
+  var incoming = { nickname:cleanNickname(d.k), num:d.u || '', code:d.c || '',
     lp:lp, score:d.sc || 0, unlockedLevel:d.ul || 0, badgeIds:d.b || [], pStars:pStars, assessments:d.a || newAssessments(), last:(d.t || '-') + ' 📥' };
   var ex = db.students[id];
   if (!ex) { db.students[id] = incoming; return true; }
@@ -2372,8 +2451,10 @@ function mergeStudentReport(d) {
   ex.unlockedLevel = Math.max(ex.unlockedLevel || 0, incoming.unlockedLevel);
   incoming.badgeIds.forEach(function(bid){ if (ex.badgeIds.indexOf(bid) === -1) ex.badgeIds.push(bid); });
   ex.last = incoming.last;
-  ex.name = incoming.name; ex.room = incoming.room; ex.num = incoming.num; ex.gender = incoming.gender;
+  if (incoming.nickname) ex.nickname = incoming.nickname;
+  ex.num = incoming.num;
   if (incoming.code) ex.code = incoming.code;
+  sanitizeStudentRecord(ex);
   return true;
 }
 
@@ -2440,8 +2521,7 @@ function sheetPayload() {
   var journeyStars = studentJourneyStars(s);
   var gem = gemLevelForStars(journeyStars);
   return {
-    code: s.code || (s.num || '') + '_' + studentAlias(s), name: studentAlias(s), room: s.room || '-', num: s.num || '-',
-    gender: s.gender === 'f' ? 'หญิง' : 'ชาย',
+    code: s.code || '', nickname: cleanNickname(s.nickname) || studentAlias(s), num: s.num || '-',
     gem: gem.name, levelBonus: gem.bonus, journeyStars: journeyStars,
     stars: st.stars, done: st.done,
     l1: (lp[0] && lp[0].stars) || 0, l2: (lp[1] && lp[1].stars) || 0,
@@ -2576,7 +2656,7 @@ try {
 var stripTimer = null;
 
 function shouldShowStrip() {
-  return !!currentId && ['login','teacher','leaderboard'].indexOf(state.view) === -1;
+  return !!currentId && ['login','nickname','teacher','leaderboard'].indexOf(state.view) === -1;
 }
 
 function rankStripHtml() {
@@ -2614,6 +2694,7 @@ function render() {
   setTimeout(function(){ appEl.classList.remove('fadein'); }, 450);
   switch (state.view) {
     case 'login': renderLogin(); break;
+    case 'nickname': renderNicknameSetup(); break;
     case 'teacher': renderTeacher(); break;
     case 'home': renderHome(); break;
     case 'lessons': renderLessonList(); break;
@@ -2645,6 +2726,10 @@ function render() {
   }
 }
 function changeView(v) {
+  if (currentId && currentStudent() && !hasNickname(currentStudent()) &&
+      ['login','nickname','teacher'].indexOf(v) === -1) {
+    v = 'nickname';
+  }
   state.view = v;
   if (v === 'leaderboard') startLbTimer(); else stopLbTimer();
   render();
@@ -2912,12 +2997,14 @@ function renderSettings() {
         '<div class="pcard yellow center" style="margin-bottom:18px">' +
           '<div class="tape tape-yellow"></div>' +
           '<img class="avimg" style="width:110px;height:110px;border-width:3px;margin-bottom:8px" src="' + avatarSrc(s) + '" alt="โปรไฟล์">' +
-          '<p class="ink" style="font-weight:700;font-size:20px">' + studentAlias(s) + '</p>' +
-          '<p class="soft small">ห้อง ' + (s.room || '-') + ' · เลขที่ ' + (s.num || '-') + '</p>' +
+          '<p class="ink" style="font-weight:700;font-size:20px">' + escChat(studentAlias(s)) + '</p>' +
+          '<p class="soft small">เลขที่ ' + escChat(s.num || '-') + '</p>' +
         '</div>' +
         '<div class="pcard plain" style="margin-bottom:18px">' +
-          '<h3 class="ink" style="font-weight:700;margin-bottom:10px">🛡️ ชื่อแทนเพื่อความเป็นส่วนตัว</h3>' +
-          '<p class="soft small">ระบบไม่ใช้ชื่อจริงของนักเรียน หน้าเรียน อันดับ และรายงานจะแสดงเฉพาะชื่อแทนหรือเลขที่เท่านั้น</p>' +
+          '<h3 class="ink" style="font-weight:700;margin-bottom:10px">🛡️ ชื่อเล่นเพื่อความเป็นส่วนตัว</h3>' +
+          '<p class="soft small" style="margin-bottom:12px">ระบบไม่เก็บชื่อจริง หน้าเรียน อันดับ และรายงานจะแสดงชื่อเล่นนี้</p>' +
+          '<div class="field"><label>ชื่อเล่น</label><input id="nickname-input" class="inp" maxlength="20" value="' + escPromptAttr(cleanNickname(s.nickname)) + '" onkeydown="if(event.key===\'Enter\') saveNickname(true)"></div>' +
+          '<button id="nickname-save-button" type="button" onclick="saveNickname(true)" class="btn mintb sm" style="width:100%">💾 บันทึกชื่อเล่น</button>' +
         '</div>' +
         '<div class="pcard blue" style="margin-bottom:18px">' +
           '<h3 class="ink" style="font-weight:700;margin-bottom:10px">🔑 เปลี่ยนรหัสผ่าน</h3>' +
@@ -2937,7 +3024,7 @@ function renderSettings() {
 }
 
 function changeName() {
-  alert('ระบบกำหนดชื่อแทนอัตโนมัติเพื่อความเป็นส่วนตัวของนักเรียน');
+  saveNickname(true);
 }
 
 function changeStudentPassword() {
@@ -2962,12 +3049,12 @@ function changeStudentPassword() {
     var newId = result.id || ('roster_' + newCode);
     var updated = result.data || s;
     updated.code = newCode;
-    updated.name = studentAlias(updated);
+    sanitizeStudentRecord(updated);
     updated._updatedAt = updated._updatedAt || Date.now();
     delete db.students[oldId];
     db.students[newId] = updated;
     currentId = newId;
-    if (sessionInfo) { sessionInfo.code = newCode; sessionInfo.name = studentAlias(updated); }
+    if (sessionInfo) { sessionInfo.code = newCode; sessionInfo.nickname = cleanNickname(updated.nickname); }
     saveDB();
     alert('เปลี่ยนรหัสผ่านเรียบร้อย กรุณาใช้รหัสใหม่ในการเข้าสู่ระบบครั้งถัดไป ✅');
     renderSettings();
@@ -3214,7 +3301,7 @@ function renderLeaderboard() {
           '<span class="medal">' + medals[i] + '</span>' +
           '<img class="avimg" src="' + avatarSrc(r.s) + '" alt="">' +
           '<p class="ink" style="font-weight:700;font-size:16px;line-height:1.4">' + studentAlias(r.s) + (isMe ? ' 👈' : '') + '</p>' +
-          '<p class="soft tiny">ห้อง ' + (r.s.room || '-') + '</p>' +
+          '<p class="soft tiny">เลขที่ ' + (r.s.num || '-') + '</p>' +
           '<p class="t-orange" style="font-weight:700;font-size:20px;margin-top:6px">' + r.pts + ' คะแนน</p>' +
           '<p class="soft tiny">' + gemShapeHtml(r.gem, 'mini') + ' ' + r.gem.name + ' · ⭐' + studentJourneyStars(r.s) + '</p>' +
         '</div>';
@@ -3412,7 +3499,7 @@ function renderTeacher() {
     return '<tr>' +
       '<td><div style="display:flex;align-items:center;gap:8px">' +
         '<img class="avimg" style="width:46px;height:46px;flex-shrink:0" src="' + avatarSrc(s) + '" alt="">' +
-        '<div><b>' + escChat(studentAlias(s)) + '</b><br><span class="soft tiny">ห้อง ' + escChat(s.room || '-') + ' เลขที่ ' + escChat(s.num || '-') + (s.code ? ' · รหัส ' + escChat(s.code) : '') + '</span></div>' +
+        '<div><b>' + escChat(studentAlias(s)) + '</b><br><span class="soft tiny">เลขที่ ' + escChat(s.num || '-') + (s.code ? ' · เลขประจำตัว ' + escChat(s.code) : '') + '</span></div>' +
       '</div></td>' +
       '<td class="t-orange" style="font-weight:700">' + gemShapeHtml(gem, 'mini') + ' ' + gem.name + '<br><span class="soft tiny">⭐ ' + studentJourneyStars(s) + '/' + journeyTotal() + ' · โบนัส +' + gem.bonus + '</span></td>' +
       '<td style="line-height:1.9">' + (perLesson || '-') + '</td>' +
@@ -3501,7 +3588,11 @@ function delStudent(id) {
   if (!confirm('ล้างข้อมูลความคืบหน้าของ “' + studentAlias(s) + '”? รายชื่อและรหัสเข้าเรียนจะยังคงอยู่')) return;
   delete db.students[id];
   var rosterItem = activeRoster().find(function(r){ return 'roster_' + r.code === id; });
-  if (rosterItem) db.students[id] = emptyStudentFromRoster(rosterItem);
+  if (rosterItem) {
+    var fresh = emptyStudentFromRoster(rosterItem);
+    if (hasNickname(s)) fresh.nickname = cleanNickname(s.nickname);
+    db.students[id] = fresh;
+  }
   if (state.teacherDetailId === id) state.teacherDetailId = null;
   saveDB();
   if (rosterItem) scheduleFirebaseStudentSync(id);
@@ -3510,7 +3601,7 @@ function delStudent(id) {
 }
 
 function exportCSV() {
-  var head = ['ชื่อแทน','ห้อง','เลขที่','เพศ','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','ดาวบทเรียน (เต็ม ' + maxStars() + ')','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
+  var head = ['ชื่อเล่น','เลขที่','เลขประจำตัวนักเรียน','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','ดาวบทเรียน (เต็ม ' + maxStars() + ')','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
   lessons.forEach(function(ls, i){
     head.push('ดาวบทที่ ' + (i + 1) + ' (' + ls.short + ')');
     head.push('คะแนนระหว่างบทที่ ' + (i + 1));
@@ -3522,8 +3613,7 @@ function exportCSV() {
     var st = studentStats(s);
     var journeyStars = studentJourneyStars(s);
     var gem = gemLevelForStars(journeyStars);
-    var gtxt = s.gender === 'f' ? 'หญิง' : (s.gender === 'm' ? 'ชาย' : '-');
-    var row = [studentAlias(s), s.room || '-', s.num || '-', gtxt, gem.name, gem.bonus, journeyStars, st.stars, st.done];
+    var row = [studentAlias(s), s.num || '-', s.code || '-', gem.name, gem.bonus, journeyStars, st.stars, st.done];
     lessons.forEach(function(_, i){
       var p = (s.lp && s.lp[i]) ? normalizeLessonProgress(s.lp[i]) : normalizeLessonProgress();
       row.push(p.stars || 0);
@@ -3548,9 +3638,9 @@ function exportCSV() {
 }
 
 function exportRosterCSV() {
-  var rows = [['เลขที่','ชื่อแทน','ห้อง','เพศ','เลขประจำตัวนักเรียน']];
+  var rows = [['เลขที่','เลขประจำตัวนักเรียน']];
   activeRoster().forEach(function(r){
-    rows.push([r.num, studentAlias(r), r.room, r.gender === 'f' ? 'หญิง' : 'ชาย', r.code]);
+    rows.push([r.num, r.code]);
   });
   var csv = rows.map(function(row){
     return row.map(function(v){
@@ -3608,9 +3698,7 @@ function importRosterCSV(input) {
         return -1;
       }
       var codeCol = column(['เลขประจำตัวนักเรียน','รหัสประจำตัวนักเรียน','รหัสเข้าเรียน','รหัสผ่าน','studentid','id','code']);
-      var roomCol = column(['ห้อง','ชั้น','room','class']);
       var numCol = column(['เลขที่','number','no']);
-      var genderCol = column(['เพศ','gender','sex']);
       if (codeCol < 0) throw new Error('ต้องมีคอลัมน์ “เลขประจำตัวนักเรียน”');
 
       var roster = activeRoster();
@@ -3621,15 +3709,10 @@ function importRosterCSV(input) {
           skipped.push(rowIndex + 2);
           return;
         }
-        var genderText = genderCol >= 0 ? String(cols[genderCol] || '').trim().toLowerCase() : '';
-        var room = roomCol >= 0 ? String(cols[roomCol] || '').trim() : '';
         var num = numCol >= 0 ? String(cols[numCol] || '').trim() : '';
         var item = {
-          name: studentAlias({ code:code, room:room, num:num }),
           code: code,
-          room: room,
-          num: num,
-          gender: /^(f|female|หญิง)$/.test(genderText) ? 'f' : 'm'
+          num: num
         };
         var existingIndex = roster.findIndex(function(r){ return String(r.code) === code; });
         if (existingIndex >= 0) roster[existingIndex] = item;
@@ -3637,11 +3720,9 @@ function importRosterCSV(input) {
         var id = 'roster_' + code;
         if (!db.students[id]) db.students[id] = emptyStudentFromRoster(item);
         else {
-          db.students[id].name = item.name;
           db.students[id].code = item.code;
-          db.students[id].room = item.room;
           db.students[id].num = item.num;
-          db.students[id].gender = item.gender;
+          sanitizeStudentRecord(db.students[id]);
         }
         db.students[id]._updatedAt = Date.now();
         imported.push(id);
@@ -4184,7 +4265,7 @@ function renderHome() {
           '<span class="app-title-main">เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์</span>' +
           '<span class="app-title-sub">เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4</span>' +
         '</h2>' +
-        '<p class="soft tiny">🎒 ผู้เรียน: <b>' + stuName + '</b>' + (stu && stu.room ? ' · ห้อง ' + stu.room : '') + '</p></div>' +
+        '<p class="soft tiny">🎒 ผู้เรียน: <b>' + stuName + '</b>' + (stu && stu.num ? ' · เลขที่ ' + stu.num : '') + '</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         gemChipHtml(homeStars) +
@@ -5049,7 +5130,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
     }
     function rowsToStudents(rows) {
       var students = {};
-      (rows || []).forEach(function(row){ students[row.id] = row.data || {}; });
+      (rows || []).forEach(function(row){
+        students[row.id] = window.sanitizeStudentRecord ? window.sanitizeStudentRecord(row.data || {}) : (row.data || {});
+      });
       return students;
     }
     function fetchStudents() {
@@ -5075,8 +5158,14 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
         return supabase.rpc('claim_student', { p_code:String(code || '').trim() }).then(function(result) {
           var data = check(result) || {};
           if (!data.id || !data.data) throw new Error('Student not found');
+          if (window.sanitizeStudentRecord) data.data = window.sanitizeStudentRecord(data.data);
           return data;
         });
+      },
+      setStudentNickname: function(nickname) {
+        return supabase.rpc('set_student_nickname', {
+          p_nickname:String(nickname || '').trim()
+        }).then(check);
       },
       changeStudentPassword: function(currentCode, newCode) {
         return supabase.rpc('change_student_password', {
@@ -5105,7 +5194,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       },
       signOut: function() { return supabase.auth.signOut().then(check); },
       saveStudent: function(id, student) {
-        var payload = clean(student);
+        var payload = clean(window.sanitizeStudentRecord ? window.sanitizeStudentRecord(student) : student);
         payload._updatedAt = payload._updatedAt || Date.now();
         payload._rankStars = window.studentJourneyStars ? window.studentJourneyStars(payload) : 0;
         payload._rankBadges = Array.isArray(payload.badgeIds) ? payload.badgeIds.length : 0;
@@ -5121,6 +5210,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
         return supabase.from('students').delete().eq('id', id).then(check);
       },
       saveRoster: function(roster) {
+        roster = (roster || []).map(function(item){
+          return window.sanitizeRosterItem ? window.sanitizeRosterItem(item) : item;
+        });
         if (teacherPin) return supabase.rpc('teacher_save_roster', {p_pin:teacherPin,p_roster:clean(roster)}).then(check);
         var updatedAt = Date.now();
         return supabase.from('app_settings').upsert({
@@ -5132,7 +5224,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       loadAll: function() {
         if (teacherPin) return supabase.rpc('teacher_load_all', {p_pin:teacherPin}).then(function(result){
           var data = check(result) || {};
-          return {students:data.students || {},roster:Array.isArray(data.roster) ? data.roster : [],rosterUpdatedAt:Date.now()};
+          var roster = Array.isArray(data.roster) ? data.roster : [];
+          if (window.sanitizeRosterItem) roster = roster.map(window.sanitizeRosterItem);
+          return {students:data.students || {},roster:roster,rosterUpdatedAt:Date.now()};
         });
         if (!isTeacher) return fetchStudents().then(function(students){ return { students:students, roster:[], rosterUpdatedAt:0 }; });
         return Promise.all([fetchStudents(), supabase.from('app_settings').select('data,updated_at').eq('id', 'roster').maybeSingle()]).then(function(results) {
@@ -5141,7 +5235,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
           var rosterData = rosterRow.data || {};
           return {
             students: results[0],
-            roster: Array.isArray(rosterData.items) ? rosterData.items : [],
+            roster: Array.isArray(rosterData.items) ? rosterData.items.map(function(item){
+              return window.sanitizeRosterItem ? window.sanitizeRosterItem(item) : item;
+            }) : [],
             rosterUpdatedAt: rosterRow.updated_at || 0
           };
         });
