@@ -170,6 +170,12 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .lesson-inner-menu-label{display:flex;align-items:center;gap:10px;margin:0 2px 12px;font-size:16px;font-weight:700;color:var(--ink)}
 .lesson-inner-menu-label span{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:var(--yellow);border:1.5px solid var(--yellow-deep)}
 .lesson-inner-menu .tabbar{margin-bottom:12px}
+.research-process{margin-bottom:18px;padding:18px;border:2px solid #D8D0BF;border-radius:18px;background:rgba(255,255,255,.84);box-shadow:0 5px 0 rgba(83,97,123,.13)}
+.research-process-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.research-process-head h3{font-size:19px;font-weight:700;margin:0}.research-process-head p{font-size:12px;line-height:1.7;color:var(--ink-soft);margin-top:3px}
+.research-process-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.research-process-step{position:relative;min-height:116px;padding:14px 13px 12px 48px;border:1.5px solid rgba(48,67,97,.2);border-radius:14px;background:linear-gradient(145deg,#fff,#f5f9ff);box-shadow:0 3px 0 rgba(73,91,126,.1)}
+.research-process-step .num{position:absolute;left:12px;top:13px;display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:var(--yellow);border:1.5px solid var(--yellow-deep);font-size:12px;font-weight:700}.research-process-step b{display:block;font-size:14px;line-height:1.5;margin-bottom:4px}.research-process-step p{font-size:11px;line-height:1.65;color:var(--ink-soft);margin:0}.research-process-step.prompt-step{background:linear-gradient(145deg,#fff8df,#fff)}
+@media(min-width:761px) and (max-width:1100px){.research-process-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* Tabs */
 .tabbar{display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap}
@@ -883,6 +889,7 @@ body::after{
   .lesson-submenu-heading{align-items:flex-start;flex-direction:column}
   .lesson-inner-menu{padding:12px 10px 2px}
   .lesson-inner-menu .tab{min-width:calc(50% - 6px);font-size:14px}
+  .research-process{padding:14px}.research-process-head{flex-direction:column}.research-process-grid{grid-template-columns:1fr}.research-process-step{min-height:0}
   .mright{width:100%; justify-content:space-between; border-top:2px dashed rgba(120,100,70,.2); padding-top:10px}
   h1.title{font-size:30px !important}
   .login-card{max-width:100%; padding:22px}
@@ -1418,8 +1425,8 @@ var themeList = [
 /* ---------- บทเรียน (สื่อ + แบบทดสอบ) ---------- */
 var lessons = [
   {
-    title: 'บทที่ 1: รู้จัก AI อย่างเข้าใจ',
-    short: 'รู้จัก AI',
+    title: 'บทที่ 1: ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์',
+    short: 'พื้นฐาน AI',
     mission: {
       name: 'ภารกิจที่ 1: เปิดกล่องปริศนา AI',
       role: 'รับบทเป็นนักสำรวจเทคโนโลยีร่วมกับลูกไดโนเสาร์',
@@ -1450,8 +1457,8 @@ var lessons = [
     ]
   },
   {
-    title: 'บทที่ 2: เลือกใช้ AI ให้เหมาะกับงาน',
-    short: 'เลือกใช้ AI',
+    title: 'บทที่ 2: การเลือกและใช้ปัญญาประดิษฐ์อย่างเหมาะสม',
+    short: 'เลือกและใช้ AI',
     mission: {
       name: 'ภารกิจที่ 2: จัดกระเป๋าเครื่องมือ AI ให้เป็ด',
       role: 'รับบทเป็นผู้ช่วยวางแผนงานของเป็ด',
@@ -1480,8 +1487,8 @@ var lessons = [
     ]
   },
   {
-    title: 'บทที่ 5: ปกป้องข้อมูลให้ปลอดภัย',
-    short: 'ปกป้องข้อมูล',
+    title: 'บทที่ 5: การคุ้มครองข้อมูลส่วนบุคคลและความปลอดภัย',
+    short: 'คุ้มครองข้อมูล',
     mission: {
       name: 'ภารกิจที่ 5: ช่วยไก่ปิดประตูข้อมูลลับ',
       role: 'รับบทเป็นผู้พิทักษ์ข้อมูลของไก่และเพื่อนในห้อง',
@@ -1515,8 +1522,8 @@ var lessons = [
     ]
   },
   {
-    title: 'บทที่ 4: ใช้ AI อย่างซื่อสัตย์และรับผิดชอบ',
-    short: 'ซื่อสัตย์และรับผิดชอบ',
+    title: 'บทที่ 4: การใช้ปัญญาประดิษฐ์อย่างมีจริยธรรมและความรับผิดชอบ',
+    short: 'จริยธรรม AI',
     mission: {
       name: 'ภารกิจที่ 4: ช่วยยีราฟเลือกเส้นทางอนาคต',
       role: 'รับบทเป็นที่ปรึกษาที่ช่วยยีราฟคิดอย่างรอบด้าน',
@@ -1551,8 +1558,8 @@ var lessons = [
 ];
 
 lessons.push({
-  title: 'บทที่ 3: ตรวจคำตอบ AI ก่อนเชื่อ',
-  short: 'ตรวจคำตอบ AI',
+  title: 'บทที่ 3: การตรวจสอบและประเมินข้อมูลจากปัญญาประดิษฐ์',
+  short: 'ตรวจสอบข้อมูล AI',
   mission: {
     name: 'ภารกิจที่ 3: ช่วยหมีตรวจข่าวก่อนแชร์',
     role: 'รับบทเป็นนักตรวจสอบข้อมูลให้หมี',
@@ -2190,7 +2197,7 @@ function teacherSystemStatusHtml() {
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:10px">🧑‍🏫 ศูนย์ควบคุมสำหรับครู</h3>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px">' +
       '<div class="innerbox"><p class="small" style="font-weight:700">1. แจกไฟล์ให้นักเรียน</p><p class="soft tiny">ให้นักเรียนเปิดไฟล์นี้ เลือกชื่อ และใส่รหัสประจำตัว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">2. ครูนำภารกิจ</p><p class="soft tiny">ก่อนเรียนรวม → ภารกิจช่วยตัวละคร → สื่อสั้น → แบบทดสอบระหว่างบท</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">2. ครูนำกระบวนการเรียนรู้</p><p class="soft tiny">ก่อนเรียน → วิดีโอ/สไลด์ → พรอมต์บทที่ 2 → สถานการณ์ → แบบทดสอบระหว่างบท</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">3. ครูเก็บคะแนน</p><p class="soft tiny">ดูจากเครื่องครู หรือเชื่อม Google Sheet อัตโนมัติ</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">4. ส่งออกหลักฐาน</p><p class="soft tiny">ดาวน์โหลด CSV / พิมพ์รายงาน / บันทึก PDF</p></div>' +
     '</div>' +
@@ -2226,13 +2233,13 @@ function teacherLessonMissionGuideHtml() {
       '<p class="small ' + t.deep + '" style="font-weight:700;line-height:1.7">' + t.emoji + ' ' + (mission.name || ls.title) + '</p>' +
       '<p class="soft tiny" style="line-height:1.8"><b>ครูชวนคิด:</b> ' + (sim.task || mission.goal || '-') + '</p>' +
       '<p class="soft tiny" style="line-height:1.8"><b>สาระหลัก:</b> ' + ls.title.replace(/^บทที่ \d+:\s*/, '') + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8"><b>ผ่านภารกิจ:</b> เลือกดูสื่ออย่างน้อย 1 รูปแบบ และทำแบบทดสอบระหว่างบทได้ 80% ขึ้นไป = 1 ดาว</p>' +
+      '<p class="soft tiny" style="line-height:1.8"><b>ผ่านบทเรียน:</b> ศึกษาวิดีโอหรือสไลด์' + (i === 1 ? ' ฝึกเขียนพรอมต์ในบทที่ 2' : '') + ' วิเคราะห์สถานการณ์ และทำแบบทดสอบระหว่างบทได้ 80% ขึ้นไป = 1 ดาว</p>' +
     '</div>';
   }).join('');
   return '<div class="pcard blue noprint" style="margin-bottom:20px">' +
     '<div class="tape tape-blue"></div>' +
     '<h3 class="t-blue" style="font-weight:700;margin-bottom:8px">🧑‍🏫 คู่มือครู: ภารกิจช่วยตัวละคร</h3>' +
-    '<p class="soft small" style="line-height:1.9;margin-bottom:12px">ใช้เปิดคาบเรียนแบบเล่าเรื่อง: ครูอ่านสถานการณ์ให้นักเรียนช่วยตัดสินใจก่อน แล้วให้นักเรียนเลือกดูสไลด์/อินโฟกราฟิกหรือคลิปสั้นอย่างน้อย 1 รูปแบบ จากนั้นทำแบบทดสอบระหว่างบท</p>' +
+    '<p class="soft small" style="line-height:1.9;margin-bottom:12px">ดำเนินกิจกรรมตามโครงร่างงานวิจัย: ให้นักเรียนศึกษาวิดีโอสั้นและสไลด์ก่อน โดยบทที่ 2 มีการศึกษาหลักการเขียนพรอมต์และฝึกปรับปรุงจากง่ายไปยาก จากนั้นวิเคราะห์สถานการณ์จำลอง และทำกิจกรรมหรือแบบทดสอบระหว่างบทพร้อมคำใบ้และข้อมูลย้อนกลับ</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">' + rows + '</div>' +
   '</div>';
 }
@@ -2483,8 +2490,10 @@ function copyStudentInstruction() {
   var text = 'นักเรียนเปิด “เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์ เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4” แล้วทำตามนี้\\n' +
     '1) กรอกรหัสผ่านที่ได้รับจากคุณครูเพื่อเข้าสู่ระบบ\\n' +
     '2) ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย\\n' +
-    '3) เรียนเนื้อหาแต่ละบท แล้วทำแบบทดสอบระหว่างบทให้ผ่าน 80% เพื่อเก็บดาว\\n' +
-    '4) เมื่อเรียนครบ ทำแบบทดสอบหลังเรียนรวม 1 ครั้ง และทำภารกิจพรอมต์/เกมสถานการณ์';
+    '3) ศึกษาเนื้อหาทั้ง 5 บทผ่านวิดีโอสั้นและสไลด์ โดยบทที่ 2 ให้ฝึกเขียนและปรับปรุงพรอมต์จากง่ายไปยาก\\n' +
+    '4) เรียนรู้ผ่านสถานการณ์จำลอง แล้วทำกิจกรรมและแบบทดสอบระหว่างบทให้ผ่าน 80% พร้อมใช้คำใบ้และข้อมูลย้อนกลับ\\n' +
+    '5) ใช้ผู้ช่วย AI เมื่อมีข้อสงสัย และสะสมคะแนน ระดับ เหรียญรางวัล และอันดับ\\n' +
+    '6) เมื่อเรียนครบทั้ง 5 บท ทำแบบทดสอบหลังเรียนและแบบสอบถามความพึงพอใจ';
   copyPlainText(text, 'คัดลอกคำสั่งให้นักเรียนแล้ว 📋✅');
 }
 
@@ -3311,7 +3320,7 @@ function offlineBot(q) {
   if (has('ดาว','คะแนน','แต้ม','อันดับ'))
     return 'เก็บดาวได้ 3 ทาง: 🎯 ผ่านภารกิจจำลองและแบบทดสอบระหว่างบท (1 ภารกิจ = 1 ดาว), ✍️ ฝึกพรอมต์ (โจทย์ละ 3 ดาว), 🎮 เกมสถานการณ์ได้แต้ม แล้วทั้งหมดรวมเป็นคะแนนอันดับห้อง 🏆 ตอนนี้อยากอัปดาวส่วนไหนก่อนดี?';
   if (has('เล่นยังไง','วิธีเล่น','เริ่มยังไง','ทำอะไรก่อน','ช่วย'))
-    return 'เริ่มง่าย ๆ: ทำแบบทดสอบก่อนเรียนรวมก่อน แล้วเข้า 🎯 ห้องเรียน อ่านสถานการณ์จำลอง → เลือกดูสไลด์/อินโฟกราฟิกหรือคลิปสั้นอย่างน้อย 1 รูปแบบ → ทำแบบทดสอบระหว่างบทรับดาว ⭐ จากนั้นลอง 🎮 เกมสถานการณ์ กับ ✍️ ฝึกพรอมต์ ทุกภารกิจที่สำเร็จ ตัวเราจะเดินในเมือง AI ต่อ 1 ก้าวด้วยนะ 🗺️';
+    return 'เริ่มตามกระบวนการนี้นะ: ทำแบบทดสอบก่อนเรียน → ศึกษาวิดีโอสั้นและสไลด์ → ในบทที่ 2 ฝึกเขียนพรอมต์จากง่ายไปยาก → วิเคราะห์สถานการณ์จำลอง → ทำแบบทดสอบระหว่างบทพร้อมคำใบ้และข้อมูลย้อนกลับ ⭐ เมื่อครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน ระหว่างทางถามผู้ช่วยและเก็บคะแนน ระดับ เหรียญรางวัล และอันดับได้เลย 🗺️';
   if (has('เฉลย','คำตอบข้อ','ตอบข้อไหน'))
     return 'เรายังไม่บอกเฉลยตรง ๆ นะครับ แต่ช่วยชี้ทางได้: ลองกลับไปอ่านสไลด์ของบทนั้นอีกครั้ง แล้วพิจารณาว่าคำถามเกี่ยวกับการรู้และเข้าใจ การประยุกต์ใช้ การประเมิน หรือจริยธรรม หากยังติดอยู่ เล่าโจทย์ให้ฟังได้ เราจะช่วยแยกประเด็นให้';
   if (has('สวัสดี','หวัดดี','ดีจ้า','hello','hi'))
@@ -4512,6 +4521,26 @@ function totalPromptStars() {
 }
 
 /* ==================== รายการบทเรียน ==================== */
+function researchLearningProcessHtml() {
+  var steps = [
+    { icon:'📝', title:'แบบทดสอบก่อนเรียน', text:'ทำ Pre-test ก่อนเริ่มเรียนรู้ผ่านเว็บแอปพลิเคชัน' },
+    { icon:'🎬', title:'วิดีโอสั้นและสไลด์', text:'ศึกษาเนื้อหาทั้ง 5 ด้านผ่าน Short Video Learning และ Slide Learning' },
+    { icon:'✍️', title:'หลักการเขียนพรอมต์', text:'ศึกษา ฝึกเขียน และปรับปรุงพรอมต์ในบทที่ 2 จากระดับง่ายไปยาก', prompt:true },
+    { icon:'🎭', title:'สถานการณ์จำลอง', text:'ฝึกวิเคราะห์และตัดสินใจจากสถานการณ์การใช้ AI ในชีวิตจริง' },
+    { icon:'💡', title:'กิจกรรมและแบบทดสอบ', text:'ทำแบบทดสอบระหว่างเรียน พร้อมคำใบ้และข้อมูลย้อนกลับ' },
+    { icon:'🤖', title:'ผู้ช่วย AI และเกมมิฟิเคชัน', text:'ถามข้อสงสัย สะสมคะแนน ระดับ เหรียญรางวัล และดูอันดับ' },
+    { icon:'🏁', title:'แบบทดสอบหลังเรียน', text:'เมื่อเรียนครบทุกบท จึงทำ Post-test และแบบสอบถามความพึงพอใจ' }
+  ];
+  return '<section class="research-process" aria-label="กระบวนการเรียนรู้ตามโครงร่างงานวิจัย">' +
+    '<div class="research-process-head"><div><h3>🧭 กระบวนการเรียนรู้ตามโครงร่างงานวิจัย</h3>' +
+    '<p>เรียงลำดับการเรียนรู้และการประเมินตามขอบเขตระบบส่วนของผู้เรียน</p></div>' +
+    '<span class="chip">7 ขั้นตอน</span></div>' +
+    '<div class="research-process-grid">' + steps.map(function(step, i) {
+      return '<div class="research-process-step' + (step.prompt ? ' prompt-step' : '') + '">' +
+        '<span class="num">' + (i + 1) + '</span><b>' + step.icon + ' ' + step.title + '</b><p>' + step.text + '</p></div>';
+    }).join('') + '</div></section>';
+}
+
 function renderLessonList() {
   var listHtml = lessons.map(function(ls, i) {
     var t = themeList[i % themeList.length];
@@ -4522,7 +4551,9 @@ function renderLessonList() {
     else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
     else if (!unlocked) status = '🔒 ผ่านบทที่ ' + i + ' และรับดาวก่อน';
     else if (p.postScore) status = 'ระหว่างบท ' + lessonAssessmentLabel(p, 'post') + ' · ยังไม่ถึง 80%';
-    else if (p.slidesDone || p.videoDone) status = 'เลือกดูสื่อแล้ว · รอทำแบบทดสอบระหว่างบท';
+    else if (p.slidesDone || p.videoDone) status = i === 1 && totalPromptStars() === 0
+      ? 'ศึกษาเนื้อหาแล้ว · ไปฝึกเขียนพรอมต์ในบทที่ 2'
+      : 'ศึกษาเนื้อหาแล้ว · ไปวิเคราะห์สถานการณ์จำลอง';
     else if (p.slideSeen > 0) status = 'กำลังเรียนอยู่...';
     else status = 'ยังไม่เริ่มเรียน';
     var actionText = p.quizDone ? '🔁 ทบทวนบทเรียน' : (unlocked ? 'เลือกเมนูย่อย ›' : '🔒 ยังไม่ปลดล็อก');
@@ -4556,9 +4587,10 @@ function renderLessonList() {
       '</div>' +
     '</div>' +
     '<div class="body-area scroll">' +
-      '<div class="pcard yellow" style="margin-bottom:6px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย จากนั้นทำภารกิจจำลอง เลือกดูสื่ออย่างน้อย 1 รูปแบบ และทำแบบทดสอบระหว่างบทให้ผ่าน 80% เพื่อรับดาว ภายหลังเรียนครบจึงทำแบบทดสอบหลังเรียนรวม</p>' +
+      '<div class="pcard yellow" style="margin-bottom:14px">' +
+        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน จากนั้นศึกษาเนื้อหาผ่านวิดีโอสั้นและสไลด์ ฝึกเขียนพรอมต์ในบทที่ 2 เรียนรู้ผ่านสถานการณ์จำลอง และทำแบบทดสอบระหว่างบทให้ผ่าน 80% เมื่อเรียนครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
       '</div>' +
+      researchLearningProcessHtml() +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>กดเลือกบทที่ต้องการเพื่อเปิดเมนูย่อย</p></div><span class="chip">ปลดล็อกทีละบท</span></div>' +
       '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
     '</div>';
@@ -4574,7 +4606,7 @@ function openLesson(i) {
     return;
   }
   state.currentLesson = i;
-  state.lessonTab = 'mission';
+  state.lessonTab = 'video';
   state.slideIdx = 0;
   changeView('lesson');
 }
@@ -4615,10 +4647,12 @@ function lessonMissionHtml(ls, t) {
       bullets +
     '</div>' +
     '<div class="center" style="margin-top:14px">' +
-      '<p class="small" style="font-weight:700;margin-bottom:10px">เลือกสื่อเพื่อเรียนรู้อย่างน้อย 1 รูปแบบ</p>' +
+      '<p class="small" style="font-weight:700;margin-bottom:10px">วิเคราะห์สถานการณ์แล้ว สามารถทบทวนสื่อหรือทำแบบทดสอบระหว่างบทได้</p>' +
       '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">' +
-        '<button onclick="setTab(\'slides\')" class="btn blueb sm">🖼️ เลือกสไลด์/อินโฟกราฟิก</button>' +
-        '<button onclick="setTab(\'video\')" class="btn whiteb sm">🎬 เลือกคลิปสั้น</button>' +
+        '<button onclick="setTab(\'video\')" class="btn whiteb sm">🎬 ทบทวนวิดีโอสั้น</button>' +
+        '<button onclick="setTab(\'slides\')" class="btn blueb sm">🖼️ ทบทวนสไลด์</button>' +
+        (state.currentLesson === 1 ? '<button onclick="changeView(\'prompt\')" class="btn whiteb sm">✍️ ฝึกเขียนพรอมต์</button>' : '') +
+        '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -4626,12 +4660,12 @@ function lessonMissionHtml(ls, t) {
 function lessonTabBar(p) {
   var quizUnlocked = p.videoDone || p.slidesDone;
   return '<div class="lesson-inner-menu">' +
-    '<p class="lesson-inner-menu-label"><span>☰</span>เลือกเมนูย่อยในบทนี้</p>' +
+    '<p class="lesson-inner-menu-label"><span>☰</span>เรียนตามลำดับ: สื่อ →' + (state.currentLesson === 1 ? ' พรอมต์ →' : '') + ' สถานการณ์ → แบบทดสอบ</p>' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
-    '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">ภารกิจจำลอง</button>' +
+    '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : (p.videoDone ? 'done' : '')) + '" onclick="setTab(\'video\')">🎬 วิดีโอสั้น ' + (p.videoDone ? '✅' : '') + '</button>' +
     '<button class="tab ' + (state.lessonTab === 'slides' ? 'active' : (p.slidesDone ? 'done' : '')) + '" onclick="setTab(\'slides\')">🖼️ สไลด์/อินโฟกราฟิก ' + (p.slidesDone ? '✅' : '') + '</button>' +
-    '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : (p.videoDone ? 'done' : '')) + '" onclick="setTab(\'video\')">🎬 คลิปสั้น ' + (p.videoDone ? '✅' : '') + '</button>' +
     (state.currentLesson === 1 ? '<button class="tab ' + (totalPromptStars() > 0 ? 'done' : '') + '" onclick="changeView(\'prompt\')">✍️ ฝึกเขียนพรอมต์ ' + (totalPromptStars() > 0 ? '⭐' + totalPromptStars() : '') + '</button>' : '') +
+    '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">สถานการณ์จำลอง</button>' +
     '<button class="tab ' + (state.lessonTab === 'quiz' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท') + (p.quizDone ? ' ' + lessonStarRow(p.stars) : '') + '</button>' +
     '</div>' +
   '</div>';
