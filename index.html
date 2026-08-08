@@ -4419,7 +4419,7 @@ function lessonStarRow(n) {
 function mascotHtml(text, icon, iconClass) {
   var iconHtml = icon === ''
     ? ''
-    : '<div class="dog ' + (iconClass || '') + '" aria-hidden="true">' + (typeof icon === 'undefined' ? 'AI' : icon) + '</div>';
+    : '<div class="dog ' + (iconClass || '') + '" aria-hidden="true">' + (typeof icon === 'undefined' ? '🤖' : icon) + '</div>';
   return '<div class="mascot"><div class="say">' + text + '</div>' + iconHtml + '</div>';
 }
 
