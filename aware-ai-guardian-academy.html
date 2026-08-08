@@ -175,18 +175,53 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .tab.done{border-color:var(--mint-line); background:var(--mint); color:var(--mint-deep)}
 .tab.lockt{opacity:.55}
 
-/* Slides */
-.slidebox{min-height:230px; display:flex; flex-direction:column; justify-content:center}
-.dots{display:flex; gap:8px; justify-content:center; margin-top:16px}
-.dot{width:12px; height:12px; border-radius:50%; background:#E3D5B8; border:2px solid #D9C9A8}
-.dot.on{background:var(--yellow-deep); border-color:var(--yellow-deep)}
-.dot.seen{background:var(--mint-line); border-color:var(--mint-deep)}
+/* Lesson media: infographic + video */
+.media-stage{width:min(100%,960px);margin:0 auto 8px}
+.media-stage-head{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:16px 18px;border:2px solid #D8D0BF;border-radius:18px;background:rgba(255,255,255,.92);box-shadow:0 5px 0 rgba(83,97,123,.13)}
+.media-stage-icon{display:grid;place-items:center;flex:0 0 50px;width:50px;height:50px;border-radius:15px;font-size:27px;border:2px solid rgba(32,42,51,.13);box-shadow:0 3px 0 rgba(32,42,51,.12)}
+.media-stage-icon.video{background:linear-gradient(145deg,#dcecff,#eef6ff)}
+.media-stage-icon.slides{background:linear-gradient(145deg,#fff0b8,#fff8dc)}
+.media-stage-title{min-width:0;flex:1}.media-stage-title h3{font-size:20px;font-weight:700;line-height:1.35;margin:0}.media-stage-title p{font-size:12px;color:var(--ink-soft);line-height:1.55;margin-top:3px}
+.media-state-chip{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:6px 11px;border:1.5px solid #D8D0BF;border-radius:999px;background:#f7f3ea;color:var(--ink-soft);font-size:12px;font-weight:700;white-space:nowrap}
+.media-state-chip.done{background:var(--mint);border-color:var(--mint-line);color:var(--mint-deep)}
 
-/* Video placeholder */
-.videobox{position:relative; border-radius:12px; overflow:hidden; border:2px solid #D8D0BF; background:#202A33}
-.videobox iframe{display:block; width:100%; aspect-ratio:16/9; border:0}
-.vph{aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  color:#F3E8CF; text-align:center; padding:20px; gap:8px}
+/* Slides / infographic */
+.media-stage .slidebox{min-height:350px;display:flex;flex-direction:column;justify-content:center;padding:26px;border-radius:22px;box-shadow:0 10px 28px rgba(54,72,100,.11)}
+.slide-content-grid{display:grid;grid-template-columns:minmax(150px,190px) minmax(0,1fr);gap:22px;align-items:stretch}
+.slide-emoji-card{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:230px;padding:20px;border:2px solid rgba(44,91,150,.18);border-radius:18px;background:linear-gradient(150deg,#fff 0%,#eef6ff 55%,#fff6cf 100%);box-shadow:inset 0 0 0 5px rgba(255,255,255,.68)}
+.slide-emoji-card:before,.slide-emoji-card:after{content:"";position:absolute;border-radius:50%;background:rgba(84,142,218,.12)}
+.slide-emoji-card:before{width:100px;height:100px;right:-35px;top:-35px}.slide-emoji-card:after{width:70px;height:70px;left:-24px;bottom:-24px;background:rgba(255,193,64,.19)}
+.slide-emoji{position:relative;z-index:1;font-size:74px;filter:drop-shadow(0 7px 7px rgba(49,67,92,.15))}
+.slide-emoji-label{position:relative;z-index:1;margin-top:14px;padding:5px 10px;border-radius:999px;background:#fff;border:1.5px solid rgba(32,42,51,.14);color:var(--ink-soft);font-size:11px;font-weight:700;letter-spacing:.02em}
+.slide-text-card{display:flex;flex-direction:column;justify-content:center;padding:24px;border:2px solid rgba(32,42,51,.13);border-radius:18px;background:rgba(255,255,255,.94);box-shadow:0 5px 0 rgba(83,97,123,.11)}
+.slide-text-card h3{font-size:23px;font-weight:700;line-height:1.45;margin:0 0 14px}
+.slide-text-card p{font-size:17px;line-height:2;margin:0}
+.slide-audio{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:11px 13px;border:1.5px dashed rgba(32,42,51,.2);border-radius:14px;background:rgba(255,255,255,.62)}
+.slide-audio-note{color:var(--ink-soft);font-size:11px;line-height:1.5}
+.slide-progress-wrap{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px auto 0;padding:8px 13px;border:1.5px solid #D8D0BF;border-radius:999px;background:rgba(255,255,255,.9);width:max-content;max-width:100%}
+.dots{display:flex;align-items:center;gap:7px;justify-content:center;margin:0}
+.dot{width:11px;height:11px;border-radius:50%;background:#E3D5B8;border:2px solid #D9C9A8;transition:transform .2s ease,background .2s ease}
+.dot.on{background:var(--yellow-deep);border-color:var(--yellow-deep);transform:scale(1.32)}
+.dot.seen{background:var(--mint-line);border-color:var(--mint-deep)}
+.slide-progress-label{font-size:11px;font-weight:700;color:var(--ink-soft);white-space:nowrap}
+.slide-navigation{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px;flex-wrap:wrap}
+.slide-navigation .image-nav-btn img{width:clamp(128px,15vw,185px)}
+
+/* Video */
+.lesson-video-panel{padding:15px;border:2px solid #c9d9ee;border-radius:23px;background:linear-gradient(145deg,#dcecff 0%,#f7fbff 48%,#fff3c8 100%);box-shadow:0 10px 28px rgba(54,72,100,.13)}
+.videobox{position:relative;border-radius:18px;overflow:hidden;border:6px solid #fff;background:#172331;box-shadow:0 8px 22px rgba(24,38,55,.24),0 0 0 1px rgba(21,42,69,.22)}
+.videobox iframe,.videobox video{display:block;width:100%;aspect-ratio:16/9;border:0;background:#101820}
+.vph{aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#F3E8CF;text-align:center;padding:20px;gap:8px;background:radial-gradient(circle at 50% 35%,#314d6e 0%,#172331 70%)}
+.video-summary-card{display:flex;align-items:flex-start;gap:14px;margin-top:14px;padding:17px 18px;border:2px solid #D8D0BF;border-radius:17px;background:#fff;box-shadow:0 4px 0 rgba(83,97,123,.11)}
+.video-summary-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:13px;background:var(--pink);border:1.5px solid var(--pink-line);font-size:21px}
+.video-summary-card p{line-height:1.85;margin:0}
+.media-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding:14px;border:2px dashed rgba(32,42,51,.16);border-radius:16px;background:rgba(255,255,255,.7)}
+
+@media(max-width:700px){
+  .media-stage-head{align-items:flex-start;padding:13px 14px;border-radius:15px}.media-stage-icon{width:42px;height:42px;flex-basis:42px;font-size:23px;border-radius:12px}.media-stage-title h3{font-size:17px}.media-state-chip{font-size:10px;min-height:29px;padding:5px 8px}
+  .lesson-video-panel{padding:8px;border-radius:17px}.videobox{border-width:4px;border-radius:13px}.video-summary-card{padding:14px;gap:10px}.video-summary-icon{width:36px;height:36px;flex-basis:36px;font-size:18px}
+  .media-stage .slidebox{min-height:0;padding:16px;border-radius:18px}.slide-content-grid{grid-template-columns:1fr;gap:13px}.slide-emoji-card{min-height:135px;padding:15px}.slide-emoji{font-size:58px}.slide-emoji-label{margin-top:8px}.slide-text-card{padding:17px}.slide-text-card h3{font-size:20px;text-align:center}.slide-text-card p{font-size:16px;line-height:1.9}.slide-audio{flex-direction:column;text-align:center}.slide-navigation{justify-content:center}.slide-navigation>span{order:-1;width:100%;text-align:center}.slide-navigation .image-nav-btn img{width:120px}.media-actions{padding:11px}
+}
 
 /* Quiz */
 .qopt{display:flex; align-items:flex-start; gap:14px; width:100%; text-align:left;
@@ -4634,19 +4669,27 @@ function renderLesson() {
       '</div></div>';
     }
     content =
-      media +
-      '<div class="pcard ' + t.card + '" style="margin-top:18px">' +
-        '<p style="line-height:1.9"><b class="' + t.deep + '">🎥 เนื้อหาในคลิป:</b> ' + ls.videoDesc + '</p>' +
+      '<section class="media-stage lesson-video-stage">' +
+      '<div class="media-stage-head">' +
+        '<div class="media-stage-icon video">🎬</div>' +
+        '<div class="media-stage-title"><h3>คลิปสั้นประจำบท</h3><p>รับชมเต็มจอได้ และกลับมาดูซ้ำได้ทุกเมื่อ</p></div>' +
+        '<span class="media-state-chip ' + (p.videoDone ? 'done' : '') + '">' + (p.videoDone ? '✓ ดูแล้ว' : 'วิดีโอ 1 คลิป') + '</span>' +
       '</div>' +
-      '<div class="center" style="margin-top:20px">' +
+      '<div class="lesson-video-panel">' + media + '</div>' +
+      '<div class="video-summary-card">' +
+        '<span class="video-summary-icon">💡</span>' +
+        '<p><b class="' + t.deep + '">สิ่งที่จะได้เรียนรู้จากคลิป</b><br>' + ls.videoDesc + '</p>' +
+      '</div>' +
+      '<div class="media-actions center">' +
         (p.videoDone
           ? '<p class="t-mint" style="font-weight:700">✅ ดูคลิปจบแล้ว พร้อมทำแบบทดสอบระหว่างบท</p>' +
-            '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px">' +
+            '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;width:100%">' +
               '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>' +
               '<button onclick="setTab(\'slides\')" class="btn whiteb sm">🖼️ ดูสไลด์เพิ่มเติม</button>' +
             '</div>'
           : '<button onclick="markVideoDone()" class="btn mintb">✅ ฉันดูคลิป/อ่านเนื้อหาจบแล้ว</button>') +
-      '</div>';
+      '</div>' +
+      '</section>';
   }
   else if (state.lessonTab === 'slides') {
     var idx = state.slideIdx;
@@ -4657,19 +4700,29 @@ function renderLesson() {
       return '<span class="dot ' + cls + '"></span>';
     }).join('');
     content =
+      '<section class="media-stage lesson-slides-stage">' +
+      '<div class="media-stage-head">' +
+        '<div class="media-stage-icon slides">🖼️</div>' +
+        '<div class="media-stage-title"><h3>สไลด์และอินโฟกราฟิก</h3><p>อ่านทีละหน้า กดฟังเสียงประกอบได้ตามต้องการ</p></div>' +
+        '<span class="media-state-chip ' + (p.slidesDone ? 'done' : '') + '">' + (p.slidesDone ? '✓ อ่านครบแล้ว' : 'หน้า ' + (idx + 1) + '/' + ls.slides.length) + '</span>' +
+      '</div>' +
       '<div class="pcard ' + t.card + ' slidebox">' +
         '<div class="tape ' + t.tape + '"></div>' +
-        '<div class="center" style="font-size:52px;margin-bottom:12px">' + slide.emoji + '</div>' +
-        '<h3 class="center ' + t.deep + '" style="font-size:22px;font-weight:700;margin-bottom:12px">' + slide.title + '</h3>' +
-        '<div class="innerbox"><p style="line-height:2;font-size:17px">' + slide.text + '</p></div>' +
-        '<div class="center" style="margin-top:14px">' +
-          '<button onclick="speakSlide()" class="btn whiteb sm">🔊 ฟังเสียงประกอบ</button> ' +
-          '<button onclick="stopSpeak()" class="btn whiteb sm" style="padding:9px 14px">⏹️</button>' +
-          '<p class="soft tiny" style="margin-top:8px">เสียงเป็นตัวเลือกเสริม ใช้เสียงอ่านภาษาไทยของเครื่อง (บางอุปกรณ์อาจไม่รองรับ)</p>' +
+        '<div class="slide-content-grid">' +
+          '<div class="slide-emoji-card"><span class="slide-emoji">' + slide.emoji + '</span><span class="slide-emoji-label">INFOGRAPHIC</span></div>' +
+          '<div class="slide-text-card">' +
+            '<h3 class="' + t.deep + '">' + slide.title + '</h3>' +
+            '<p>' + slide.text + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="slide-audio">' +
+          '<div><button onclick="speakSlide()" class="btn whiteb sm">🔊 ฟังเสียงประกอบ</button> ' +
+          '<button onclick="stopSpeak()" class="btn whiteb sm" style="padding:9px 14px">⏹️ หยุด</button></div>' +
+          '<p class="slide-audio-note">ใช้เสียงอ่านภาษาไทยของเครื่อง<br>บางอุปกรณ์อาจไม่รองรับ</p>' +
         '</div>' +
       '</div>' +
-      '<div class="dots">' + dots + '</div>' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px;flex-wrap:wrap">' +
+      '<div class="slide-progress-wrap"><div class="dots">' + dots + '</div><span class="slide-progress-label">' + (idx + 1) + ' / ' + ls.slides.length + '</span></div>' +
+      '<div class="slide-navigation">' +
         '<button onclick="prevSlide()" class="image-nav-btn" aria-label="ย้อนกลับ" ' + (idx === 0 ? 'disabled' : '') + '><img src="./back-button.png" alt="ย้อนกลับ"></button>' +
         '<span class="soft small" style="font-weight:600">สไลด์ ' + (idx + 1) + ' / ' + ls.slides.length + '</span>' +
         (isLast
@@ -4680,7 +4733,8 @@ function renderLesson() {
                 '</div>'
               : '<button onclick="finishSlides()" class="btn mintb sm">✅ อ่านจบแล้ว!</button>')
           : '<button onclick="nextSlide()" class="image-nav-btn" aria-label="ถัดไป"><img src="./next-button.png" alt="ถัดไป"></button>') +
-      '</div>';
+      '</div>' +
+      '</section>';
   }
 
   appEl.innerHTML =
