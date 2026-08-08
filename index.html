@@ -84,13 +84,14 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .iconbtn.visual-back-btn{width:50px;height:50px;padding:0;overflow:hidden;border:0!important;background:transparent!important;box-shadow:none!important}
 .iconbtn.visual-back-btn:hover{transform:translateY(-1px) scale(1.04);border:0!important;box-shadow:none!important}
 .back-icon-img{display:block;width:50px;height:50px;object-fit:contain}
+.iconbtn.visual-back-btn.lesson-back-btn,.iconbtn.visual-back-btn.lesson-back-btn .back-icon-img{width:58px;height:58px}
 .image-nav-btn{padding:0;border:0;background:transparent!important;box-shadow:none!important;line-height:0;border-radius:999px}
 .image-nav-btn:hover:not(:disabled){transform:translateY(-2px) scale(1.02);box-shadow:none!important}
 .image-nav-btn:active:not(:disabled){transform:translateY(1px) scale(.99);box-shadow:none!important}
 .image-nav-btn:disabled{filter:grayscale(.7);opacity:.38}
 .image-nav-btn img{display:block;width:clamp(160px,18vw,230px);height:auto}
-.slide-navigation .image-nav-btn.back-nav-btn img{width:clamp(76px,8vw,88px);border-radius:18px}
-@media(max-width:600px){.image-nav-btn img{width:145px}.slide-navigation .image-nav-btn.back-nav-btn img{width:66px}.iconbtn.visual-back-btn,.back-icon-img{width:44px;height:44px}}
+.slide-navigation .image-nav-btn.back-nav-btn.lesson-back-btn img{width:clamp(82px,9vw,96px);border-radius:18px}
+@media(max-width:600px){.image-nav-btn img{width:145px}.slide-navigation .image-nav-btn.back-nav-btn.lesson-back-btn img{width:74px}.iconbtn.visual-back-btn,.back-icon-img{width:44px;height:44px}.iconbtn.visual-back-btn.lesson-back-btn,.iconbtn.visual-back-btn.lesson-back-btn .back-icon-img{width:48px;height:48px}}
 
 /* Home menu */
 .menugrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; gap:16px; width:100%; max-width:1100px}
@@ -3936,7 +3937,7 @@ function renderPromptMenu() {
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div class="scorebox"><div class="t-orange" style="font-size:20px;font-weight:700">✍️ ' + totalPromptStars() + '/' + maxPromptStars() + '</div><p class="soft tiny">ดาวพรอมต์</p></div>' +
-        '<button onclick="openLesson(1)" class="iconbtn visual-back-btn" title="ย้อนกลับไปบทที่ 2" aria-label="ย้อนกลับไปบทที่ 2"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
+        '<button onclick="openLesson(1)" class="iconbtn visual-back-btn lesson-back-btn" title="ย้อนกลับไปบทที่ 2" aria-label="ย้อนกลับไปบทที่ 2"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
       '</div>' +
     '</div>' +
     '<div class="body-area scroll">' +
@@ -4151,7 +4152,7 @@ function renderPromptWork() {
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<span class="t-orange small" style="font-weight:700">' + starRow(best) + '</span>' +
-        '<button onclick="changeView(\'prompt\')" class="iconbtn visual-back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
+        '<button onclick="changeView(\'prompt\')" class="iconbtn visual-back-btn lesson-back-btn" title="ย้อนกลับ" aria-label="ย้อนกลับ"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
       '</div>' +
     '</div>' +
     '<div class="body-area scroll">' +
@@ -4727,7 +4728,7 @@ function renderLesson() {
       '</div>' +
       '<div class="slide-progress-wrap"><div class="dots">' + dots + '</div><span class="slide-progress-label">' + (idx + 1) + ' / ' + ls.slides.length + '</span></div>' +
       '<div class="slide-navigation">' +
-        '<button onclick="prevSlide()" class="image-nav-btn back-nav-btn" aria-label="ย้อนกลับ" ' + (idx === 0 ? 'disabled' : '') + '><img src="./return-button.png" alt="ย้อนกลับ"></button>' +
+        '<button onclick="prevSlide()" class="image-nav-btn back-nav-btn lesson-back-btn" aria-label="ย้อนกลับ" ' + (idx === 0 ? 'disabled' : '') + '><img src="./return-button.png" alt="ย้อนกลับ"></button>' +
         '<span class="soft small" style="font-weight:600">สไลด์ ' + (idx + 1) + ' / ' + ls.slides.length + '</span>' +
         (isLast
           ? (p.slidesDone
@@ -4747,7 +4748,7 @@ function renderLesson() {
         '<span style="font-size:28px">' + t.emoji + '</span>' +
         '<h2 class="ink" style="font-size:18px;font-weight:700">' + ls.title + '</h2>' +
       '</div>' +
-      '<button onclick="changeView(\'lessons\')" class="iconbtn visual-back-btn" title="ย้อนกลับไปห้องเรียน" aria-label="ย้อนกลับไปห้องเรียน"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
+      '<button onclick="changeView(\'lessons\')" class="iconbtn visual-back-btn lesson-back-btn" title="ย้อนกลับไปห้องเรียน" aria-label="ย้อนกลับไปห้องเรียน"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
     '</div>' +
     '<div class="body-area scroll">' +
       lessonTabBar(p) +
