@@ -170,13 +170,6 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .lesson-inner-menu-label{display:flex;align-items:center;gap:10px;margin:0 2px 12px;font-size:16px;font-weight:700;color:var(--ink)}
 .lesson-inner-menu-label span{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:var(--yellow);border:1.5px solid var(--yellow-deep)}
 .lesson-inner-menu .tabbar{margin-bottom:12px}
-.research-process{margin-bottom:18px;padding:18px;border:2px solid #D8D0BF;border-radius:18px;background:rgba(255,255,255,.84);box-shadow:0 5px 0 rgba(83,97,123,.13)}
-.research-process-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.research-process-head h3{font-size:19px;font-weight:700;margin:0}.research-process-head p{font-size:12px;line-height:1.7;color:var(--ink-soft);margin-top:3px}
-.research-process-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.research-process-step{position:relative;min-height:116px;padding:14px 13px 12px 48px;border:1.5px solid rgba(48,67,97,.2);border-radius:14px;background:linear-gradient(145deg,#fff,#f5f9ff);box-shadow:0 3px 0 rgba(73,91,126,.1)}
-.research-process-step .num{position:absolute;left:12px;top:13px;display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:var(--yellow);border:1.5px solid var(--yellow-deep);font-size:12px;font-weight:700}.research-process-step b{display:block;font-size:14px;line-height:1.5;margin-bottom:4px}.research-process-step p{font-size:11px;line-height:1.65;color:var(--ink-soft);margin:0}.research-process-step.prompt-step{background:linear-gradient(145deg,#fff8df,#fff)}
-@media(min-width:761px) and (max-width:1100px){.research-process-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
 /* Tabs */
 .tabbar{display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap}
 .tab{flex:1; min-width:140px; padding:12px 10px; border-radius:14px; text-align:center; font-weight:700; font-size:16px;
@@ -889,7 +882,6 @@ body::after{
   .lesson-submenu-heading{align-items:flex-start;flex-direction:column}
   .lesson-inner-menu{padding:12px 10px 2px}
   .lesson-inner-menu .tab{min-width:calc(50% - 6px);font-size:14px}
-  .research-process{padding:14px}.research-process-head{flex-direction:column}.research-process-grid{grid-template-columns:1fr}.research-process-step{min-height:0}
   .mright{width:100%; justify-content:space-between; border-top:2px dashed rgba(120,100,70,.2); padding-top:10px}
   h1.title{font-size:30px !important}
   .login-card{max-width:100%; padding:22px}
@@ -4521,26 +4513,6 @@ function totalPromptStars() {
 }
 
 /* ==================== รายการบทเรียน ==================== */
-function researchLearningProcessHtml() {
-  var steps = [
-    { icon:'📝', title:'แบบทดสอบก่อนเรียน', text:'ทำ Pre-test ก่อนเริ่มเรียนรู้ผ่านเว็บแอปพลิเคชัน' },
-    { icon:'🎬', title:'วิดีโอสั้นและสไลด์', text:'ศึกษาเนื้อหาทั้ง 5 ด้านผ่าน Short Video Learning และ Slide Learning' },
-    { icon:'✍️', title:'หลักการเขียนพรอมต์', text:'ศึกษา ฝึกเขียน และปรับปรุงพรอมต์ในบทที่ 2 จากระดับง่ายไปยาก', prompt:true },
-    { icon:'🎭', title:'สถานการณ์จำลอง', text:'ฝึกวิเคราะห์และตัดสินใจจากสถานการณ์การใช้ AI ในชีวิตจริง' },
-    { icon:'💡', title:'กิจกรรมและแบบทดสอบ', text:'ทำแบบทดสอบระหว่างเรียน พร้อมคำใบ้และข้อมูลย้อนกลับ' },
-    { icon:'🤖', title:'ผู้ช่วย AI และเกมมิฟิเคชัน', text:'ถามข้อสงสัย สะสมคะแนน ระดับ เหรียญรางวัล และดูอันดับ' },
-    { icon:'🏁', title:'แบบทดสอบหลังเรียน', text:'เมื่อเรียนครบทุกบท จึงทำ Post-test และแบบสอบถามความพึงพอใจ' }
-  ];
-  return '<section class="research-process" aria-label="กระบวนการเรียนรู้ตามโครงร่างงานวิจัย">' +
-    '<div class="research-process-head"><div><h3>🧭 กระบวนการเรียนรู้ตามโครงร่างงานวิจัย</h3>' +
-    '<p>เรียงลำดับการเรียนรู้และการประเมินตามขอบเขตระบบส่วนของผู้เรียน</p></div>' +
-    '<span class="chip">7 ขั้นตอน</span></div>' +
-    '<div class="research-process-grid">' + steps.map(function(step, i) {
-      return '<div class="research-process-step' + (step.prompt ? ' prompt-step' : '') + '">' +
-        '<span class="num">' + (i + 1) + '</span><b>' + step.icon + ' ' + step.title + '</b><p>' + step.text + '</p></div>';
-    }).join('') + '</div></section>';
-}
-
 function renderLessonList() {
   var listHtml = lessons.map(function(ls, i) {
     var t = themeList[i % themeList.length];
@@ -4590,7 +4562,6 @@ function renderLessonList() {
       '<div class="pcard yellow" style="margin-bottom:14px">' +
         '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน จากนั้นศึกษาเนื้อหาผ่านวิดีโอสั้นและสไลด์ ฝึกเขียนพรอมต์ในบทที่ 2 เรียนรู้ผ่านสถานการณ์จำลอง และทำแบบทดสอบระหว่างบทให้ผ่าน 80% เมื่อเรียนครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
       '</div>' +
-      researchLearningProcessHtml() +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>กดเลือกบทที่ต้องการเพื่อเปิดเมนูย่อย</p></div><span class="chip">ปลดล็อกทีละบท</span></div>' +
       '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
     '</div>';
