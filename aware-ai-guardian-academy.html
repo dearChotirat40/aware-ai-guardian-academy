@@ -167,9 +167,13 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .lesson-submenu-action{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:7px 12px;border-radius:10px;background:var(--white);border:1.5px solid rgba(32,42,51,.45);font-size:13px;font-weight:700;box-shadow:0 2px 0 rgba(32,42,51,.2)}
 .lesson-submenu-item:disabled .lesson-submenu-action{box-shadow:none}
 .lesson-inner-menu{margin-bottom:22px;padding:14px 14px 4px;border:2px solid #D8D0BF;border-radius:15px;background:rgba(255,255,255,.72);box-shadow:0 3px 0 rgba(83,97,123,.15)}
-.lesson-inner-menu-label{display:flex;align-items:center;gap:10px;margin:0 2px 12px;font-size:16px;font-weight:700;color:var(--ink)}
-.lesson-inner-menu-label span{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:var(--yellow);border:1.5px solid var(--yellow-deep)}
 .lesson-inner-menu .tabbar{margin-bottom:12px}
+.lesson-choice-card{max-width:900px;margin:0 auto;padding:24px;border:2px solid #D8D0BF;border-radius:20px;background:rgba(255,255,255,.9);box-shadow:0 6px 0 rgba(83,97,123,.14)}
+.lesson-choice-head{text-align:center;margin-bottom:18px}.lesson-choice-head h3{font-size:24px;margin-bottom:6px}.lesson-choice-head p{color:var(--ink-soft);font-size:14px;line-height:1.7}
+.lesson-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.lesson-choice-btn{display:flex;align-items:center;gap:14px;min-height:100px;padding:17px;border:2px solid #D8D0BF;border-radius:17px;background:#fff;text-align:left;color:var(--ink);box-shadow:0 4px 0 rgba(83,97,123,.15);transition:.18s}
+.lesson-choice-btn:hover{transform:translateY(-2px);border-color:var(--blue);box-shadow:0 6px 0 rgba(83,97,123,.18)}
+.lesson-choice-icon{display:grid;place-items:center;flex:0 0 54px;width:54px;height:54px;border-radius:15px;background:var(--yellow);font-size:29px}.lesson-choice-btn b{display:block;font-size:17px;margin-bottom:3px}.lesson-choice-btn small{display:block;color:var(--ink-soft);font-size:12px;line-height:1.55}
 /* Tabs */
 .tabbar{display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap}
 .tab{flex:1; min-width:140px; padding:12px 10px; border-radius:14px; text-align:center; font-weight:700; font-size:16px;
@@ -882,6 +886,7 @@ body::after{
   .lesson-submenu-heading{align-items:flex-start;flex-direction:column}
   .lesson-inner-menu{padding:12px 10px 2px}
   .lesson-inner-menu .tab{min-width:calc(50% - 6px);font-size:14px}
+  .lesson-choice-card{padding:17px}.lesson-choice-grid{grid-template-columns:1fr}.lesson-choice-btn{min-height:88px}
   .mright{width:100%; justify-content:space-between; border-top:2px dashed rgba(120,100,70,.2); padding-top:10px}
   h1.title{font-size:30px !important}
   .login-card{max-width:100%; padding:22px}
@@ -4577,7 +4582,7 @@ function openLesson(i) {
     return;
   }
   state.currentLesson = i;
-  state.lessonTab = 'video';
+  state.lessonTab = 'choose';
   state.slideIdx = 0;
   changeView('lesson');
 }
@@ -4631,7 +4636,6 @@ function lessonMissionHtml(ls, t) {
 function lessonTabBar(p) {
   var quizUnlocked = p.videoDone || p.slidesDone;
   return '<div class="lesson-inner-menu">' +
-    '<p class="lesson-inner-menu-label"><span>☰</span>เรียนตามลำดับ: สื่อ →' + (state.currentLesson === 1 ? ' พรอมต์ →' : '') + ' สถานการณ์ → แบบทดสอบ</p>' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
     '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : (p.videoDone ? 'done' : '')) + '" onclick="setTab(\'video\')">🎬 วิดีโอสั้น ' + (p.videoDone ? '✅' : '') + '</button>' +
     '<button class="tab ' + (state.lessonTab === 'slides' ? 'active' : (p.slidesDone ? 'done' : '')) + '" onclick="setTab(\'slides\')">🖼️ สไลด์/อินโฟกราฟิก ' + (p.slidesDone ? '✅' : '') + '</button>' +
@@ -4661,7 +4665,18 @@ function renderLesson() {
   var p = lessonProgress[i];
   var content = '';
 
-  if (state.lessonTab === 'mission') {
+  if (state.lessonTab === 'choose') {
+    content = '<section class="lesson-choice-card pop">' +
+      '<div class="lesson-choice-head"><h3>เลือกวิธีเรียนที่เหมาะกับเรา</h3><p>เริ่มจากรูปแบบที่ชอบได้เลย และกลับมาเลือกแบบอื่นเพิ่มเติมได้ทุกเมื่อ</p></div>' +
+      '<div class="lesson-choice-grid">' +
+        '<button class="lesson-choice-btn" onclick="setTab(\'video\')"><span class="lesson-choice-icon">🎬</span><span><b>เรียนด้วยวิดีโอสั้น</b><small>ดูคลิปสรุปเนื้อหาประจำบท</small></span></button>' +
+        '<button class="lesson-choice-btn" onclick="setTab(\'slides\')"><span class="lesson-choice-icon">🖼️</span><span><b>เรียนด้วยสไลด์/อินโฟกราฟิก</b><small>อ่านทีละหน้าและฟังเสียงประกอบได้</small></span></button>' +
+        (state.currentLesson === 1 ? '<button class="lesson-choice-btn" onclick="changeView(\'prompt\')"><span class="lesson-choice-icon">✍️</span><span><b>ฝึกเขียนพรอมต์</b><small>ฝึกจากระดับง่ายไปยากในบทที่ 2</small></span></button>' : '') +
+        '<button class="lesson-choice-btn" onclick="setTab(\'mission\')"><span class="lesson-choice-icon">🎭</span><span><b>เรียนด้วยสถานการณ์จำลอง</b><small>ลองคิดและตัดสินใจจากเหตุการณ์ใกล้ตัว</small></span></button>' +
+      '</div>' +
+    '</section>';
+  }
+  else if (state.lessonTab === 'mission') {
     content = lessonMissionHtml(ls, t);
   }
   else if (state.lessonTab === 'video') {
