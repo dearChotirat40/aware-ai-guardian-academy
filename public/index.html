@@ -174,6 +174,9 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .lesson-choice-btn{display:flex;align-items:center;gap:14px;min-height:100px;padding:17px;border:2px solid #D8D0BF;border-radius:17px;background:#fff;text-align:left;color:var(--ink);box-shadow:0 4px 0 rgba(83,97,123,.15);transition:.18s}
 .lesson-choice-btn:hover{transform:translateY(-2px);border-color:var(--blue);box-shadow:0 6px 0 rgba(83,97,123,.18)}
 .lesson-choice-icon{display:grid;place-items:center;flex:0 0 54px;width:54px;height:54px;border-radius:15px;background:var(--yellow);font-size:29px}.lesson-choice-btn b{display:block;font-size:17px;margin-bottom:3px}.lesson-choice-btn small{display:block;color:var(--ink-soft);font-size:12px;line-height:1.55}
+.lesson-choice-btn.featured{grid-column:1/-1;border-color:var(--pink-deep);background:linear-gradient(135deg,var(--pink),#fff);box-shadow:0 5px 0 rgba(163,77,107,.2)}
+.lesson-choice-btn.featured .lesson-choice-icon{background:#fff;border:2px solid var(--pink-deep)}
+.lesson-choice-recommend{display:inline-flex;margin-top:7px;padding:3px 9px;border-radius:999px;background:var(--yellow);border:1px solid var(--yellow-deep);font-size:11px;font-weight:700;color:var(--ink)}
 /* Tabs */
 .tabbar{display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap}
 .tab{flex:1; min-width:140px; padding:12px 10px; border-radius:14px; text-align:center; font-weight:700; font-size:16px;
@@ -4556,7 +4559,7 @@ function renderLessonList() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="header-section-icon" src="./lesson-content-icon.png" alt="บทเรียนและเนื้อหา">' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">บทเรียนและเนื้อหา</h2>' +
-        '<p class="soft tiny">เลือกบทเรียน แล้วเลือกเมนูย่อยภายในแต่ละบท</p></div>' +
+        '<p class="soft tiny">เลือกบทเรียน แล้วเริ่มเรียนรู้จากสถานการณ์ใกล้ตัว</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div class="scorebox"><div class="t-orange" style="font-size:20px;font-weight:700">⭐ ' + totalStars() + '/' + maxStars() + '</div><p class="soft tiny">ดาวสะสม</p></div>' +
@@ -4565,9 +4568,9 @@ function renderLessonList() {
     '</div>' +
     '<div class="body-area scroll">' +
       '<div class="pcard yellow" style="margin-bottom:14px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน จากนั้นศึกษาเนื้อหาผ่านวิดีโอสั้นและสไลด์ ฝึกเขียนพรอมต์ในบทที่ 2 เรียนรู้ผ่านสถานการณ์จำลอง และทำแบบทดสอบระหว่างบทให้ผ่าน 80% เมื่อเรียนครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
+        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน แล้วเริ่มแต่ละบทจากสถานการณ์จำลองเพื่อคิดและตัดสินใจ จากนั้นเลือกวิดีโอสั้น สไลด์/อินโฟกราฟิก หรือฝึกเขียนพรอมต์ในบทที่ 2 ก่อนทำแบบทดสอบระหว่างบทให้ผ่าน 80% เมื่อเรียนครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
       '</div>' +
-      '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>กดเลือกบทที่ต้องการเพื่อเปิดเมนูย่อย</p></div><span class="chip">ปลดล็อกทีละบท</span></div>' +
+      '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>เปิดบทเรียนเพื่อเริ่มจากสถานการณ์ แล้วเลือกสื่อเสริมที่เหมาะกับตนเอง</p></div><span class="chip">สถานการณ์เป็นฐาน</span></div>' +
       '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
     '</div>';
 }
@@ -4637,10 +4640,10 @@ function lessonTabBar(p) {
   var quizUnlocked = p.videoDone || p.slidesDone;
   return '<div class="lesson-inner-menu">' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
+    '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">สถานการณ์จำลอง · เริ่มที่นี่</button>' +
     '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : (p.videoDone ? 'done' : '')) + '" onclick="setTab(\'video\')">🎬 วิดีโอสั้น ' + (p.videoDone ? '✅' : '') + '</button>' +
     '<button class="tab ' + (state.lessonTab === 'slides' ? 'active' : (p.slidesDone ? 'done' : '')) + '" onclick="setTab(\'slides\')">🖼️ สไลด์/อินโฟกราฟิก ' + (p.slidesDone ? '✅' : '') + '</button>' +
     (state.currentLesson === 1 ? '<button class="tab ' + (totalPromptStars() > 0 ? 'done' : '') + '" onclick="changeView(\'prompt\')">✍️ ฝึกเขียนพรอมต์ ' + (totalPromptStars() > 0 ? '⭐' + totalPromptStars() : '') + '</button>' : '') +
-    '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">สถานการณ์จำลอง</button>' +
     '<button class="tab ' + (state.lessonTab === 'quiz' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท') + (p.quizDone ? ' ' + lessonStarRow(p.stars) : '') + '</button>' +
     '</div>' +
   '</div>';
@@ -4667,12 +4670,12 @@ function renderLesson() {
 
   if (state.lessonTab === 'choose') {
     content = '<section class="lesson-choice-card pop">' +
-      '<div class="lesson-choice-head"><h3>เลือกวิธีเรียนที่เหมาะกับเรา</h3><p>เริ่มจากรูปแบบที่ชอบได้เลย และกลับมาเลือกแบบอื่นเพิ่มเติมได้ทุกเมื่อ</p></div>' +
+      '<div class="lesson-choice-head"><h3>เรียนรู้จากสถานการณ์เป็นฐาน</h3><p>เริ่มจากเหตุการณ์ใกล้ตัวเพื่อฝึกคิดและตัดสินใจ แล้วเลือกสื่อเสริมที่เหมาะกับเรา</p></div>' +
       '<div class="lesson-choice-grid">' +
+        '<button class="lesson-choice-btn featured" onclick="setTab(\'mission\')"><span class="lesson-choice-icon">🎭</span><span><b>เริ่มด้วยสถานการณ์จำลอง</b><small>ลองคิด วิเคราะห์ และตัดสินใจจากเหตุการณ์ใกล้ตัว</small><span class="lesson-choice-recommend">แนะนำให้เริ่มที่นี่</span></span></button>' +
         '<button class="lesson-choice-btn" onclick="setTab(\'video\')"><span class="lesson-choice-icon">🎬</span><span><b>เรียนด้วยวิดีโอสั้น</b><small>ดูคลิปสรุปเนื้อหาประจำบท</small></span></button>' +
         '<button class="lesson-choice-btn" onclick="setTab(\'slides\')"><span class="lesson-choice-icon">🖼️</span><span><b>เรียนด้วยสไลด์/อินโฟกราฟิก</b><small>อ่านทีละหน้าและฟังเสียงประกอบได้</small></span></button>' +
         (state.currentLesson === 1 ? '<button class="lesson-choice-btn" onclick="changeView(\'prompt\')"><span class="lesson-choice-icon">✍️</span><span><b>ฝึกเขียนพรอมต์</b><small>ฝึกจากระดับง่ายไปยากในบทที่ 2</small></span></button>' : '') +
-        '<button class="lesson-choice-btn" onclick="setTab(\'mission\')"><span class="lesson-choice-icon">🎭</span><span><b>เรียนด้วยสถานการณ์จำลอง</b><small>ลองคิดและตัดสินใจจากเหตุการณ์ใกล้ตัว</small></span></button>' +
       '</div>' +
     '</section>';
   }
