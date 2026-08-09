@@ -199,6 +199,12 @@ button:disabled{cursor:not-allowed; opacity:.55}
 /* Slides / infographic */
 .media-stage .slidebox{min-height:350px;display:flex;flex-direction:column;justify-content:center;padding:26px;border-radius:22px;box-shadow:0 10px 28px rgba(54,72,100,.11)}
 .slide-content-grid{display:grid;grid-template-columns:minmax(150px,190px) minmax(0,1fr);gap:22px;align-items:stretch}
+.slide-content-grid.has-source-image{display:block}
+.slide-source-image-card{overflow:hidden;padding:8px;border:2px solid rgba(44,91,150,.18);border-radius:18px;background:#fff;box-shadow:0 6px 18px rgba(49,67,92,.13)}
+.slide-source-image{display:block;width:100%;height:auto;max-height:58vh;object-fit:contain;border-radius:12px;background:#fff}
+.slide-content-grid.has-source-image .slide-text-card{margin-top:14px;padding:18px 22px}
+.slide-content-grid.has-source-image .slide-text-card h3{margin-bottom:7px}
+.slide-content-grid.has-source-image .slide-text-card p{font-size:15px;line-height:1.8}
 .slide-emoji-card{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:230px;padding:20px;border:2px solid rgba(44,91,150,.18);border-radius:18px;background:linear-gradient(150deg,#fff 0%,#eef6ff 55%,#fff6cf 100%);box-shadow:inset 0 0 0 5px rgba(255,255,255,.68)}
 .slide-emoji-card:before,.slide-emoji-card:after{content:"";position:absolute;border-radius:50%;background:rgba(84,142,218,.12)}
 .slide-emoji-card:before{width:100px;height:100px;right:-35px;top:-35px}.slide-emoji-card:after{width:70px;height:70px;left:-24px;bottom:-24px;background:rgba(255,193,64,.19)}
@@ -231,7 +237,7 @@ button:disabled{cursor:not-allowed; opacity:.55}
 @media(max-width:700px){
   .media-stage-head{align-items:flex-start;padding:13px 14px;border-radius:15px}.media-stage-icon{width:42px;height:42px;flex-basis:42px;font-size:23px;border-radius:12px}.media-stage-title h3{font-size:17px}.media-state-chip{font-size:10px;min-height:29px;padding:5px 8px}
   .lesson-video-panel{padding:8px;border-radius:17px}.videobox{border-width:4px;border-radius:13px}.video-summary-card{padding:14px;gap:10px}.video-summary-icon{width:36px;height:36px;flex-basis:36px;font-size:18px}
-  .media-stage .slidebox{min-height:0;padding:16px;border-radius:18px}.slide-content-grid{grid-template-columns:1fr;gap:13px}.slide-emoji-card{min-height:135px;padding:15px}.slide-emoji{font-size:58px}.slide-emoji-label{margin-top:8px}.slide-text-card{padding:17px}.slide-text-card h3{font-size:20px;text-align:center}.slide-text-card p{font-size:16px;line-height:1.9}.slide-audio{flex-direction:column;text-align:center}.slide-navigation{justify-content:center}.slide-navigation>span{order:-1;width:100%;text-align:center}.slide-navigation .image-nav-btn img{width:120px}.media-actions{padding:11px}
+  .media-stage .slidebox{min-height:0;padding:16px;border-radius:18px}.slide-content-grid{grid-template-columns:1fr;gap:13px}.slide-emoji-card{min-height:135px;padding:15px}.slide-emoji{font-size:58px}.slide-emoji-label{margin-top:8px}.slide-text-card{padding:17px}.slide-text-card h3{font-size:20px;text-align:center}.slide-text-card p{font-size:16px;line-height:1.9}.slide-source-image{max-height:none}.slide-content-grid.has-source-image .slide-text-card{padding:15px}.slide-audio{flex-direction:column;text-align:center}.slide-navigation{justify-content:center}.slide-navigation>span{order:-1;width:100%;text-align:center}.slide-navigation .image-nav-btn img{width:120px}.media-actions{padding:11px}
 }
 
 /* Quiz */
@@ -1441,10 +1447,10 @@ var lessons = [
     },
     videoDesc: 'คลิปสั้น: “AI คืออะไรและทำงานอย่างไร?” — รู้จัก Machine Learning, Generative AI, ข้อมูลฝึก ความสามารถ และข้อจำกัด',
     slides: [
-      { emoji:'🤖', title:'AI คืออะไร?', text:'AI หรือปัญญาประดิษฐ์ (Artificial Intelligence) คือเทคโนโลยีที่ช่วยให้เครื่องจักรหรือคอมพิวเตอร์ทำงานบางอย่างที่ต้องอาศัยความฉลาดของมนุษย์ เช่น การวิเคราะห์ การเรียนรู้ การตัดสินใจ และการใช้ภาษาธรรมชาติ' },
+      { emoji:'🤖', image:'./lesson1-ai-what-is-ai.png', imageAlt:'สื่ออธิบายความหมายของ AI และตัวอย่างความสามารถของปัญญาประดิษฐ์', title:'AI คืออะไร?', text:'AI หรือปัญญาประดิษฐ์ (Artificial Intelligence) ช่วยให้เครื่องจักรหรือคอมพิวเตอร์ทำงานที่ต้องอาศัยการวิเคราะห์ การเรียนรู้ การตัดสินใจ และการใช้ภาษาธรรมชาติได้' },
       { emoji:'🧠', title:'AI ทำงานอะไรได้บ้าง?', text:'AI เรียนรู้รูปแบบจากข้อมูลจำนวนมาก แล้วนำรูปแบบนั้นไปจำแนก คาดการณ์ แนะนำ ตอบคำถาม หรือตัดสินใจภายใต้เงื่อนไขที่กำหนด อย่างไรก็ตาม AI ไม่ได้คิดหรือรู้สึกเหมือนมนุษย์' },
       { emoji:'🛒', title:'AI ในชีวิตประจำวัน', text:'ตัวอย่างที่พบได้จริง ได้แก่ ระบบแนะนำสินค้าและวิดีโอ การค้นหาด้วยเสียง ผู้ช่วยเสมือน ระบบรู้จำใบหน้า การแปลภาษา แชตบอต และระบบช่วยขับรถหรือรถยนต์ไร้คนขับบางระดับ' },
-      { emoji:'🧩', title:'AI แบ่งตามขอบเขตความสามารถ', text:'AI มักแบ่งตามขอบเขตความสามารถเป็น 3 ประเภท ได้แก่ AI แบบแคบ (Narrow AI), AI แบบทั่วไป (Artificial General Intelligence: AGI) และ AI แบบเหนือมนุษย์ (Artificial Superintelligence: ASI)' },
+      { emoji:'🧩', image:'./lesson1-ai-types.png', imageAlt:'สื่ออธิบาย AI แบบแคบ AI แบบทั่วไป และ AI แบบเหนือมนุษย์', title:'AI แบ่งตามขอบเขตความสามารถ', text:'AI แบ่งตามขอบเขตความสามารถเป็น 3 ประเภท ได้แก่ AI แบบแคบ (Narrow AI), AI แบบทั่วไป (Artificial General Intelligence: AGI) และ AI แบบเหนือมนุษย์ (Artificial Superintelligence: ASI)' },
       { emoji:'🎯', title:'AI แบบแคบ (Narrow AI)', text:'AI ที่ออกแบบมาให้ทำงานเฉพาะด้านอย่างมีประสิทธิภาพ เช่น ระบบแนะนำของ Netflix ผู้ช่วยเสียง การกรองสแปม หรือระบบรู้จำภาพ ทำงานได้ดีในขอบเขตที่กำหนด แต่ไม่สามารถขยายความสามารถไปทำทุกเรื่องได้เอง และเป็นประเภทที่พบมากที่สุดในปัจจุบัน' },
       { emoji:'🌐', title:'AI แบบทั่วไป (AGI)', text:'AGI คือแนวคิดของ AI ที่สามารถเรียนรู้ คิด และทำงานได้หลากหลายคล้ายมนุษย์ ไม่จำกัดเฉพาะงานใดงานหนึ่ง ปัจจุบันยังอยู่ในขั้นการวิจัยและพัฒนา และยังไม่มีระบบที่ได้รับการยอมรับทั่วไปว่าเป็น AGI อย่างสมบูรณ์' },
       { emoji:'🚀', title:'AI แบบเหนือมนุษย์ (ASI)', text:'ASI เป็นแนวคิดเชิงทฤษฎีของ AI ที่มีความสามารถเหนือมนุษย์ในแทบทุกด้าน ตั้งแต่การคิดวิเคราะห์ไปจนถึงความคิดสร้างสรรค์ ปัจจุบันยังไม่มีอยู่จริง และต้องพิจารณาประเด็นด้านจริยธรรม ความปลอดภัย และการควบคุมอย่างรอบคอบ' },
@@ -1711,7 +1717,7 @@ var state = {
 };
 
 function newLessonProgress() {
-  return lessons.map(function(){ return { preDone:false, preScore:0, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0 }; });
+  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0 }; });
 }
 var lessonProgress = newLessonProgress();
 
@@ -1719,9 +1725,13 @@ function normalizeLessonProgress(p) {
   p = p || {};
   var postScore = Math.max(0, Number(p.postScore || 0));
   var attempted = !!p.quizAttempted || !!p.quizDone || postScore > 0;
+  var scenarioChoice = Number(p.scenarioChoice);
+  if (!isFinite(scenarioChoice) || scenarioChoice < 0) scenarioChoice = -1;
   return {
     preDone: !!p.preDone,
     preScore: p.preScore || 0,
+    scenarioAnswered: !!p.scenarioAnswered && scenarioChoice >= 0,
+    scenarioChoice: scenarioChoice,
     videoDone: !!p.videoDone,
     slideSeen: p.slideSeen || 0,
     slidesDone: !!p.slidesDone,
@@ -2492,7 +2502,7 @@ function copyStudentInstruction() {
     '1) กรอกรหัสผ่านที่ได้รับจากคุณครูเพื่อเข้าสู่ระบบ\\n' +
     '2) ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย\\n' +
     '3) ศึกษาเนื้อหาทั้ง 5 บทผ่านวิดีโอสั้นและสไลด์ โดยบทที่ 2 ให้ฝึกเขียนและปรับปรุงพรอมต์จากง่ายไปยาก\\n' +
-    '4) เรียนรู้จากเหตุการณ์จริงที่นักเรียนอาจพบ แล้วเลือกสื่อที่เหมาะกับตนเอง จากนั้นเลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท ซึ่งทำได้บทละ 1 ครั้งและบันทึกคะแนนครั้งแรก\\n' +
+    '4) อ่านเหตุการณ์จริงในแต่ละบทและเลือกคำตอบอย่างน้อย 1 ครั้ง แล้วเลือกสื่อที่เหมาะกับตนเอง จากนั้นเลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท ซึ่งทำได้บทละ 1 ครั้งและบันทึกคะแนนครั้งแรก\\n' +
     '5) ใช้ผู้ช่วย AI เมื่อมีข้อสงสัย และสะสมคะแนน ระดับ เหรียญรางวัล และอันดับ\\n' +
     '6) เมื่อเรียนครบทั้ง 5 บท ทำแบบทดสอบหลังเรียนและแบบสอบถามความพึงพอใจ';
   copyPlainText(text, 'คัดลอกคำสั่งให้นักเรียนแล้ว 📋✅');
@@ -2523,7 +2533,7 @@ function buildReportCode() {
   if (!s) return '';
   var payload = {
     c: s.code || '', k: cleanNickname(s.nickname), u: s.num || '',
-    lp: (s.lp || []).map(function(p){ p = normalizeLessonProgress(p); return [p.stars || 0, p.videoDone ? 1 : 0, p.slidesDone ? 1 : 0, p.quizDone ? 1 : 0, p.preDone ? 1 : 0, p.preScore || 0, p.postScore || 0, p.postTotal || 0]; }),
+    lp: (s.lp || []).map(function(p){ p = normalizeLessonProgress(p); return [p.stars || 0, p.videoDone ? 1 : 0, p.slidesDone ? 1 : 0, p.quizDone ? 1 : 0, p.preDone ? 1 : 0, p.preScore || 0, p.postScore || 0, p.postTotal || 0, p.scenarioAnswered ? 1 : 0, p.scenarioChoice]; }),
     sc: s.score || 0, ul: s.unlockedLevel || 0, b: s.badgeIds || [], p: s.pStars || [], a: s.assessments || newAssessments(),
     t: new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })
   };
@@ -2547,7 +2557,7 @@ function mergeStudentReport(d) {
   var id = 'roster_' + (d.c || d.u);
   var lp = lessons.map(function(_, i) {
     var a = (d.lp && d.lp[i]) || [0,0,0,0];
-    return normalizeLessonProgress({ stars: a[0] || 0, videoDone: !!a[1], slidesDone: !!a[2], quizAttempted: !!a[3], quizDone: !!a[3], preDone: !!a[4], preScore: a[5] || 0, postScore: a[6] || 0, postTotal: a[7] || 0, slideSeen: 0 });
+    return normalizeLessonProgress({ stars: a[0] || 0, videoDone: !!a[1], slidesDone: !!a[2], quizAttempted: !!a[3], quizDone: !!a[3], preDone: !!a[4], preScore: a[5] || 0, postScore: a[6] || 0, postTotal: a[7] || 0, scenarioAnswered: !!a[8], scenarioChoice:typeof a[9] === 'number' ? a[9] : -1, slideSeen: 0 });
   });
   var pStars = PROMPT_CHALLENGES.map(function(_, i){ return (d.p && d.p[i]) || 0; });
   var incoming = { nickname:cleanNickname(d.k), num:d.u || '', code:d.c || '',
@@ -2572,6 +2582,10 @@ function mergeStudentReport(d) {
     a.stars = (a.quizDone || b.quizDone) ? 1 : 0;
     a.preDone = a.preDone || b.preDone;
     a.preScore = Math.max(a.preScore || 0, b.preScore || 0);
+    if (!a.scenarioAnswered && b.scenarioAnswered) {
+      a.scenarioAnswered = true;
+      a.scenarioChoice = b.scenarioChoice;
+    }
     a.videoDone = a.videoDone || b.videoDone;
     a.slidesDone = a.slidesDone || b.slidesDone;
     a.quizAttempted = a.quizAttempted || b.quizAttempted;
@@ -4596,12 +4610,29 @@ function openLesson(i) {
 function lessonMissionHtml(ls, t) {
   var sim = ls.simulation || {};
   var mission = ls.mission || {};
+  var progress = normalizeLessonProgress(lessonProgress[state.currentLesson]);
+  var selectedChoice = progress.scenarioChoice;
   var choices = (sim.choices || []).map(function(c, idx) {
-    return '<div class="innerbox" style="margin-bottom:10px;border-color:' + (idx === sim.best ? 'var(--mint-line)' : '#E3D5B8') + '">' +
-      '<p class="small" style="font-weight:700;line-height:1.7">' + String.fromCharCode(65 + idx) + '. ' + c + '</p>' +
-      (idx === sim.best ? '<p class="tiny t-mint" style="font-weight:700;margin-top:2px">แนวทางที่ควรเลือกหลังเรียนรู้บทนี้</p>' : '') +
-    '</div>';
+    var cls = '';
+    if (progress.scenarioAnswered) {
+      if (idx === sim.best) cls = ' right';
+      else if (idx === selectedChoice) cls = ' wrong';
+    }
+    return '<button type="button" class="qopt' + cls + '" style="margin-bottom:10px"' +
+      (progress.scenarioAnswered ? ' disabled' : ' onclick="answerLessonScenario(' + idx + ')"') + '>' +
+      '<span class="key">' + String.fromCharCode(65 + idx) + '</span>' +
+      '<span style="line-height:1.75;padding-top:2px">' + c + '</span>' +
+    '</button>';
   }).join('');
+  var answerFeedback = '';
+  if (progress.scenarioAnswered) {
+    var correct = selectedChoice === sim.best;
+    answerFeedback = '<div class="pcard ' + (correct ? 'mint' : 'pink') + ' pop" style="margin-top:10px;padding:14px 16px">' +
+      '<p class="small" style="font-weight:700;line-height:1.8">' + (correct ? '✅ เลือกได้เหมาะสม' : '💡 ลองพิจารณาผลกระทบอีกครั้ง') + '</p>' +
+      '<p class="soft tiny" style="line-height:1.8;margin-top:3px">แนวทางที่เหมาะสมคือ: ' + ((sim.choices || [])[sim.best] || '-') + '</p>' +
+      (correct ? '' : '<button type="button" onclick="resetLessonScenario()" class="btn whiteb sm" style="margin-top:10px">🔄 ลองเลือกใหม่</button>') +
+    '</div>';
+  }
   var bullets = ls.slides.map(function(s){
     var shortText = s.text.length > 108 ? s.text.slice(0, 108) + '...' : s.text;
     return '<div class="innerbox" style="margin-bottom:10px">' +
@@ -4620,25 +4651,45 @@ function lessonMissionHtml(ls, t) {
       '<p class="small" style="font-weight:700;line-height:1.8">📍 เหตุการณ์ที่พบ: ' + (sim.place || 'โรงเรียนและชีวิตออนไลน์') + '</p>' +
       '<p class="soft small" style="line-height:1.9;margin-top:4px">' + (sim.context || 'นักเรียนพบสถานการณ์ที่ต้องใช้ AI อย่างรอบคอบ') + '</p>' +
       '<p class="small" style="font-weight:700;line-height:1.8;margin-top:10px">สิ่งที่ต้องตัดสินใจ: ' + (sim.task || 'เลือกแนวทางที่รับผิดชอบที่สุด') + '</p>' +
-      '<div style="margin-top:10px">' + choices + '</div>' +
+      '<p class="tiny t-blue" style="font-weight:700;margin-top:10px">เลือกคำตอบที่เหมาะสมที่สุด 1 ข้อ</p>' +
+      '<div style="margin-top:8px">' + choices + answerFeedback + '</div>' +
     '</div>' +
     '<div class="pcard plain" style="margin-top:12px;padding:14px 18px">' +
       '<div class="lesson-media-icons" aria-label="สื่อการเรียนรู้"><span title="สไลด์และอินโฟกราฟิก">🖼️</span><span title="คลิปสั้น">🎬</span></div>' +
       bullets +
     '</div>' +
     '<div class="center" style="margin-top:14px">' +
-      '<p class="small" style="font-weight:700;margin-bottom:10px">วิเคราะห์สถานการณ์แล้ว สามารถทบทวนสื่อหรือทำแบบทดสอบระหว่างบทได้</p>' +
+      '<p class="small" style="font-weight:700;margin-bottom:10px">' + (progress.scenarioAnswered ? 'ตอบเหตุการณ์แล้ว สามารถทบทวนสื่อหรือเตรียมทำแบบทดสอบระหว่างบทได้' : 'เลือกคำตอบของเหตุการณ์ก่อน แล้วจึงไปเรียนผ่านสื่อที่ต้องการ') + '</p>' +
       '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">' +
         '<button onclick="setTab(\'video\')" class="btn whiteb sm">🎬 ทบทวนวิดีโอสั้น</button>' +
         '<button onclick="setTab(\'slides\')" class="btn blueb sm">🖼️ ทบทวนสไลด์</button>' +
         (state.currentLesson === 1 ? '<button onclick="changeView(\'prompt\')" class="btn whiteb sm">✍️ ฝึกเขียนพรอมต์</button>' : '') +
-        '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>' +
+        (progress.scenarioAnswered
+          ? '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>'
+          : '<button class="btn pinkb sm" disabled>🔒 ตอบเหตุการณ์ก่อน</button>') +
       '</div>' +
     '</div>' +
   '</div>';
 }
+function answerLessonScenario(index) {
+  var i = state.currentLesson;
+  var sim = lessons[i] && lessons[i].simulation;
+  index = Number(index);
+  if (!sim || !sim.choices || !sim.choices[index]) return;
+  lessonProgress[i].scenarioChoice = index;
+  lessonProgress[i].scenarioAnswered = true;
+  saveProgress();
+  render();
+}
+function resetLessonScenario() {
+  var p = lessonProgress[state.currentLesson];
+  p.scenarioChoice = -1;
+  p.scenarioAnswered = false;
+  saveProgress();
+  render();
+}
 function lessonTabBar(p) {
-  var quizUnlocked = p.quizDone || p.videoDone || p.slidesDone;
+  var quizUnlocked = p.quizDone || (p.scenarioAnswered && (p.videoDone || p.slidesDone));
   return '<div class="lesson-inner-menu">' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
     '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">เหตุการณ์จริง · เริ่มที่นี่</button>' +
@@ -4658,6 +4709,12 @@ function tryOpenQuiz() {
   if (p.quizDone) {
     state.quiz = { mode:'mid', qIndex:lessons[state.currentLesson].quiz.length - 1, correct:p.postScore || 0, answered:true, picked:null, completed:true };
     changeView('quizresult');
+    return;
+  }
+  if (!p.scenarioAnswered) {
+    alert('กรุณาอ่านเหตุการณ์และเลือกคำตอบอย่างน้อย 1 ครั้งก่อนทำแบบทดสอบ');
+    state.lessonTab = 'mission';
+    render();
     return;
   }
   if (!(p.videoDone || p.slidesDone)) {
@@ -4752,8 +4809,10 @@ function renderLesson() {
       '</div>' +
       '<div class="pcard ' + t.card + ' slidebox">' +
         '<div class="tape ' + t.tape + '"></div>' +
-        '<div class="slide-content-grid">' +
-          '<div class="slide-emoji-card"><span class="slide-emoji">' + slide.emoji + '</span><span class="slide-emoji-label">INFOGRAPHIC</span></div>' +
+        '<div class="slide-content-grid' + (slide.image ? ' has-source-image' : '') + '">' +
+          (slide.image
+            ? '<a class="slide-source-image-card" href="' + slide.image + '" target="_blank" rel="noopener" aria-label="เปิดภาพสไลด์ขนาดเต็ม"><img class="slide-source-image" src="' + slide.image + '" alt="' + (slide.imageAlt || slide.title) + '"></a>'
+            : '<div class="slide-emoji-card"><span class="slide-emoji">' + slide.emoji + '</span><span class="slide-emoji-label">INFOGRAPHIC</span></div>') +
           '<div class="slide-text-card">' +
             '<h3 class="' + t.deep + '">' + slide.title + '</h3>' +
             '<p>' + slide.text + '</p>' +
@@ -4976,7 +5035,7 @@ function renderDashboard() {
         '<span class="t-orange small" style="font-weight:700">' + lessonStarRow(p.stars) + '</span>' +
       '</div>' +
       '<div class="pbar" style="height:12px"><div style="width:' + pct + '%;background:' + t.bar + '"></div></div>' +
-      '<p class="soft tiny" style="margin-top:6px">🎯 เหตุการณ์จริง ✅ · 📚 รูปแบบที่เลือก ' + (mediaDone ? '✅' : '⬜') + (p.slidesDone ? ' สไลด์/อินโฟกราฟิก' : '') + (p.videoDone ? ' คลิปสั้น' : '') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅ ทำแล้ว' : '⬜ ยังไม่ได้ทำ') + '</p>' +
+      '<p class="soft tiny" style="margin-top:6px">🎯 เหตุการณ์จริง ' + (p.scenarioAnswered ? '✅ ตอบแล้ว' : '⬜ ยังไม่ได้ตอบ') + ' · 📚 รูปแบบที่เลือก ' + (mediaDone ? '✅' : '⬜') + (p.slidesDone ? ' สไลด์/อินโฟกราฟิก' : '') + (p.videoDone ? ' คลิปสั้น' : '') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅ ทำแล้ว' : '⬜ ยังไม่ได้ทำ') + '</p>' +
     '</div>';
   }).join('');
 
