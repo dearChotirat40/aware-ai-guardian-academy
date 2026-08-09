@@ -1332,7 +1332,7 @@ var APPS_SCRIPT_CODE = [
 "function doPost(e) {",
 "  var d = JSON.parse(e.postData.contents);",
 "  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];",
-"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวรวม','บทที่เรียนจบ',",
+"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวบทเรียน','บทที่เรียนจบ','คะแนนหน่วย (เต็ม 100)','เหรียญหน่วย (เต็ม 5)',",
 "    'ดาวบทที่ 1','คะแนนระหว่างบทที่ 1',",
 "    'ดาวบทที่ 2','คะแนนระหว่างบทที่ 2',",
 "    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
@@ -1341,7 +1341,7 @@ var APPS_SCRIPT_CODE = [
 "    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','อัปเดตล่าสุด'];",
 "  if (sh.getLastRow() === 0) sh.appendRow(headers);",
 "  else if (sh.getLastColumn() < headers.length) sh.getRange(1, 1, 1, headers.length).setValues([headers]);",
-"  var row = [String(d.code), d.nickname, d.num, d.gem, d.levelBonus, d.journeyStars, d.stars, d.done,",
+"  var row = [String(d.code), d.nickname, d.num, d.gem, d.levelBonus, d.journeyStars, d.stars, d.done, d.unitPoints, d.lessonMedals,",
 "    d.l1, d.l1post, d.l2, d.l2post, d.l3, d.l3post, d.l4, d.l4post, d.l5, d.l5post,",
 "    d.pstars, d.pretest, d.posttest, d.score, d.game, d.badges, d.achievements, d.pct, d.last];",
 "  var last = sh.getLastRow();",
@@ -2224,13 +2224,13 @@ function teacherSystemStatusHtml() {
 function teacherMissionPlanHtml() {
   return '<div class="pcard orange noprint" style="margin-bottom:20px">' +
     '<div class="tape tape-yellow"></div>' +
-    '<h3 class="t-orange" style="font-weight:700;margin-bottom:8px">🗺️ แผนภารกิจ 11 ดาวเดินทาง</h3>' +
-    '<p class="soft small" style="line-height:1.9">คะแนนเดินทางคิดง่าย: 1 ภารกิจสำเร็จ = 1 ดาว = เดิน 1 จุด · ครบ 11 ภารกิจถึงปราสาทผู้พิทักษ์</p>' +
+    '<h3 class="t-orange" style="font-weight:700;margin-bottom:8px">🗺️ แผนรางวัลที่ใช้เกณฑ์เดียวกันทุกหน่วย</h3>' +
+    '<p class="soft small" style="line-height:1.9">จบ 1 หน่วย = 20 คะแนนหน่วย + 1 ดาวบทเรียน + 1 เหรียญหน่วย · ทั้ง 5 หน่วยรวม 100 คะแนน + 5 ดาว + 5 เหรียญ และแต่ละภารกิจที่สำเร็จยังพาเดินทาง 1 จุด</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px">' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">📚 เนื้อหา 4 ดาว</p><p class="soft tiny">ทำแบบทดสอบระหว่างบทได้บทละ 1 ครั้ง</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">✍️ พรอมต์ 3 ดาว</p><p class="soft tiny">ส่งพรอมต์ผ่านโจทย์แต่ละข้ออย่างน้อย 1 ดาว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🎮 สถานการณ์ 4 ดาว</p><p class="soft tiny">ตอบตัวเลือกที่ถูกในแต่ละด่านเพื่อรับตราสัญลักษณ์</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เป้าหมาย</p><p class="soft tiny">ครบ 11 ดาว เดินถึงจุดที่ 11</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">📚 5 หน่วยเรียน</p><p class="soft tiny">เต็ม 100 คะแนน · 5 ดาว · 5 เหรียญ (ทำแบบทดสอบระหว่างบทได้หน่วยละ 1 ครั้ง)</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">✍️ โบนัสพรอมต์</p><p class="soft tiny">3 โจทย์ · ประเมินคุณภาพโจทย์ละ 1–3 ดาว · สูงสุด 9 ดาว</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🎮 ภารกิจสถานการณ์</p><p class="soft tiny">4 ด่าน · สูงสุด 80 แต้ม · ผ่านด่านละ 1 เหรียญ</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เส้นทางรวม</p><p class="soft tiny">5 หน่วย + 3 พรอมต์ + 4 สถานการณ์ = 12 ดาวเดินทาง</p></div>' +
     '</div>' +
   '</div>';
 }
@@ -2244,7 +2244,7 @@ function teacherLessonMissionGuideHtml() {
       '<p class="small ' + t.deep + '" style="font-weight:700;line-height:1.7">' + t.emoji + ' ' + (mission.name || ls.title) + '</p>' +
       '<p class="soft tiny" style="line-height:1.8"><b>ครูชวนคิด:</b> ' + (sim.task || mission.goal || '-') + '</p>' +
       '<p class="soft tiny" style="line-height:1.8"><b>สาระหลัก:</b> ' + ls.title.replace(/^บทที่ \d+:\s*/, '') + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8"><b>จบบทเรียน:</b> ศึกษาวิดีโอหรือสไลด์' + (i === 1 ? ' ฝึกเขียนพรอมต์ในบทที่ 2' : '') + ' วิเคราะห์สถานการณ์ แล้วเลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท 1 ครั้ง เมื่อส่งครบ = 1 ดาว</p>' +
+      '<p class="soft tiny" style="line-height:1.8"><b>จบหน่วย:</b> ศึกษาวิดีโอหรือสไลด์' + (i === 1 ? ' ฝึกเขียนพรอมต์ในบทที่ 2' : '') + ' วิเคราะห์สถานการณ์ แล้วเลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท 1 ครั้ง เมื่อส่งครบ = 20 คะแนน + 1 ดาว + 1 เหรียญ</p>' +
     '</div>';
   }).join('');
   return '<div class="pcard blue noprint" style="margin-bottom:20px">' +
@@ -2451,7 +2451,8 @@ function teacherStudentDetailHtml() {
     var media = p.slidesDone && p.videoDone ? 'สไลด์และคลิป' : (p.slidesDone ? 'สไลด์/อินโฟกราฟิก' : (p.videoDone ? 'คลิปสั้น' : 'ยังไม่เลือกสื่อ'));
     return '<div class="student-detail-item"><b>บทที่ ' + (i + 1) + ' · ' + escChat(ls.short) + '</b>' +
       '<span class="small">สื่อ: ' + media + '</span><br>' +
-      '<span class="small">คะแนนระหว่างบท: ' + lessonAssessmentLabel(p, 'post') + ' · ' + lessonStarRow(p.stars) + '</span></div>';
+      '<span class="small">คะแนนระหว่างบท: ' + lessonAssessmentLabel(p, 'post') + '</span><br>' +
+      '<span class="small" style="font-weight:700">รางวัลหน่วย: ' + lessonRewardText(p) + '</span></div>';
   }).join('');
   var pStars = PROMPT_CHALLENGES.map(function(_, i){ return (s.pStars && s.pStars[i]) || 0; });
   var promptDone = pStars.filter(function(n){ return n > 0; }).length;
@@ -2473,7 +2474,7 @@ function teacherStudentDetailHtml() {
       '<div class="student-detail-item"><b>ความคืบหน้ารวม</b><span style="font-size:23px;font-weight:700">' + st.pct + '%</span></div>' +
       '<div class="student-detail-item"><b>ระดับอัญมณี</b><span>' + gemShapeHtml(gem, 'mini') + ' ' + gem.name + ' · โบนัสอันดับ +' + gem.bonus + '</span></div>' +
       '<div class="student-detail-item"><b>ก่อนเรียน / หลังเรียน</b><span>🧭 ' + assessmentLabel(s, 'pre') + ' · 🏁 ' + assessmentLabel(s, 'post') + '</span></div>' +
-      '<div class="student-detail-item"><b>ดาวบทเรียน</b><span>⭐ ' + st.stars + '/' + maxStars() + ' · จบ ' + st.done + '/' + lessons.length + ' บท</span></div>' +
+      '<div class="student-detail-item"><b>รางวัล 5 หน่วยเรียน</b><span>' + st.lessonPoints + '/100 คะแนน · ⭐ ' + st.stars + '/5 · 🏅 ' + st.lessonMedals + '/5</span></div>' +
       '<div class="student-detail-item"><b>ฝึกเขียนพรอมต์</b><span>' + pStars.map(function(n, i){ return 'ระดับ ' + (i + 1) + ' ' + starRow(n, 3); }).join('<br>') + '<br>รวม ' + st.pstars + '/' + maxPromptStars() + ' ดาว</span></div>' +
       '<div class="student-detail-item"><b>ภารกิจสถานการณ์</b><span>' + (s.score || 0) + '/80 คะแนน · ผ่าน ' + st.game + '/4 ด่าน</span></div>' +
       '<div class="student-detail-item"><b>การเดินทางและรางวัล</b><span>' + journeyDone + '/' + journeyTotal() + ' จุด · ตราสัญลักษณ์ ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></div>' +
@@ -2515,6 +2516,7 @@ function studentStats(s) {
   var g = Math.min(s.unlockedLevel || 0, scenarios.length);
   var pct = Math.round(((stars / maxStars()) * 0.5 + (g / scenarios.length) * 0.3 + (pstars / maxPromptStars()) * 0.2) * 100);
   return { stars: stars, done: done, game: g, badges: (s.badgeIds || []).length,
+    lessonPoints: done * UNIT_POINTS, lessonMedals: done,
     achievements: earnedAchievementBadges(s).length, pstars: pstars, pct: pct };
 }
 function assessmentLabel(s, mode) {
@@ -2669,7 +2671,7 @@ function sheetPayload() {
   return {
     code: s.code || '', nickname: cleanNickname(s.nickname) || studentAlias(s), num: s.num || '-',
     gem: gem.name, levelBonus: gem.bonus, journeyStars: journeyStars,
-    stars: st.stars, done: st.done,
+    stars: st.stars, done: st.done, unitPoints: st.lessonPoints, lessonMedals: st.lessonMedals,
     l1: (lp[0] && lp[0].stars) || 0, l2: (lp[1] && lp[1].stars) || 0,
     l3: (lp[2] && lp[2].stars) || 0, l4: (lp[3] && lp[3].stars) || 0,
     l5: (lp[4] && lp[4].stars) || 0,
@@ -2747,6 +2749,22 @@ function totalStars() {
   return t;
 }
 function maxStars() { return lessons.length; }
+var UNIT_POINTS = 20;
+function lessonRewardPoints(p) {
+  return normalizeLessonProgress(p).quizDone ? UNIT_POINTS : 0;
+}
+function totalLessonRewardPoints(s) {
+  var lp = s ? (s.lp || []) : lessonProgress;
+  return lessons.reduce(function(total, _, i){ return total + lessonRewardPoints(lp[i]); }, 0);
+}
+function lessonMedalCount(s) {
+  var lp = s ? (s.lp || []) : lessonProgress;
+  return lessons.reduce(function(total, _, i){ return total + (normalizeLessonProgress(lp[i]).quizDone ? 1 : 0); }, 0);
+}
+function lessonRewardText(p) {
+  var done = normalizeLessonProgress(p).quizDone;
+  return done ? (UNIT_POINTS + ' คะแนน · ⭐ 1 ดาว · 🏅 1 เหรียญ') : '0 คะแนน · ☆ 0 ดาว · ◯ 0 เหรียญ';
+}
 function lessonsCompleted() {
   return lessonProgress.filter(function(p){ return p.quizDone; }).length;
 }
@@ -2896,28 +2914,23 @@ var JOURNEY_NODES = [
   { ic:'🏠', lb:'เริ่มต้น' },       { ic:'🏫', lb:'ห้องเรียน' },       { ic:'📚', lb:'ห้องสมุด' },
   { ic:'🧪', lb:'ห้องวิทยาศาสตร์' }, { ic:'🧭', lb:'ห้องแนะแนว' },      { ic:'👥', lb:'งานกลุ่ม' },
   { ic:'💻', lb:'ห้องคอมพิวเตอร์' }, { ic:'🖥️', lb:'ห้องเรียนออนไลน์' }, { ic:'💬', lb:'กลุ่มแชต' },
-  { ic:'📝', lb:'โต๊ะทำรายงาน' },   { ic:'🩺', lb:'ห้องพยาบาล' },       { ic:'✅', lb:'ชีวิตจริง' }
+  { ic:'📝', lb:'โต๊ะทำรายงาน' },   { ic:'🩺', lb:'ห้องพยาบาล' },       { ic:'🎓', lb:'หอประชุม' },
+  { ic:'✅', lb:'ชีวิตจริง' }
 ];
 /* พิกัดโหนดอิงตามภาพแผนที่ ai-journey-map.png (x%, y%) */
 var JOURNEY_PTS = [
   [16,55],[40,36],[55,28],[77,30],
   [83,52],[67,55],[43,57],[16,24],
-  [18,82],[50,78],[70,79],[88,76]
+  [18,82],[38,78],[56,82],[74,78],[90,70]
 ];
-var JOURNEY_EVENTS = [
-  { title:'เริ่มเรียนรู้จากสิ่งใกล้ตัว', obstacle:'เตรียมสังเกตเหตุการณ์ที่พบในโรงเรียนและชีวิตออนไลน์', reward:'เริ่มต้นเส้นทางสถานการณ์จริง' },
-  { title:'AI รอบตัวในห้องเรียน', obstacle:'แยกให้ออกว่า AI ทำอะไรได้และมีข้อจำกัดอย่างไร', reward:'ผ่านเหตุการณ์บทที่ 1 ได้ 1 ดาว' },
-  { title:'ตรวจข้อมูลในห้องสมุด', obstacle:'แยกข้อมูลจริงกับข้อมูลที่ AI อาจแต่งขึ้น', reward:'ผ่านเหตุการณ์บทที่ 2 ได้ 1 ดาว' },
-  { title:'ใช้ AI ช่วยงานวิทยาศาสตร์', obstacle:'ใช้ AI เป็นผู้ช่วยคิด ไม่ใช่ให้ทำแทนทั้งหมด', reward:'ผ่านเหตุการณ์บทที่ 3 ได้ 1 ดาว' },
-  { title:'คำแนะนำในห้องแนะแนว', obstacle:'รับฟัง AI เป็นข้อมูลประกอบและตัดสินใจด้วยตนเอง', reward:'ผ่านเหตุการณ์บทที่ 4 ได้ 1 ดาว' },
-  { title:'เขียนพรอมต์สำหรับงานกลุ่ม', obstacle:'เขียนพรอมต์ให้มีบทบาท งาน บริบท และรูปแบบ', reward:'ผ่านพรอมต์ที่ 1 ได้ 1 ดาวเดินทาง' },
-  { title:'ปรับพรอมต์ในห้องคอมพิวเตอร์', obstacle:'เพิ่มรายละเอียดให้คำสั่งชัดขึ้นและตรวจผลลัพธ์', reward:'ผ่านพรอมต์ที่ 2 ได้ 1 ดาวเดินทาง' },
-  { title:'สื่อสารในห้องเรียนออนไลน์', obstacle:'สื่อสารกับ AI อย่างสุภาพ ชัดเจน และมีเป้าหมาย', reward:'ผ่านพรอมต์ที่ 3 ได้ 1 ดาวเดินทาง' },
-  { title:'ตรวจข่าวในกลุ่มแชต', obstacle:'ตรวจอคติและความน่าเชื่อถือก่อนแชร์ต่อ', reward:'ตอบสถานการณ์ที่ 1 ถูก ได้ 1 ดาวเดินทาง' },
-  { title:'รายงานใกล้ถึงกำหนดส่ง', obstacle:'เลือกใช้ AI แบบผู้ช่วยอย่างซื่อสัตย์', reward:'ตอบสถานการณ์ที่ 2 ถูก ได้ 1 ดาวเดินทาง' },
-  { title:'ข้อมูลสุขภาพของเพื่อน', obstacle:'ทำข้อมูลให้ไม่ระบุตัวตนก่อนใช้ AI', reward:'ตอบสถานการณ์ที่ 3 ถูก ได้ 1 ดาวเดินทาง' },
-  { title:'ตัดสินใจในชีวิตจริง', obstacle:'มนุษย์ต้องเป็นผู้ตัดสินใจ ไม่ปล่อยให้ AI กำหนดชีวิตแทน', reward:'ตอบสถานการณ์ที่ 4 ถูก ครบ 11 ภารกิจแล้ว!' }
-];
+var JOURNEY_EVENTS = [{ title:'เริ่มเรียนรู้จากสิ่งใกล้ตัว', obstacle:'เตรียมสังเกตเหตุการณ์ที่พบในโรงเรียนและชีวิตออนไลน์', reward:'เริ่มต้นเส้นทางสถานการณ์จริง' }];
+for (var journeyEventIndex = 1; journeyEventIndex <= JOURNEY_NODES.length - 1; journeyEventIndex++) {
+  JOURNEY_EVENTS.push({
+    title: journeyEventIndex === JOURNEY_NODES.length - 1 ? 'ถึงจุดหมายผู้พิทักษ์ AI' : 'สะสมความสำเร็จ ' + journeyEventIndex + '/' + (JOURNEY_NODES.length - 1) + ' ภารกิจ',
+    obstacle: 'เลือกทำหน่วยเรียน ฝึกพรอมต์ หรือภารกิจสถานการณ์ต่อไปตามลำดับที่พร้อม',
+    reward: 'ได้รับดาวเดินทางแล้ว ' + journeyEventIndex + '/' + (JOURNEY_NODES.length - 1) + ' ดวง'
+  });
+}
 
 function journeySteps() {
   var c = 0;
@@ -2926,12 +2939,12 @@ function journeySteps() {
   c += state.badges.length;
   return Math.min(c, journeyTotal());
 }
-function journeyTotal() { return Math.min(11, JOURNEY_NODES.length - 1); }
+function journeyTotal() { return JOURNEY_NODES.length - 1; }
 var GEM_LEVELS = [
   { name:'Silver', th:'ซิลเวอร์', cls:'silver', min:0, next:4, bonus:0 },
   { name:'Gold', th:'โกลด์', cls:'gold', min:4, next:8, bonus:5 },
-  { name:'Platinum', th:'แพลทินัม', cls:'platinum', min:8, next:11, bonus:10 },
-  { name:'Diamond', th:'ไดมอนด์', cls:'diamond', min:11, next:11, bonus:15 }
+  { name:'Platinum', th:'แพลทินัม', cls:'platinum', min:8, next:12, bonus:10 },
+  { name:'Diamond', th:'ไดมอนด์', cls:'diamond', min:12, next:12, bonus:15 }
 ];
 var ACHIEVEMENT_BADGES = [
   { id:'pre', name:'นักสำรวจ AI', criterion:'ทำแบบทดสอบก่อนเรียน', type:'pre', x:0, y:0 },
@@ -3003,7 +3016,7 @@ function gemSystemHtml(stars) {
   var g = gemLevelForStars(stars);
   var levelCards = GEM_LEVELS.map(function(l, i){
     var cls = i === g.index ? ' active' : (i < g.index ? ' done' : '');
-    var rule = i === 0 ? 'เริ่มต้น' : (i === 3 ? 'ครบ 11 ดาว' : l.min + ' ดาว');
+    var rule = i === 0 ? 'เริ่มต้น' : (i === 3 ? 'ครบ ' + journeyTotal() + ' ดาว' : l.min + ' ดาว');
     return '<div class="gem-level' + cls + '">' + gemShapeHtml(l, 'mini') +
       '<b>' + l.name + '</b><span>' + rule + ' · โบนัส +' + l.bonus + '</span></div>';
   }).join('');
@@ -3077,7 +3090,7 @@ function renderJourney() {
     '</div>';
   } else if (steps >= total) {
     celebrate = '<div class="pcard yellow pop center" style="margin-bottom:16px">' +
-      '<p style="font-weight:700;font-size:20px">🎊 สุดยอด! ทำสำเร็จครบ 11 ภารกิจ เดินทางถึงปราสาทผู้พิทักษ์แล้ว 🏰✨</p>' +
+      '<p style="font-weight:700;font-size:20px">🎊 สุดยอด! ทำสำเร็จครบ ' + total + ' ภารกิจ เดินทางถึงจุดหมายผู้พิทักษ์แล้ว 🏰✨</p>' +
     '</div>';
   }
 
@@ -3086,14 +3099,14 @@ function renderJourney() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:30px">🗺️</div>' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">เส้นทางสถานการณ์ในชีวิตจริง</h2>' +
-        '<p class="soft tiny">1 ภารกิจสำเร็จ = 1 ดาวเดินทาง · ครบ 11 ภารกิจถึงจุดที่ 11</p></div>' +
+        '<p class="soft tiny">1 ภารกิจสำเร็จ = 1 ดาวเดินทาง · ครบ ' + total + ' ภารกิจถึงจุดหมาย</p></div>' +
       '</div>' +
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
     '</div>' +
     '<div class="body-area scroll">' +
       celebrate +
       '<div class="citymap map-art">' +
-        '<img class="journey-map-image" src="./ai-journey-map.png" alt="แผนที่สถานการณ์จริง 11 จุด">' +
+        '<img class="journey-map-image" src="./ai-journey-map.png" alt="แผนที่สถานการณ์จริง ' + total + ' จุด">' +
         '<svg class="cityroad" viewBox="0 0 100 100" preserveAspectRatio="none">' +
           '<polyline points="' + roadPts + '" fill="none" stroke="#D9A93C" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" opacity=".45"/>' +
           '<polyline points="' + roadPts + '" fill="none" stroke="#FFFDF7" stroke-width="0.7" stroke-dasharray="2.5 2.5" stroke-linejoin="round"/>' +
@@ -3115,7 +3128,7 @@ function renderJourney() {
         '<div class="pcard mint">' +
           '<h3 class="ink sec-label">⭐ ดาวเดินทาง · ' + gem.name + '</h3>' +
           '<p class="ink" style="font-size:30px;font-weight:700;margin-bottom:6px">' + steps + ' <span class="soft" style="font-size:16px">/ ' + total + '</span></p>' +
-          '<p class="soft tiny" style="line-height:1.8">โบนัสอันดับ +' + gem.bonus + ' คะแนน<br>📚 เนื้อหา ' + ms.lessons + '/4<br>✍️ พรอมต์ ' + ms.prompts + '/3<br>🎮 สถานการณ์ ' + ms.games + '/4</p>' +
+          '<p class="soft tiny" style="line-height:1.8">โบนัสอันดับ +' + gem.bonus + ' คะแนน<br>📚 หน่วยเรียน ' + ms.lessons + '/5<br>✍️ พรอมต์ ' + ms.prompts + '/3<br>🎮 สถานการณ์ ' + ms.games + '/4</p>' +
         '</div>' +
       '</div>' +
       '<div class="center" style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">' +
@@ -3335,7 +3348,7 @@ function offlineBot(q) {
   if (has('พรอมต์','prompt','สูตร'))
     return 'สูตรพรอมต์เก่งมี 4 ส่วน: <b>บท-งาน-บริบท-รูปแบบ</b> ✍️ (1) บอกบทบาท (2) บอกงานชัด ๆ (3) ใส่รายละเอียด (4) กำหนดรูปแบบผลลัพธ์ ลองเอาพรอมต์ล่าสุดของเรามาเช็กดูสิว่าครบกี่ส่วน? ไปฝึกที่เมนู ✍️ ได้เลย!';
   if (has('ดาว','คะแนน','แต้ม','อันดับ'))
-    return 'เก็บดาวได้ 3 ทาง: 🎯 วิเคราะห์เหตุการณ์จริงและทำแบบทดสอบระหว่างบทให้ครบ (ทำได้บทละ 1 ครั้ง และ 1 บท = 1 ดาว), ✍️ ฝึกพรอมต์ (โจทย์ละ 3 ดาว), 🎮 ตัดสินใจจากสถานการณ์ได้แต้ม แล้วทั้งหมดรวมเป็นคะแนนอันดับห้อง 🏆 ตอนนี้อยากอัปดาวส่วนไหนก่อนดี?';
+    return 'รางวัลหน่วยเรียนใช้เกณฑ์เดียวกัน: จบ 1 หน่วย = 20 คะแนน + 1 ดาว + 1 เหรียญ (ครบ 5 หน่วย = 100 คะแนน + 5 ดาว + 5 เหรียญ) 📚 ส่วนการฝึกพรอมต์ได้ดาวโบนัสตามคุณภาพ และภารกิจสถานการณ์ได้แต้มกับเหรียญเพิ่ม ทั้งหมดรวมเป็นคะแนนอันดับห้อง 🏆';
   if (has('เล่นยังไง','วิธีเล่น','เริ่มยังไง','ทำอะไรก่อน','ช่วย'))
     return 'เริ่มตามกระบวนการนี้นะ: ทำแบบทดสอบก่อนเรียน → อ่านเหตุการณ์ที่นักเรียนอาจพบจริง → เลือกเรียนผ่านวิดีโอหรือสไลด์ → ในบทที่ 2 ฝึกเขียนพรอมต์จากง่ายไปยาก → เลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบทซึ่งทำได้บทละ 1 ครั้ง ⭐ เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน ระหว่างทางถามผู้ช่วยและเก็บคะแนน ระดับ เหรียญรางวัล และอันดับได้เลย 🗺️';
   if (has('เฉลย','คำตอบข้อ','ตอบข้อไหน'))
@@ -3388,7 +3401,7 @@ try {
 function rankPoints(s) {
   var st = studentStats(s);
   var gem = gemLevelForStars(studentJourneyStars(s));
-  return st.stars * 10 + st.pstars * 10 + (s.score || 0) + gem.bonus;
+  return st.lessonPoints + st.pstars * 5 + (s.score || 0) + gem.bonus;
 }
 function rankedStudents() {
   return Object.keys(db.students).map(function(id){
@@ -3428,7 +3441,7 @@ function renderLeaderboard(skipLoad) {
     '</div>' +
     '<div class="body-area scroll">' +
       (currentId && rank
-        ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '</div>'
+        ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนหน่วย (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม 80) + โบนัสระดับอัญมณี (0/5/10/15)</p></div>'
         : secureRankError
           ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">📡</div><p>' + escChat(secureRankError) + '</p><button onclick="retryLeaderboard()" class="btn blueb sm" style="margin-top:16px">ลองโหลดอันดับอีกครั้ง</button></div>'
           : '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>กำลังโหลดอันดับจากห้องเรียน...</p></div>') +
@@ -3484,7 +3497,7 @@ function renderLeaderboard(skipLoad) {
       (list.length === 0
         ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>ยังไม่มีใครบนตารางอันดับเลย<br>เข้าสู่ระบบแล้วเริ่มเก็บดาวกันเถอะ!</p></div>'
         : podiumHtml + rowsHtml) +
-      '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = (ดาวห้องเรียน × 10) + (ดาวพรอมต์ × 10) + แต้มภารกิจ + โบนัสระดับอัญมณี (0/5/10/15) · หากเรียนหลายเครื่องให้เชื่อม Google Sheet เพื่อรวมคะแนนอัตโนมัติ</p>' +
+      '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนหน่วย (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม 80) + โบนัสระดับอัญมณี (0/5/10/15)</p>' +
     '</div>';
 }
 
@@ -3636,16 +3649,17 @@ function teacherSupabaseDashboardHtml() {
 function renderTeacher() {
   var ids = Object.keys(db.students);
   var totalStudents = ids.length;
-  var sumPct = 0, sumStars = 0, finishedAll = 0;
+  var sumPct = 0, sumStars = 0, sumLessonPoints = 0, finishedAll = 0;
 
   var rowsHtml = ids.map(function(id) {
     var s = db.students[id];
     var st = studentStats(s);
     var gem = gemLevelForStars(studentJourneyStars(s));
-    sumPct += st.pct; sumStars += st.stars;
+    sumPct += st.pct; sumStars += st.stars; sumLessonPoints += st.lessonPoints;
     if (st.done === lessons.length) finishedAll++;
-    var perLesson = (s.lp || []).map(function(p, li){
-      return themeList[li % themeList.length].emoji + lessonStarRow(p.stars || 0) + '<br><span class="soft tiny">ระหว่างบท ' + lessonAssessmentLabel(p, 'post') + '</span>';
+    var perLesson = lessons.map(function(_, li){
+      var p = normalizeLessonProgress((s.lp || [])[li]);
+      return themeList[li % themeList.length].emoji + ' หน่วย ' + (li + 1) + ': ' + (p.quizDone ? '20 คะแนน · ⭐1 · 🏅1' : '0 คะแนน · ☆ · ◯') + '<br><span class="soft tiny">ระหว่างบท ' + lessonAssessmentLabel(p, 'post') + '</span>';
     }).join('<br>');
     var safeId = id.replace(/\\/g,'\\\\').replace(/'/g, "\\'");
     return '<tr>' +
@@ -3668,6 +3682,7 @@ function renderTeacher() {
 
   var avgPct = totalStudents ? Math.round(sumPct / totalStudents) : 0;
   var avgStars = totalStudents ? (sumStars / totalStudents).toFixed(1) : '0';
+  var avgLessonPoints = totalStudents ? Math.round(sumLessonPoints / totalStudents) : 0;
 
   appEl.innerHTML =
     '<div class="hdr">' +
@@ -3710,14 +3725,14 @@ function renderTeacher() {
       '</div>' +
       '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:20px">' +
         '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700">👨‍👩‍👧‍👦 นักเรียนทั้งหมด</p><p class="ink" style="font-size:30px;font-weight:700">' + totalStudents + ' คน</p></div>' +
-        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700">⭐ ดาวเฉลี่ยต่อคน</p><p class="ink" style="font-size:30px;font-weight:700">' + avgStars + '/' + maxStars() + '</p></div>' +
+        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700">📚 รางวัลหน่วยเฉลี่ย</p><p class="ink" style="font-size:25px;font-weight:700">' + avgLessonPoints + '/100</p><p class="soft tiny">⭐ ' + avgStars + '/5 · 🏅 ' + avgStars + '/5</p></div>' +
         '<div class="pcard mint center"><p class="t-mint tiny" style="font-weight:700">🎓 เรียนจบครบทุกบท</p><p class="ink" style="font-size:30px;font-weight:700">' + finishedAll + ' คน</p></div>' +
         '<div class="pcard yellow center"><p class="t-orange tiny" style="font-weight:700">🚀 คืบหน้าเฉลี่ย</p><p class="ink" style="font-size:30px;font-weight:700">' + avgPct + '%</p></div>' +
       '</div>' +
       (totalStudents === 0
         ? '<div class="empty" style="padding:50px 20px"><div style="font-size:38px;margin-bottom:10px">📭</div><p>ยังไม่มีข้อมูลนักเรียนบนเครื่องนี้เลย<br>ให้นักเรียนล็อกอินและเริ่มเรียนก่อนนะครับ</p></div>'
         : '<div class="twrap"><table class="ttable">' +
-            '<tr><th>👤 นักเรียน</th><th>💎 ระดับ/ดาว</th><th>📚 คะแนนระหว่างบท</th><th>🧭/🏁 ก่อน-หลังเรียนรวม</th><th>🎮 ภารกิจ</th><th>🚀 คืบหน้า</th><th>🕐 ล่าสุด</th><th class="noprint"></th></tr>' +
+            '<tr><th>👤 นักเรียน</th><th>💎 ระดับ/ดาว</th><th>📚 คะแนน–ดาว–เหรียญรายหน่วย</th><th>🧭/🏁 ก่อน-หลังเรียนรวม</th><th>🎮 ภารกิจ</th><th>🚀 คืบหน้า</th><th>🕐 ล่าสุด</th><th class="noprint"></th></tr>' +
             rowsHtml +
           '</table></div>') +
       '<p class="soft tiny noprint" style="margin-top:14px">💡 เคล็ดลับ: จัดการรายชื่อและรหัสได้จากแผงด้านบน · เครื่องเดียวกัน—ข้อมูลนักเรียนทุกคนขึ้นอัตโนมัติ · คนละเครื่อง—แนะนำเชื่อม Google Sheet เพื่อรวมคะแนน · เก็บหลักฐาน—กดพิมพ์รายงานหรือดาวน์โหลด CSV</p>' +
@@ -3755,9 +3770,11 @@ function delStudent(id) {
 }
 
 function exportCSV() {
-  var head = ['ชื่อเล่น','เลขที่','เลขประจำตัวนักเรียน','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','ดาวบทเรียน (เต็ม ' + maxStars() + ')','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
+  var head = ['ชื่อเล่น','เลขที่','เลขประจำตัวนักเรียน','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','คะแนนหน่วยรวม (เต็ม 100)','ดาวบทเรียน (เต็ม 5)','เหรียญหน่วย (เต็ม 5)','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
   lessons.forEach(function(ls, i){
-    head.push('ดาวบทที่ ' + (i + 1) + ' (' + ls.short + ')');
+    head.push('คะแนนหน่วยที่ ' + (i + 1) + ' (เต็ม 20)');
+    head.push('ดาวหน่วยที่ ' + (i + 1) + ' (เต็ม 1)');
+    head.push('เหรียญหน่วยที่ ' + (i + 1) + ' (เต็ม 1)');
     head.push('คะแนนระหว่างบทที่ ' + (i + 1));
   });
   head = head.concat(['ดาวพรอมต์ (เต็ม ' + maxPromptStars() + ')','คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ (เต็ม 80)','ด่านที่ผ่าน (เต็ม 4)','ตราสถานการณ์ (เต็ม 4)','ตราสัญลักษณ์รวม (เต็ม ' + ACHIEVEMENT_BADGES.length + ')','ความคืบหน้า (%)','อัปเดตล่าสุด']);
@@ -3767,10 +3784,12 @@ function exportCSV() {
     var st = studentStats(s);
     var journeyStars = studentJourneyStars(s);
     var gem = gemLevelForStars(journeyStars);
-    var row = [studentAlias(s), s.num || '-', s.code || '-', gem.name, gem.bonus, journeyStars, st.stars, st.done];
+    var row = [studentAlias(s), s.num || '-', s.code || '-', gem.name, gem.bonus, journeyStars, st.lessonPoints, st.stars, st.lessonMedals, st.done];
     lessons.forEach(function(_, i){
       var p = (s.lp && s.lp[i]) ? normalizeLessonProgress(s.lp[i]) : normalizeLessonProgress();
+      row.push(lessonRewardPoints(p));
       row.push(p.stars || 0);
+      row.push(p.quizDone ? 1 : 0);
       row.push(lessonAssessmentLabel(p, 'post'));
     });
     row = row.concat([st.pstars, assessmentLabel(s, 'pre'), assessmentLabel(s, 'post'), s.score || 0, st.game, st.badges, st.achievements, st.pct, s.last || '-']);
@@ -4544,7 +4563,7 @@ function renderLessonList() {
     var p = lessonProgress[i];
     var unlocked = p.quizDone || lessonUnlocked(i);
     var status;
-    if (p.quizDone) status = lessonStarRow(p.stars) + ' · ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post');
+    if (p.quizDone) status = 'ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post') + ' · ได้รางวัลครบหน่วย';
     else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
     else if (!unlocked) status = '🔒 ทำข้อสอบบทที่ ' + i + ' ให้เสร็จก่อน';
     else if (p.slidesDone || p.videoDone) status = i === 1 && totalPromptStars() === 0
@@ -4564,7 +4583,7 @@ function renderLessonList() {
         '<p class="lesson-submenu-status">' + status + '</p></div>' +
       '</div>' +
       '<div class="lesson-submenu-footer">' +
-        '<span class="t-orange" style="font-size:18px;font-weight:700">' + lessonStarRow(p.stars) + '</span>' +
+        '<span class="t-orange" style="font-size:14px;font-weight:700">' + lessonRewardText(p) + '</span>' +
         '<span class="lesson-submenu-action">' + actionText + '</span>' +
       '</div>' +
     '</button>';
@@ -4578,7 +4597,7 @@ function renderLessonList() {
         '<p class="soft tiny">เลือกบทเรียน แล้วเริ่มเรียนรู้จากสถานการณ์ใกล้ตัว</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
-        '<div class="scorebox"><div class="t-orange" style="font-size:20px;font-weight:700">⭐ ' + totalStars() + '/' + maxStars() + '</div><p class="soft tiny">ดาวสะสม</p></div>' +
+        '<div class="scorebox"><div class="t-orange" style="font-size:18px;font-weight:700">' + totalLessonRewardPoints() + '/100 · ⭐' + totalStars() + ' · 🏅' + lessonMedalCount() + '</div><p class="soft tiny">คะแนน · ดาว · เหรียญหน่วย</p></div>' +
         '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
       '</div>' +
     '</div>' +
@@ -5006,8 +5025,8 @@ function renderQuizResult() {
     '</div>' +
     '<div class="center-view">' +
       journeyBanner() +
-      '<div class="pop" style="font-size:44px;letter-spacing:6px;margin-bottom:10px">' + lessonStarRow(p.stars) + '</div>' +
-      '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → จบบทและได้ 1 ดาว</p>' +
+      '<div class="pop" style="font-size:38px;margin-bottom:10px">🎯 ' + UNIT_POINTS + ' คะแนน · ⭐ 1 ดาว · 🏅 1 เหรียญ</div>' +
+      '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → จบหน่วยและได้รับรางวัลครบแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
@@ -5032,7 +5051,7 @@ function renderDashboard() {
     return '<div class="innerbox" style="margin-bottom:12px">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">' +
         '<span class="small ink" style="font-weight:700">' + t.emoji + ' ' + ls.title + '</span>' +
-        '<span class="t-orange small" style="font-weight:700">' + lessonStarRow(p.stars) + '</span>' +
+        '<span class="t-orange tiny" style="font-weight:700">' + lessonRewardText(p) + '</span>' +
       '</div>' +
       '<div class="pbar" style="height:12px"><div style="width:' + pct + '%;background:' + t.bar + '"></div></div>' +
       '<p class="soft tiny" style="margin-top:6px">🎯 เหตุการณ์จริง ' + (p.scenarioAnswered ? '✅ ตอบแล้ว' : '⬜ ยังไม่ได้ตอบ') + ' · 📚 รูปแบบที่เลือก ' + (mediaDone ? '✅' : '⬜') + (p.slidesDone ? ' สไลด์/อินโฟกราฟิก' : '') + (p.videoDone ? ' คลิปสั้น' : '') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅ ทำแล้ว' : '⬜ ยังไม่ได้ทำ') + '</p>' +
@@ -5061,9 +5080,9 @@ function renderDashboard() {
       '</div>' +
       gemSystemHtml(journeySteps()) +
       '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:20px">' +
-        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:4px">⭐ ดาวจากห้องเรียน</p>' +
-          '<p class="ink" style="font-size:32px;font-weight:700">' + totalStars() + ' <span class="soft" style="font-size:16px">/ ' + maxStars() + '</span></p>' +
-          '<p class="soft tiny">ทำสำเร็จ ' + lessonsCompleted() + '/' + lessons.length + ' ภารกิจ</p></div>' +
+        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:4px">📚 รางวัล 5 หน่วยเรียน</p>' +
+          '<p class="ink" style="font-size:26px;font-weight:700">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/100 คะแนน</span></p>' +
+          '<p class="soft tiny">⭐ ' + totalStars() + '/5 ดาว · 🏅 ' + lessonMedalCount() + '/5 เหรียญ</p></div>' +
         '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:4px">🎮 แต้มจากภารกิจ</p>' +
           '<p class="ink" style="font-size:32px;font-weight:700">' + state.score + ' <span class="soft" style="font-size:16px">/ 80</span></p>' +
           '<p class="soft tiny">ผ่านด่าน ' + Math.min(state.unlockedLevel, scenarios.length) + '/' + scenarios.length + ' · ตราสัญลักษณ์รวม ' + earnedAchievements.length + '/' + ACHIEVEMENT_BADGES.length + '</p></div>' +
@@ -5536,7 +5555,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
         var payload = clean(window.sanitizeStudentRecord ? window.sanitizeStudentRecord(student) : student);
         payload._updatedAt = payload._updatedAt || Date.now();
         payload._rankStars = window.studentJourneyStars ? window.studentJourneyStars(payload) : 0;
-        payload._rankBadges = Array.isArray(payload.badgeIds) ? payload.badgeIds.length : 0;
+        payload._rankBadges = window.earnedAchievementBadges ? window.earnedAchievementBadges(payload).length : (Array.isArray(payload.badgeIds) ? payload.badgeIds.length : 0);
         if (teacherPin) return supabase.rpc('teacher_save_student', {p_pin:teacherPin,p_id:id,p_data:payload,p_points:window.rankPoints ? window.rankPoints(payload) : 0}).then(check);
         return supabase.from('students').update({
           data: payload,
