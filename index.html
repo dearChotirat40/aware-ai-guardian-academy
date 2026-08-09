@@ -2208,7 +2208,7 @@ function teacherSystemStatusHtml() {
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:10px">🧑‍🏫 ศูนย์ควบคุมสำหรับครู</h3>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px">' +
       '<div class="innerbox"><p class="small" style="font-weight:700">1. แจกไฟล์ให้นักเรียน</p><p class="soft tiny">ให้นักเรียนเปิดไฟล์นี้ เลือกชื่อ และใส่รหัสประจำตัว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">2. ครูนำกระบวนการเรียนรู้</p><p class="soft tiny">ก่อนเรียน → วิดีโอ/สไลด์ → พรอมต์บทที่ 2 → สถานการณ์ → แบบทดสอบระหว่างบท</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">2. ครูนำกระบวนการเรียนรู้</p><p class="soft tiny">ก่อนเรียน → สถานการณ์ → เลือกวิดีโอหรือสไลด์อย่างน้อย 1 แบบ → พรอมต์บทที่ 2 → แบบทดสอบระหว่างบท</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">3. ครูเก็บคะแนน</p><p class="soft tiny">ดูจากเครื่องครู หรือเชื่อม Google Sheet อัตโนมัติ</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">4. ส่งออกหลักฐาน</p><p class="soft tiny">ดาวน์โหลด CSV / พิมพ์รายงาน / บันทึก PDF</p></div>' +
     '</div>' +
@@ -2767,6 +2767,10 @@ function lessonRewardText(p) {
 }
 function lessonsCompleted() {
   return lessonProgress.filter(function(p){ return p.quizDone; }).length;
+}
+function lessonMediaCompleted(p) {
+  p = normalizeLessonProgress(p);
+  return !!(p.videoDone || p.slidesDone);
 }
 
 /* ---------- เสียงบรรยายสไลด์ (Text-to-Speech ของเครื่อง) ---------- */
@@ -4566,7 +4570,9 @@ function renderLessonList() {
     if (p.quizDone) status = 'ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post') + ' · ได้รางวัลครบหน่วย';
     else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
     else if (!unlocked) status = '🔒 ทำข้อสอบบทที่ ' + i + ' ให้เสร็จก่อน';
-    else if (p.slidesDone || p.videoDone) status = i === 1 && totalPromptStars() === 0
+    else if (p.scenarioAnswered && lessonMediaCompleted(p)) status = 'ตอบเหตุการณ์และเรียนสื่อแล้ว · พร้อมทำแบบทดสอบระหว่างบท';
+    else if (p.scenarioAnswered) status = 'ตอบเหตุการณ์แล้ว · ต้องเลือกเรียนสื่ออย่างน้อย 1 แบบก่อนสอบ';
+    else if (lessonMediaCompleted(p)) status = i === 1 && totalPromptStars() === 0
       ? 'ศึกษาเนื้อหาแล้ว · ไปฝึกเขียนพรอมต์ในบทที่ 2'
       : 'ศึกษาเนื้อหาแล้ว · ไปวิเคราะห์เหตุการณ์จริง';
     else if (p.slideSeen > 0) status = 'กำลังเรียนอยู่...';
@@ -4603,7 +4609,7 @@ function renderLessonList() {
     '</div>' +
     '<div class="body-area scroll">' +
       '<div class="pcard yellow" style="margin-bottom:14px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน แล้วเริ่มแต่ละบทจากเหตุการณ์จริง เลือกเรียนผ่านวิดีโอ สไลด์/อินโฟกราฟิก หรือฝึกเขียนพรอมต์ในบทที่ 2 เมื่อพร้อมให้เลือกว่าจะเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท ซึ่งทำได้บทละ 1 ครั้ง เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
+        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน แล้วเริ่มแต่ละบทจากเหตุการณ์จริง จากนั้นต้องเลือกเรียนวิดีโอหรือสไลด์/อินโฟกราฟิกให้จบอย่างน้อย 1 รูปแบบ จึงจะปลดล็อกแบบทดสอบระหว่างบท ซึ่งทำได้บทละ 1 ครั้ง เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
       '</div>' +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>เปิดบทเรียนเพื่อเริ่มจากสถานการณ์ แล้วเลือกสื่อเสริมที่เหมาะกับตนเอง</p></div><span class="chip">สถานการณ์เป็นฐาน</span></div>' +
       '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
@@ -4630,6 +4636,7 @@ function lessonMissionHtml(ls, t) {
   var sim = ls.simulation || {};
   var mission = ls.mission || {};
   var progress = normalizeLessonProgress(lessonProgress[state.currentLesson]);
+  var mediaCompleted = lessonMediaCompleted(progress);
   var selectedChoice = progress.scenarioChoice;
   var choices = (sim.choices || []).map(function(c, idx) {
     var cls = '';
@@ -4678,14 +4685,16 @@ function lessonMissionHtml(ls, t) {
       bullets +
     '</div>' +
     '<div class="center" style="margin-top:14px">' +
-      '<p class="small" style="font-weight:700;margin-bottom:10px">' + (progress.scenarioAnswered ? 'ตอบเหตุการณ์แล้ว สามารถทบทวนสื่อหรือเตรียมทำแบบทดสอบระหว่างบทได้' : 'เลือกคำตอบของเหตุการณ์ก่อน แล้วจึงไปเรียนผ่านสื่อที่ต้องการ') + '</p>' +
+      '<p class="small" style="font-weight:700;margin-bottom:10px">' + (progress.scenarioAnswered ? (mediaCompleted ? 'ตอบเหตุการณ์และเรียนสื่อแล้ว แบบทดสอบระหว่างบทปลดล็อกแล้ว' : 'ตอบเหตุการณ์แล้ว ขั้นต่อไปต้องเลือกเรียนวิดีโอหรือสไลด์ให้จบอย่างน้อย 1 แบบก่อนสอบ') : 'เลือกคำตอบของเหตุการณ์ก่อน แล้วจึงไปเรียนผ่านสื่อที่ต้องการ') + '</p>' +
       '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">' +
-        '<button onclick="setTab(\'video\')" class="btn whiteb sm">🎬 ทบทวนวิดีโอสั้น</button>' +
-        '<button onclick="setTab(\'slides\')" class="btn blueb sm">🖼️ ทบทวนสไลด์</button>' +
+        '<button onclick="setTab(\'video\')" class="btn whiteb sm">🎬 ' + (progress.videoDone ? 'ทบทวนวิดีโอสั้น' : 'เลือกเรียนวิดีโอสั้น') + '</button>' +
+        '<button onclick="setTab(\'slides\')" class="btn blueb sm">🖼️ ' + (progress.slidesDone ? 'ทบทวนสไลด์' : 'เลือกเรียนสไลด์') + '</button>' +
         (state.currentLesson === 1 ? '<button onclick="changeView(\'prompt\')" class="btn whiteb sm">✍️ ฝึกเขียนพรอมต์</button>' : '') +
-        (progress.scenarioAnswered
-          ? '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>'
-          : '<button class="btn pinkb sm" disabled>🔒 ตอบเหตุการณ์ก่อน</button>') +
+        (!progress.scenarioAnswered
+          ? '<button class="btn pinkb sm" disabled>🔒 ตอบเหตุการณ์ก่อน</button>'
+          : mediaCompleted
+            ? '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>'
+            : '<button class="btn pinkb sm" disabled>🔒 เลือกเรียนสื่อก่อนสอบ</button>') +
       '</div>' +
     '</div>' +
   '</div>';
@@ -4708,7 +4717,7 @@ function resetLessonScenario() {
   render();
 }
 function lessonTabBar(p) {
-  var quizUnlocked = p.quizDone || (p.scenarioAnswered && (p.videoDone || p.slidesDone));
+  var quizUnlocked = p.quizDone || (p.scenarioAnswered && lessonMediaCompleted(p));
   return '<div class="lesson-inner-menu">' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
     '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">เหตุการณ์จริง · เริ่มที่นี่</button>' +
@@ -4736,8 +4745,10 @@ function tryOpenQuiz() {
     render();
     return;
   }
-  if (!(p.videoDone || p.slidesDone)) {
+  if (!lessonMediaCompleted(p)) {
     alert('ยังไม่ปลดล็อกแบบทดสอบ\nกรุณาเลือกดูคลิปสั้น หรืออ่านสไลด์/อินโฟกราฟิกให้จบอย่างน้อย 1 รูปแบบ');
+    state.lessonTab = 'choose';
+    render();
     return;
   }
   state.lessonTab = 'quizchoice';
@@ -4764,7 +4775,7 @@ function renderLesson() {
   }
   else if (state.lessonTab === 'quizchoice') {
     content = '<section class="lesson-choice-card pop">' +
-      '<div class="lesson-choice-head"><h3>พร้อมทำแบบทดสอบหรือยัง?</h3><p>เลือกได้ว่าจะเรียนเพิ่มก่อน หรือทำแบบทดสอบเลย โดยคะแนนครั้งแรกจะถูกบันทึกและทำซ้ำไม่ได้</p></div>' +
+      '<div class="lesson-choice-head"><h3>เรียนสื่อครบแล้ว พร้อมทำแบบทดสอบหรือยัง?</h3><p>ระบบตรวจแล้วว่าเรียนวิดีโอหรือสไลด์อย่างน้อย 1 แบบ สามารถเลือกเรียนเพิ่มหรือเริ่มสอบได้ โดยคะแนนครั้งแรกจะถูกบันทึกและทำซ้ำไม่ได้</p></div>' +
       '<div class="lesson-choice-grid">' +
         '<button class="lesson-choice-btn" onclick="setTab(\'choose\')"><span class="lesson-choice-icon">📚</span><span><b>เรียนเพิ่มก่อน</b><small>กลับไปเลือกวิดีโอ สไลด์ หรือเหตุการณ์จริงเพื่อทบทวนให้มั่นใจ</small></span></button>' +
         '<button class="lesson-choice-btn featured" onclick="startQuiz(\'mid\')"><span class="lesson-choice-icon">📝</span><span><b>ทำแบบทดสอบเลย</b><small>ทำได้ 1 ครั้ง ระบบจะบันทึกคะแนนเมื่อส่งข้อสุดท้าย</small><span class="lesson-choice-recommend">พร้อมแล้วเริ่มทำ</span></span></button>' +
@@ -4908,6 +4919,18 @@ function startQuiz(mode, lessonIndex) {
   if (saved.quizDone) {
     state.quiz = { mode:mode, qIndex:lessons[state.currentLesson].quiz.length - 1, correct:saved.postScore || 0, answered:true, picked:null, completed:true };
     changeView('quizresult');
+    return;
+  }
+  if (!saved.scenarioAnswered) {
+    alert('กรุณาอ่านเหตุการณ์และเลือกคำตอบก่อนทำแบบทดสอบ');
+    state.lessonTab = 'mission';
+    changeView('lesson');
+    return;
+  }
+  if (!lessonMediaCompleted(saved)) {
+    alert('ยังไม่ปลดล็อกแบบทดสอบ\nกรุณาเลือกเรียนวิดีโอหรือสไลด์/อินโฟกราฟิกให้จบอย่างน้อย 1 รูปแบบก่อนสอบ');
+    state.lessonTab = 'choose';
+    changeView('lesson');
     return;
   }
   state.quiz = { mode: mode, qIndex: 0, correct: 0, answered: false, picked: null };
