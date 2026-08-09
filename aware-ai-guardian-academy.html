@@ -1711,22 +1711,25 @@ var state = {
 };
 
 function newLessonProgress() {
-  return lessons.map(function(){ return { preDone:false, preScore:0, videoDone:false, slideSeen:0, slidesDone:false, quizDone:false, postScore:0, stars:0 }; });
+  return lessons.map(function(){ return { preDone:false, preScore:0, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0 }; });
 }
 var lessonProgress = newLessonProgress();
 
 function normalizeLessonProgress(p) {
   p = p || {};
-  var passed = !!p.quizDone;
+  var postScore = Math.max(0, Number(p.postScore || 0));
+  var attempted = !!p.quizAttempted || !!p.quizDone || postScore > 0;
   return {
     preDone: !!p.preDone,
     preScore: p.preScore || 0,
     videoDone: !!p.videoDone,
     slideSeen: p.slideSeen || 0,
     slidesDone: !!p.slidesDone,
-    quizDone: passed,
-    postScore: p.postScore || p.stars || 0,
-    stars: passed ? 1 : 0
+    quizAttempted: attempted,
+    quizDone: attempted,
+    postScore: postScore,
+    postTotal: Math.max(0, Number(p.postTotal || 0)),
+    stars: attempted ? 1 : 0
   };
 }
 
@@ -2214,7 +2217,7 @@ function teacherMissionPlanHtml() {
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:8px">🗺️ แผนภารกิจ 11 ดาวเดินทาง</h3>' +
     '<p class="soft small" style="line-height:1.9">คะแนนเดินทางคิดง่าย: 1 ภารกิจสำเร็จ = 1 ดาว = เดิน 1 จุด · ครบ 11 ภารกิจถึงปราสาทผู้พิทักษ์</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px">' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">📚 เนื้อหา 4 ดาว</p><p class="soft tiny">แบบทดสอบระหว่างบทผ่าน 80% ในแต่ละบท</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">📚 เนื้อหา 4 ดาว</p><p class="soft tiny">ทำแบบทดสอบระหว่างบทได้บทละ 1 ครั้ง</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">✍️ พรอมต์ 3 ดาว</p><p class="soft tiny">ส่งพรอมต์ผ่านโจทย์แต่ละข้ออย่างน้อย 1 ดาว</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🎮 สถานการณ์ 4 ดาว</p><p class="soft tiny">ตอบตัวเลือกที่ถูกในแต่ละด่านเพื่อรับตราสัญลักษณ์</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เป้าหมาย</p><p class="soft tiny">ครบ 11 ดาว เดินถึงจุดที่ 11</p></div>' +
@@ -2231,7 +2234,7 @@ function teacherLessonMissionGuideHtml() {
       '<p class="small ' + t.deep + '" style="font-weight:700;line-height:1.7">' + t.emoji + ' ' + (mission.name || ls.title) + '</p>' +
       '<p class="soft tiny" style="line-height:1.8"><b>ครูชวนคิด:</b> ' + (sim.task || mission.goal || '-') + '</p>' +
       '<p class="soft tiny" style="line-height:1.8"><b>สาระหลัก:</b> ' + ls.title.replace(/^บทที่ \d+:\s*/, '') + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8"><b>ผ่านบทเรียน:</b> ศึกษาวิดีโอหรือสไลด์' + (i === 1 ? ' ฝึกเขียนพรอมต์ในบทที่ 2' : '') + ' วิเคราะห์สถานการณ์ และทำแบบทดสอบระหว่างบทได้ 80% ขึ้นไป = 1 ดาว</p>' +
+      '<p class="soft tiny" style="line-height:1.8"><b>จบบทเรียน:</b> ศึกษาวิดีโอหรือสไลด์' + (i === 1 ? ' ฝึกเขียนพรอมต์ในบทที่ 2' : '') + ' วิเคราะห์สถานการณ์ แล้วเลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท 1 ครั้ง เมื่อส่งครบ = 1 ดาว</p>' +
     '</div>';
   }).join('');
   return '<div class="pcard blue noprint" style="margin-bottom:20px">' +
@@ -2489,7 +2492,7 @@ function copyStudentInstruction() {
     '1) กรอกรหัสผ่านที่ได้รับจากคุณครูเพื่อเข้าสู่ระบบ\\n' +
     '2) ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย\\n' +
     '3) ศึกษาเนื้อหาทั้ง 5 บทผ่านวิดีโอสั้นและสไลด์ โดยบทที่ 2 ให้ฝึกเขียนและปรับปรุงพรอมต์จากง่ายไปยาก\\n' +
-    '4) เรียนรู้จากเหตุการณ์จริงที่นักเรียนอาจพบ แล้วเลือกสื่อที่เหมาะกับตนเอง ก่อนทำแบบทดสอบระหว่างบทให้ผ่าน 80% พร้อมใช้คำใบ้และข้อมูลย้อนกลับ\\n' +
+    '4) เรียนรู้จากเหตุการณ์จริงที่นักเรียนอาจพบ แล้วเลือกสื่อที่เหมาะกับตนเอง จากนั้นเลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท ซึ่งทำได้บทละ 1 ครั้งและบันทึกคะแนนครั้งแรก\\n' +
     '5) ใช้ผู้ช่วย AI เมื่อมีข้อสงสัย และสะสมคะแนน ระดับ เหรียญรางวัล และอันดับ\\n' +
     '6) เมื่อเรียนครบทั้ง 5 บท ทำแบบทดสอบหลังเรียนและแบบสอบถามความพึงพอใจ';
   copyPlainText(text, 'คัดลอกคำสั่งให้นักเรียนแล้ว 📋✅');
@@ -2511,7 +2514,7 @@ function assessmentLabel(s, mode) {
 function lessonAssessmentLabel(p, mode) {
   p = normalizeLessonProgress(p);
   if (mode === 'pre') return p.preDone ? (p.preScore + '/3') : '-';
-  return p.postScore ? (p.postScore + '/3') : (p.quizDone ? (p.stars + '/3') : '-');
+  return p.quizAttempted ? (p.postScore + '/' + (p.postTotal || 3)) : '-';
 }
 
 /* ---------- ระบบส่งรายงานให้ครู (โค้ดรายงาน) ---------- */
@@ -2520,7 +2523,7 @@ function buildReportCode() {
   if (!s) return '';
   var payload = {
     c: s.code || '', k: cleanNickname(s.nickname), u: s.num || '',
-    lp: (s.lp || []).map(function(p){ p = normalizeLessonProgress(p); return [p.stars || 0, p.videoDone ? 1 : 0, p.slidesDone ? 1 : 0, p.quizDone ? 1 : 0, p.preDone ? 1 : 0, p.preScore || 0, p.postScore || 0]; }),
+    lp: (s.lp || []).map(function(p){ p = normalizeLessonProgress(p); return [p.stars || 0, p.videoDone ? 1 : 0, p.slidesDone ? 1 : 0, p.quizDone ? 1 : 0, p.preDone ? 1 : 0, p.preScore || 0, p.postScore || 0, p.postTotal || 0]; }),
     sc: s.score || 0, ul: s.unlockedLevel || 0, b: s.badgeIds || [], p: s.pStars || [], a: s.assessments || newAssessments(),
     t: new Date().toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })
   };
@@ -2544,7 +2547,7 @@ function mergeStudentReport(d) {
   var id = 'roster_' + (d.c || d.u);
   var lp = lessons.map(function(_, i) {
     var a = (d.lp && d.lp[i]) || [0,0,0,0];
-    return normalizeLessonProgress({ stars: a[0] || 0, videoDone: !!a[1], slidesDone: !!a[2], quizDone: !!a[3], preDone: !!a[4], preScore: a[5] || 0, postScore: a[6] || a[0] || 0, slideSeen: 0 });
+    return normalizeLessonProgress({ stars: a[0] || 0, videoDone: !!a[1], slidesDone: !!a[2], quizAttempted: !!a[3], quizDone: !!a[3], preDone: !!a[4], preScore: a[5] || 0, postScore: a[6] || 0, postTotal: a[7] || 0, slideSeen: 0 });
   });
   var pStars = PROMPT_CHALLENGES.map(function(_, i){ return (d.p && d.p[i]) || 0; });
   var incoming = { nickname:cleanNickname(d.k), num:d.u || '', code:d.c || '',
@@ -2571,8 +2574,10 @@ function mergeStudentReport(d) {
     a.preScore = Math.max(a.preScore || 0, b.preScore || 0);
     a.videoDone = a.videoDone || b.videoDone;
     a.slidesDone = a.slidesDone || b.slidesDone;
+    a.quizAttempted = a.quizAttempted || b.quizAttempted;
     a.quizDone = a.quizDone || b.quizDone;
     a.postScore = Math.max(a.postScore || 0, b.postScore || 0);
+    a.postTotal = Math.max(a.postTotal || 0, b.postTotal || 0);
   }
   ex.score = Math.max(ex.score || 0, incoming.score);
   ex.unlockedLevel = Math.max(ex.unlockedLevel || 0, incoming.unlockedLevel);
@@ -2916,11 +2921,11 @@ var GEM_LEVELS = [
 ];
 var ACHIEVEMENT_BADGES = [
   { id:'pre', name:'นักสำรวจ AI', criterion:'ทำแบบทดสอบก่อนเรียน', type:'pre', x:0, y:0 },
-  { id:'lesson1', name:'นักสำรวจพื้นฐาน AI', criterion:'ผ่านบทเรียนที่ 1', type:'lesson', index:0, x:1, y:0 },
-  { id:'lesson2', name:'คู่คิดมนุษย์–AI', criterion:'ผ่านบทเรียนที่ 2', type:'lesson', index:1, x:2, y:0 },
-  { id:'lesson3', name:'นักตรวจสอบข้อมูล', criterion:'ผ่านบทเรียนที่ 3', type:'lesson', index:2, x:3, y:0 },
-  { id:'lesson4', name:'ผู้ตัดสินใจ', criterion:'ผ่านบทเรียนที่ 4', type:'lesson', index:3, x:0, y:1 },
-  { id:'lesson5', name:'ผู้พิทักษ์ข้อมูล', criterion:'ผ่านบทเรียนที่ 5', type:'lesson', index:4, x:1, y:1 },
+  { id:'lesson1', name:'นักสำรวจพื้นฐาน AI', criterion:'ทำบทเรียนที่ 1 ครบ', type:'lesson', index:0, x:1, y:0 },
+  { id:'lesson2', name:'คู่คิดมนุษย์–AI', criterion:'ทำบทเรียนที่ 2 ครบ', type:'lesson', index:1, x:2, y:0 },
+  { id:'lesson3', name:'นักตรวจสอบข้อมูล', criterion:'ทำบทเรียนที่ 3 ครบ', type:'lesson', index:2, x:3, y:0 },
+  { id:'lesson4', name:'ผู้ตัดสินใจ', criterion:'ทำบทเรียนที่ 4 ครบ', type:'lesson', index:3, x:0, y:1 },
+  { id:'lesson5', name:'ผู้พิทักษ์ข้อมูล', criterion:'ทำบทเรียนที่ 5 ครบ', type:'lesson', index:4, x:1, y:1 },
   { id:'prompt1', name:'นักสร้างพรอมต์', criterion:'ผ่านพรอมต์ระดับ 1', type:'prompt', index:0, x:1, y:1 },
   { id:'prompt2', name:'นักปรับพรอมต์', criterion:'ผ่านพรอมต์ระดับ 2', type:'prompt', index:1, x:2, y:1 },
   { id:'prompt3', name:'ปรมาจารย์พรอมต์', criterion:'ผ่านพรอมต์ระดับ 3', type:'prompt', index:2, x:3, y:1 },
@@ -3316,9 +3321,9 @@ function offlineBot(q) {
   if (has('พรอมต์','prompt','สูตร'))
     return 'สูตรพรอมต์เก่งมี 4 ส่วน: <b>บท-งาน-บริบท-รูปแบบ</b> ✍️ (1) บอกบทบาท (2) บอกงานชัด ๆ (3) ใส่รายละเอียด (4) กำหนดรูปแบบผลลัพธ์ ลองเอาพรอมต์ล่าสุดของเรามาเช็กดูสิว่าครบกี่ส่วน? ไปฝึกที่เมนู ✍️ ได้เลย!';
   if (has('ดาว','คะแนน','แต้ม','อันดับ'))
-    return 'เก็บดาวได้ 3 ทาง: 🎯 วิเคราะห์เหตุการณ์จริงและผ่านแบบทดสอบระหว่างบท (1 บท = 1 ดาว), ✍️ ฝึกพรอมต์ (โจทย์ละ 3 ดาว), 🎮 ตัดสินใจจากสถานการณ์ได้แต้ม แล้วทั้งหมดรวมเป็นคะแนนอันดับห้อง 🏆 ตอนนี้อยากอัปดาวส่วนไหนก่อนดี?';
+    return 'เก็บดาวได้ 3 ทาง: 🎯 วิเคราะห์เหตุการณ์จริงและทำแบบทดสอบระหว่างบทให้ครบ (ทำได้บทละ 1 ครั้ง และ 1 บท = 1 ดาว), ✍️ ฝึกพรอมต์ (โจทย์ละ 3 ดาว), 🎮 ตัดสินใจจากสถานการณ์ได้แต้ม แล้วทั้งหมดรวมเป็นคะแนนอันดับห้อง 🏆 ตอนนี้อยากอัปดาวส่วนไหนก่อนดี?';
   if (has('เล่นยังไง','วิธีเล่น','เริ่มยังไง','ทำอะไรก่อน','ช่วย'))
-    return 'เริ่มตามกระบวนการนี้นะ: ทำแบบทดสอบก่อนเรียน → อ่านเหตุการณ์ที่นักเรียนอาจพบจริง → เลือกเรียนผ่านวิดีโอหรือสไลด์ → ในบทที่ 2 ฝึกเขียนพรอมต์จากง่ายไปยาก → ตัดสินใจและทำแบบทดสอบระหว่างบทพร้อมคำใบ้และข้อมูลย้อนกลับ ⭐ เมื่อครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน ระหว่างทางถามผู้ช่วยและเก็บคะแนน ระดับ เหรียญรางวัล และอันดับได้เลย 🗺️';
+    return 'เริ่มตามกระบวนการนี้นะ: ทำแบบทดสอบก่อนเรียน → อ่านเหตุการณ์ที่นักเรียนอาจพบจริง → เลือกเรียนผ่านวิดีโอหรือสไลด์ → ในบทที่ 2 ฝึกเขียนพรอมต์จากง่ายไปยาก → เลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบทซึ่งทำได้บทละ 1 ครั้ง ⭐ เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน ระหว่างทางถามผู้ช่วยและเก็บคะแนน ระดับ เหรียญรางวัล และอันดับได้เลย 🗺️';
   if (has('เฉลย','คำตอบข้อ','ตอบข้อไหน'))
     return 'เรายังไม่บอกเฉลยตรง ๆ นะครับ แต่ช่วยชี้ทางได้: ลองกลับไปอ่านสไลด์ของบทนั้นอีกครั้ง แล้วพิจารณาว่าคำถามเกี่ยวกับการรู้และเข้าใจ การประยุกต์ใช้ การประเมิน หรือจริยธรรม หากยังติดอยู่ เล่าโจทย์ให้ฟังได้ เราจะช่วยแยกประเด็นให้';
   if (has('สวัสดี','หวัดดี','ดีจ้า','hello','hi'))
@@ -4305,7 +4310,7 @@ function posttestUnlocked() {
 function startAssessment(mode) {
   mode = mode === 'post' ? 'post' : 'pre';
   if (mode === 'post' && !posttestUnlocked()) {
-    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาผ่านบทเรียนและรับดาวให้ครบทั้ง ' + lessons.length + ' บทก่อน');
+    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาทำแบบทดสอบระหว่างบทให้ครบทั้ง ' + lessons.length + ' บทก่อน');
     return;
   }
   state.currentAssessment = mode;
@@ -4525,16 +4530,15 @@ function renderLessonList() {
     var p = lessonProgress[i];
     var unlocked = p.quizDone || lessonUnlocked(i);
     var status;
-    if (p.quizDone) status = lessonStarRow(p.stars) + ' · ผ่านคะแนนระหว่างบทแล้ว';
+    if (p.quizDone) status = lessonStarRow(p.stars) + ' · ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post');
     else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
-    else if (!unlocked) status = '🔒 ผ่านบทที่ ' + i + ' และรับดาวก่อน';
-    else if (p.postScore) status = 'ระหว่างบท ' + lessonAssessmentLabel(p, 'post') + ' · ยังไม่ถึง 80%';
+    else if (!unlocked) status = '🔒 ทำข้อสอบบทที่ ' + i + ' ให้เสร็จก่อน';
     else if (p.slidesDone || p.videoDone) status = i === 1 && totalPromptStars() === 0
       ? 'ศึกษาเนื้อหาแล้ว · ไปฝึกเขียนพรอมต์ในบทที่ 2'
       : 'ศึกษาเนื้อหาแล้ว · ไปวิเคราะห์เหตุการณ์จริง';
     else if (p.slideSeen > 0) status = 'กำลังเรียนอยู่...';
     else status = 'ยังไม่เริ่มเรียน';
-    var actionText = p.quizDone ? '🔁 ทบทวนบทเรียน' : (unlocked ? 'เลือกเมนูย่อย ›' : '🔒 ยังไม่ปลดล็อก');
+    var actionText = p.quizDone ? '🔎 ดูผลและทบทวน' : (unlocked ? 'เลือกเมนูย่อย ›' : '🔒 ยังไม่ปลดล็อก');
     return '<button type="button" class="lesson-submenu-item pcard ' + t.card + '"' +
       (unlocked ? ' onclick="openLesson(' + i + ')"' : ' disabled') +
       ' aria-label="บทที่ ' + (i + 1) + ' ' + ls.title + '">' +
@@ -4566,7 +4570,7 @@ function renderLessonList() {
     '</div>' +
     '<div class="body-area scroll">' +
       '<div class="pcard yellow" style="margin-bottom:14px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน แล้วเริ่มแต่ละบทจากเหตุการณ์จริงที่นักเรียนอาจพบ เพื่อคิดและตัดสินใจ จากนั้นเลือกเรียนเหตุการณ์ผ่านวิดีโอ สไลด์/อินโฟกราฟิก หรือฝึกเขียนพรอมต์ในบทที่ 2 ก่อนทำแบบทดสอบระหว่างบทให้ผ่าน 80% เมื่อเรียนครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
+        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน แล้วเริ่มแต่ละบทจากเหตุการณ์จริง เลือกเรียนผ่านวิดีโอ สไลด์/อินโฟกราฟิก หรือฝึกเขียนพรอมต์ในบทที่ 2 เมื่อพร้อมให้เลือกว่าจะเรียนเพิ่มหรือทำแบบทดสอบระหว่างบท ซึ่งทำได้บทละ 1 ครั้ง เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
       '</div>' +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>เปิดบทเรียนเพื่อเริ่มจากสถานการณ์ แล้วเลือกสื่อเสริมที่เหมาะกับตนเอง</p></div><span class="chip">สถานการณ์เป็นฐาน</span></div>' +
       '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
@@ -4579,7 +4583,7 @@ function openLesson(i) {
   var p = normalizeLessonProgress(lessonProgress[i]);
   if (!p.quizDone && !lessonUnlocked(i)) {
     if (!pretestCompleted()) alert('กรุณาทำแบบทดสอบก่อนเรียนให้เสร็จก่อนเริ่มบทที่ 1');
-    else alert('บทนี้ยังไม่ปลดล็อก กรุณาผ่านบทที่ ' + i + ' และรับดาวก่อน');
+    else alert('บทนี้ยังไม่ปลดล็อก กรุณาทำแบบทดสอบบทที่ ' + i + ' ให้เสร็จก่อน');
     return;
   }
   state.currentLesson = i;
@@ -4634,14 +4638,14 @@ function lessonMissionHtml(ls, t) {
   '</div>';
 }
 function lessonTabBar(p) {
-  var quizUnlocked = p.videoDone || p.slidesDone;
+  var quizUnlocked = p.quizDone || p.videoDone || p.slidesDone;
   return '<div class="lesson-inner-menu">' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
     '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : '') + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">เหตุการณ์จริง · เริ่มที่นี่</button>' +
     '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : (p.videoDone ? 'done' : '')) + '" onclick="setTab(\'video\')">🎬 วิดีโอสั้น ' + (p.videoDone ? '✅' : '') + '</button>' +
     '<button class="tab ' + (state.lessonTab === 'slides' ? 'active' : (p.slidesDone ? 'done' : '')) + '" onclick="setTab(\'slides\')">🖼️ สไลด์/อินโฟกราฟิก ' + (p.slidesDone ? '✅' : '') + '</button>' +
     (state.currentLesson === 1 ? '<button class="tab ' + (totalPromptStars() > 0 ? 'done' : '') + '" onclick="changeView(\'prompt\')">✍️ ฝึกเขียนพรอมต์ ' + (totalPromptStars() > 0 ? '⭐' + totalPromptStars() : '') + '</button>' : '') +
-    '<button class="tab ' + (state.lessonTab === 'quiz' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท') + (p.quizDone ? ' ' + lessonStarRow(p.stars) : '') + '</button>' +
+    '<button class="tab ' + (state.lessonTab === 'quizchoice' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (p.quizDone ? '📝 ดูผลข้อสอบ ' + lessonAssessmentLabel(p, 'post') : (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท')) + '</button>' +
     '</div>' +
   '</div>';
 }
@@ -4650,12 +4654,18 @@ function setTab(tab) {
   render();
 }
 function tryOpenQuiz() {
-  var p = lessonProgress[state.currentLesson];
+  var p = normalizeLessonProgress(lessonProgress[state.currentLesson]);
+  if (p.quizDone) {
+    state.quiz = { mode:'mid', qIndex:lessons[state.currentLesson].quiz.length - 1, correct:p.postScore || 0, answered:true, picked:null, completed:true };
+    changeView('quizresult');
+    return;
+  }
   if (!(p.videoDone || p.slidesDone)) {
     alert('ยังไม่ปลดล็อกแบบทดสอบ\nกรุณาเลือกดูคลิปสั้น หรืออ่านสไลด์/อินโฟกราฟิกให้จบอย่างน้อย 1 รูปแบบ');
     return;
   }
-  startQuiz('mid');
+  state.lessonTab = 'quizchoice';
+  render();
 }
 
 function renderLesson() {
@@ -4673,6 +4683,15 @@ function renderLesson() {
         '<button class="lesson-choice-btn" onclick="setTab(\'video\')"><span class="lesson-choice-icon">🎬</span><span><b>ดูเหตุการณ์ผ่านวิดีโอ</b><small>ทำความเข้าใจประเด็นจากคลิปสั้น</small></span></button>' +
         '<button class="lesson-choice-btn" onclick="setTab(\'slides\')"><span class="lesson-choice-icon">🖼️</span><span><b>อ่านเหตุการณ์ผ่านสไลด์</b><small>อ่านอินโฟกราฟิกทีละหน้าและฟังเสียงประกอบได้</small></span></button>' +
         (state.currentLesson === 1 ? '<button class="lesson-choice-btn" onclick="changeView(\'prompt\')"><span class="lesson-choice-icon">✍️</span><span><b>ฝึกพรอมต์จากเหตุการณ์</b><small>ฝึกแก้ปัญหาจากง่ายไปยากในบทที่ 2</small></span></button>' : '') +
+      '</div>' +
+    '</section>';
+  }
+  else if (state.lessonTab === 'quizchoice') {
+    content = '<section class="lesson-choice-card pop">' +
+      '<div class="lesson-choice-head"><h3>พร้อมทำแบบทดสอบหรือยัง?</h3><p>เลือกได้ว่าจะเรียนเพิ่มก่อน หรือทำแบบทดสอบเลย โดยคะแนนครั้งแรกจะถูกบันทึกและทำซ้ำไม่ได้</p></div>' +
+      '<div class="lesson-choice-grid">' +
+        '<button class="lesson-choice-btn" onclick="setTab(\'choose\')"><span class="lesson-choice-icon">📚</span><span><b>เรียนเพิ่มก่อน</b><small>กลับไปเลือกวิดีโอ สไลด์ หรือเหตุการณ์จริงเพื่อทบทวนให้มั่นใจ</small></span></button>' +
+        '<button class="lesson-choice-btn featured" onclick="startQuiz(\'mid\')"><span class="lesson-choice-icon">📝</span><span><b>ทำแบบทดสอบเลย</b><small>ทำได้ 1 ครั้ง ระบบจะบันทึกคะแนนเมื่อส่งข้อสุดท้าย</small><span class="lesson-choice-recommend">พร้อมแล้วเริ่มทำ</span></span></button>' +
       '</div>' +
     '</section>';
   }
@@ -4803,10 +4822,16 @@ function finishSlides() {
   render();
 }
 
-/* ==================== แบบทดสอบระหว่างบท (ห้ามข้าม) ==================== */
+/* ==================== แบบทดสอบระหว่างบท (ทำได้บทละ 1 ครั้ง) ==================== */
 function startQuiz(mode, lessonIndex) {
   if (typeof lessonIndex === 'number') state.currentLesson = lessonIndex;
   mode = mode || 'mid';
+  var saved = normalizeLessonProgress(lessonProgress[state.currentLesson]);
+  if (saved.quizDone) {
+    state.quiz = { mode:mode, qIndex:lessons[state.currentLesson].quiz.length - 1, correct:saved.postScore || 0, answered:true, picked:null, completed:true };
+    changeView('quizresult');
+    return;
+  }
   state.quiz = { mode: mode, qIndex: 0, correct: 0, answered: false, picked: null };
   resetHint(12);
   changeView('quiz');
@@ -4849,7 +4874,7 @@ function renderQuiz() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<span style="font-size:28px">📝</span>' +
         '<div><h2 class="ink" style="font-size:18px;font-weight:700">แบบทดสอบระหว่างบท: ' + ls.short + '</h2>' +
-        '<p class="soft tiny">ต้องได้ 80% ขึ้นไปเพื่อผ่านบทและรับดาว</p></div>' +
+        '<p class="soft tiny">ทำได้ 1 ครั้ง · ระบบบันทึกคะแนนเมื่อส่งข้อสุดท้าย</p></div>' +
       '</div>' +
       '<span class="soft small" style="font-weight:700;background:var(--white);border:2px solid #E3D5B8;border-radius:10px;padding:6px 12px">ข้อ ' + (qz.qIndex + 1) + ' / ' + ls.quiz.length + '</span>' +
     '</div>' +
@@ -4884,14 +4909,14 @@ function nextQuestion() {
     render();
   } else {
     var p = lessonProgress[state.currentLesson];
-    var pct = Math.round(qz.correct / ls.quiz.length * 100);
-    p.postScore = Math.max(p.postScore || 0, qz.correct);
-    if (pct >= 80) {
-      var beforeJourney = journeySteps();
-      p.quizDone = true;
-      p.stars = 1;
-      markJourneyStep(beforeJourney);
-    }
+    var beforeJourney = journeySteps();
+    p.postScore = qz.correct;
+    p.postTotal = ls.quiz.length;
+    p.quizAttempted = true;
+    p.quizDone = true;
+    p.stars = 1;
+    qz.completed = true;
+    markJourneyStep(beforeJourney);
     saveProgress();
     changeView('quizresult');
   }
@@ -4900,39 +4925,39 @@ function nextQuestion() {
 function renderQuizResult() {
   var i = state.currentLesson;
   var ls = lessons[i];
-  var p = lessonProgress[i];
-  var got = state.quiz.correct;
-  var pct = Math.round(got / ls.quiz.length * 100);
-  var face, msg;
-  if (pct >= 80) { face = '🏆'; msg = 'ผ่านเกณฑ์ 80% แล้ว จบบทนี้สำเร็จ!'; }
-  else if (got >= 1) { face = '💪'; msg = 'ยังไม่ถึง 80% กลับไปทบทวนเนื้อหาแล้วทำแบบทดสอบระหว่างบทใหม่ได้ตลอดนะ'; }
-  else { face = '🌱'; msg = 'ยังไม่ผ่านเกณฑ์ ทบทวนเนื้อหาอีกครั้ง แล้วลองทำแบบทดสอบระหว่างบทใหม่ได้'; }
+  var p = normalizeLessonProgress(lessonProgress[i]);
+  var got = state.quiz && typeof state.quiz.correct === 'number' ? state.quiz.correct : p.postScore;
+  var total = p.postTotal || 3;
+  var pct = Math.round(got / total * 100);
+  var face = pct >= 80 ? '🏆' : (got >= 1 ? '💪' : '🌱');
+  var msg = pct >= 80
+    ? 'ทำได้ดีมาก ระบบบันทึกคะแนนครั้งแรกเรียบร้อยแล้ว'
+    : 'ระบบบันทึกคะแนนครั้งแรกเรียบร้อยแล้ว สามารถกลับไปทบทวนบทเรียนเพิ่มเติมได้';
   var nextStepButton = '';
-  if (pct >= 80 && i < lessons.length - 1) {
+  if (i < lessons.length - 1) {
     nextStepButton = '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>';
-  } else if (pct >= 80 && i === lessons.length - 1) {
+  } else {
     nextStepButton = '<button onclick="startAssessment(\'post\')" class="btn mintb sm">🏁 พร้อมแล้ว ทำแบบทดสอบหลังเรียน</button>';
   }
 
   appEl.innerHTML =
-    '<div class="fb-hdr ' + (pct >= 80 ? 'good' : 'bad') + '">' +
+    '<div class="fb-hdr good">' +
       '<span class="big pop">' + face + '</span>' +
-      '<h2 class="' + (pct >= 80 ? 't-mint' : 't-pink') + '" style="font-size:24px;font-weight:700">ทำแบบทดสอบระหว่างบทแล้ว!</h2>' +
+      '<h2 class="t-mint" style="font-size:24px;font-weight:700">ส่งแบบทดสอบระหว่างบทแล้ว!</h2>' +
     '</div>' +
     '<div class="center-view">' +
       journeyBanner() +
       '<div class="pop" style="font-size:44px;letter-spacing:6px;margin-bottom:10px">' + lessonStarRow(p.stars) + '</div>' +
-      '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + ls.quiz.length + ' ข้อ · ' + pct + '%' + (pct >= 80 ? ' → ภารกิจสำเร็จ ได้ 1 ดาว' : ' → ยังไม่ได้ดาว') + '</p>' +
+      '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → จบบทและได้ 1 ดาว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
-      '<p class="soft tiny" style="margin-bottom:24px">(กติกา: 1 เนื้อหา = 1 ภารกิจ ผ่านคะแนนระหว่างบทแล้วได้ 1 ดาว)</p>' +
+      '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
         nextStepButton +
-        '<button onclick="startQuiz(\'mid\')" class="btn pinkb sm">🔄 ทำระหว่างบทใหม่</button>' +
         '<button onclick="openLesson(' + i + ')" class="btn whiteb sm">📖 ทบทวนบทเรียน</button>' +
         '<button onclick="changeView(\'lessons\')" class="btn blueb sm">🎯 กลับห้องเรียน</button>' +
         '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>' +
       '</div>' +
-      mascotHtml(pct >= 80 ? 'เก่งมากเลย!' : 'สู้ ๆ นะ ทบทวนแล้วลองใหม่ได้!') +
+      mascotHtml(pct >= 80 ? 'เก่งมากเลย!' : 'บันทึกคะแนนแล้ว ไปเรียนบทถัดไปหรือทบทวนเพิ่มได้เลย!') +
     '</div>';
 }
 
@@ -4951,7 +4976,7 @@ function renderDashboard() {
         '<span class="t-orange small" style="font-weight:700">' + lessonStarRow(p.stars) + '</span>' +
       '</div>' +
       '<div class="pbar" style="height:12px"><div style="width:' + pct + '%;background:' + t.bar + '"></div></div>' +
-      '<p class="soft tiny" style="margin-top:6px">🎯 เหตุการณ์จริง ✅ · 📚 รูปแบบที่เลือก ' + (mediaDone ? '✅' : '⬜') + (p.slidesDone ? ' สไลด์/อินโฟกราฟิก' : '') + (p.videoDone ? ' คลิปสั้น' : '') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅' : (p.postScore ? lessonAssessmentLabel(p, 'post') + ' รอผ่าน 80%' : '⬜')) + '</p>' +
+      '<p class="soft tiny" style="margin-top:6px">🎯 เหตุการณ์จริง ✅ · 📚 รูปแบบที่เลือก ' + (mediaDone ? '✅' : '⬜') + (p.slidesDone ? ' สไลด์/อินโฟกราฟิก' : '') + (p.videoDone ? ' คลิปสั้น' : '') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅ ทำแล้ว' : '⬜ ยังไม่ได้ทำ') + '</p>' +
     '</div>';
   }).join('');
 
