@@ -1610,62 +1610,62 @@ lessons.forEach(function(lesson) {
   });
 });
 
-/* ---------- เกมภารกิจ (4 ด่านเดิม) ---------- */
+/* ---------- เกมภารกิจ 5 ด่าน สอดคล้องกับบทเรียนทั้ง 5 บท ---------- */
 var scenarios = [
   {
-    category: 'การรู้และเข้าใจ / การประเมินข้อมูล',
-    title: 'ด่านที่ 1: คำตอบที่ดูน่าเชื่อ',
-    context: 'นักเรียนใช้ AI ช่วยหาข้อมูลทำรายงานวิทยาศาสตร์ และ AI ให้ตัวเลขสถิติพร้อมคำอธิบายยาวมาก แต่ไม่มีแหล่งอ้างอิงชัดเจน',
-    hint: 'AI อาจให้ข้อมูลผิดหรือไม่ตรงบริบทได้ — ก่อนนำไปใช้ควรตรวจอะไร?',
+    category: 'บทที่ 1 · ความรู้พื้นฐานเกี่ยวกับ AI',
+    title: 'ด่านที่ 1: นักสำรวจ AI รอบตัว',
+    context: 'ในห้องเรียนมีทั้งระบบแนะนำวิดีโอ ระบบรู้จำใบหน้า และแชตบอต เพื่อนคนหนึ่งจึงสรุปว่า AI ทุกชนิดคิดและรู้สึกได้เหมือนมนุษย์',
+    hint: 'AI ที่ใช้งานจริงส่วนใหญ่เก่งเฉพาะงาน เรียนรู้รูปแบบจากข้อมูล และยังมีข้อจำกัด',
     character: 'student',
-    dialogue: 'คำตอบนี้ดูดีมากเลยนะ มีตัวเลขด้วย! แต่ไม่มีลิงก์หรือแหล่งอ้างอิง เราควรเอาไปใส่รายงานทันทีไหม?',
+    dialogue: 'ระบบเหล่านี้ตอบสนองเราได้เก่งมาก แสดงว่ามันเข้าใจและรู้สึกเหมือนมนุษย์ทุกอย่างจริงไหมนะ?',
     choices: [
-      { text:'A. ใช้ทันที เพราะ AI เขียนละเอียดและดูเป็นทางการมาก', points:0,
-        feedback:'ยังเสี่ยงอยู่นะ! AI อาจแต่งข้อมูลหรือให้ตัวเลขผิดได้ แม้คำตอบจะดูมั่นใจและเป็นทางการก็ตาม', badge:null, isCorrect:false },
-      { text:'B. ขอให้ AI พูดว่า "คำตอบนี้ถูกต้อง" อีกครั้ง ถ้ามันยืนยันก็ใช้ได้', points:10,
-        feedback:'ดีที่ยังสงสัย แต่การถาม AI ซ้ำไม่ใช่หลักฐานที่เพียงพอ ต้องตรวจจากแหล่งข้อมูลภายนอกที่น่าเชื่อถือด้วย', badge:null, isCorrect:false },
-      { text:'C. ตรวจเทียบกับหนังสือเรียน เว็บไซต์หน่วยงานที่น่าเชื่อถือ หรือถามครูก่อนนำไปใช้', points:20,
-        feedback:'ถูกต้องเลย! นี่คือทักษะ Fact-check ใช้ AI ได้ แต่ต้องตรวจหลักฐานก่อน',
-        badge:{ id:'badge1', name:'นักสืบไซเบอร์', icon:'🕵️', color:'t-pink' }, isCorrect:true }
+      { text:'A. ใช่ AI ทุกระบบคิด รู้สึก และเข้าใจโลกเหมือนมนุษย์', points:0,
+        feedback:'ยังไม่ถูกนะ AI ประมวลผลรูปแบบจากข้อมูลและคำสั่ง แต่ไม่ได้คิดหรือรู้สึกเหมือนมนุษย์ทุกด้าน', badge:null, isCorrect:false },
+      { text:'B. ไม่ใช่ AI เรียนรู้รูปแบบจากข้อมูลเพื่อทำงานเฉพาะด้าน และอาจผิดพลาดหรือไม่เข้าใจบริบทได้', points:20,
+        feedback:'ถูกต้อง! นี่คือพื้นฐานสำคัญของบทที่ 1: AI มีความสามารถเฉพาะด้าน เรียนรู้จากข้อมูล และยังต้องมีมนุษย์ตรวจสอบ',
+        badge:{ id:'badge1', name:'นักสำรวจพื้นฐาน AI', icon:'🤖', color:'t-pink' }, isCorrect:true },
+      { text:'C. AI คือเครื่องคิดเลขธรรมดาเท่านั้น จึงไม่สามารถเรียนรู้รูปแบบได้', points:0,
+        feedback:'AI ทำได้มากกว่าการคำนวณ เพราะสามารถเรียนรู้รูปแบบเพื่อจำแนก คาดการณ์ แนะนำ หรือสร้างผลลัพธ์ได้', badge:null, isCorrect:false }
     ]
   },
   {
-    category: 'การใช้งานและประยุกต์ใช้',
-    title: 'ด่านที่ 2: วิกฤตการณ์เส้นตาย (Deadline)',
-    context: 'พรุ่งนี้ต้องส่งรายงานวิชาวิทยาศาสตร์ 5 หน้ากระดาษ แต่นักเรียนเพิ่งทำไปได้หน้าเดียว พลังงานและเวลาใกล้จะหมดแล้ว!',
-    hint: 'คำตอบที่ดีที่สุดคือใช้ AI เป็น "ผู้ช่วยคิด" — ไม่ใช่ให้ทำแทนทั้งหมด และก็ไม่ปฏิเสธเครื่องมือไปเลย',
+    category: 'บทที่ 2 · เลือกและใช้ AI อย่างเหมาะสม',
+    title: 'ด่านที่ 2: ออกแบบพรอมต์ให้ตรงงาน',
+    context: 'กลุ่มนักเรียนต้องทำอินโฟกราฟิกจากบทความยาว แต่พิมพ์คำสั่งกับ AI เพียงว่า “ทำให้หน่อย” จึงได้คำตอบกว้างและไม่เหมาะกับนักเรียน ม.4',
+    hint: 'เลือกเครื่องมือให้ตรงงาน และเขียนพรอมต์ให้มีบทบาท งาน บริบท และรูปแบบผลลัพธ์',
     character: 'student',
-    dialogue: 'เวลาใกล้หมดแล้ว ถ้าให้ AI เขียนทั้งหมด 5 หน้าแทนเรา จะถือว่าเหมาะสมหรือไม่?',
+    dialogue: 'คำตอบไม่ตรงงานเลย เราควรแก้พรอมต์อย่างไรให้ AI ช่วยได้ดีขึ้นและเรายังเป็นเจ้าของผลงาน?',
     choices: [
-      { text:'A. ให้ AI ทำแทนทั้งหมด 100% แล้วคัดลอกวางลงไฟล์ส่งครูทันที', points:0,
-        feedback:'วิธีนี้ไม่เหมาะสม เพราะเป็นการลอกเลียนแบบ (Plagiarism) ไม่เกิดทักษะการเรียนรู้ และข้อมูลจาก AI อาจมีการปั้นแต่ง (Hallucination)', badge:null, isCorrect:false },
-      { text:'B. เปิดโหมด Co-pilot: ให้ AI ช่วยสรุปโครงเรื่องและหัวข้อย่อย จากนั้นเรานำโครงเรื่องนั้นมาเรียบเรียงและค้นคว้าด้วยตนเอง', points:20,
-        feedback:'ถูกต้อง! นี่คือการใช้งานและประยุกต์ใช้ AI อย่างเหมาะสม โดยใช้เป็นเครื่องมือช่วยคิด แต่ผู้เรียนยังตรวจสอบ สร้างสรรค์ และรับผิดชอบผลงานของตนเอง',
-        badge:{ id:'badge2', name:'นักวางแผนอัจฉริยะ', icon:'🧠', color:'t-blue' }, isCorrect:true },
-      { text:'C. ปิด AI ไปเลย: ทำงานด้วยตนเองทั้งหมด ยอมอดนอน เพราะกลัวถูกจับได้ว่าใช้เทคโนโลยี', points:10,
-        feedback:'ซื่อสัตย์มาก แต่การปฏิเสธเครื่องมือในยุคดิจิทัลอาจทำให้เสียเปรียบนะ เราสามารถใช้ AI เป็น "ผู้ช่วย" ได้ หากรู้ขอบเขตที่เหมาะสม', badge:null, isCorrect:false }
+      { text:'A. ใช้เครื่องมือใดก็ได้และพิมพ์คำสั่งเดิมซ้ำหลายครั้ง', points:0,
+        feedback:'การทำซ้ำคำสั่งที่ไม่ชัดเจนอาจยังได้ผลลัพธ์ไม่ตรงงาน ควรกำหนดเป้าหมายและเงื่อนไขให้ครบ', badge:null, isCorrect:false },
+      { text:'B. เลือกเครื่องมือให้ตรงงาน แล้วระบุบทบาท งาน บริบท และรูปแบบอินโฟกราฟิกอย่างชัดเจน', points:20,
+        feedback:'ถูกต้อง! พรอมต์ที่ชัดเจนและการเลือกเครื่องมือให้ตรงงานช่วยให้ AI เป็นผู้ช่วยที่มีประสิทธิภาพ โดยนักเรียนยังต้องตรวจและปรับผลงานเอง',
+        badge:{ id:'badge2', name:'นักออกแบบพรอมต์', icon:'✍️', color:'t-blue' }, isCorrect:true },
+      { text:'C. ส่งบทความทั้งหมดให้ AI ตัดสินใจและทำแทนโดยไม่ตรวจผลลัพธ์', points:0,
+        feedback:'AI ควรเป็นผู้ช่วย ไม่ใช่ผู้รับผิดชอบแทนทั้งหมด นักเรียนต้องตรวจ เลือก และปรับผลลัพธ์ก่อนใช้', badge:null, isCorrect:false }
     ]
   },
   {
-    category: 'จริยธรรม / ความเป็นส่วนตัว',
-    title: 'ด่านที่ 3: ฐานข้อมูลลับห้องเรียน',
-    context: 'นักเรียนต้องสรุปข้อมูลสุขภาพของเพื่อน 40 คน (มีชื่อ เบอร์โทร และโรคประจำตัว) เป็นตาราง Excel เพื่อส่งครูพยาบาล',
-    hint: 'ข้อมูลเพื่อนมีทั้งชื่อ เบอร์ และโรคประจำตัว — จะให้ AI ช่วยยังไงโดยที่ไม่มีใครถูกระบุตัวตนได้?',
+    category: 'บทที่ 3 · ตรวจสอบและประเมินข้อมูลจาก AI',
+    title: 'ด่านที่ 3: นักตรวจสอบข้อมูล',
+    context: 'AI ให้ตัวเลขสถิติสำหรับรายงานพร้อมคำอธิบายที่ดูเป็นทางการมาก แต่ไม่มีชื่อแหล่งข้อมูล ผู้เขียน หรือวันที่เผยแพร่',
+    hint: 'คำตอบที่ดูมั่นใจอาจเป็น Hallucination ต้องตรวจข้ามกับแหล่งข้อมูลภายนอกที่น่าเชื่อถือ',
     character: 'student',
-    dialogue: 'ข้อมูลเยอะจังเลย... จะอัปโหลดไฟล์ต้นฉบับขึ้น Cloud AI ให้ระบบสรุปเป็นตารางเลยดีไหมนะ?',
+    dialogue: 'ข้อมูลนี้ดูน่าเชื่อมากและมีตัวเลขครบ เราควรนำไปใส่รายงานทันทีเลยไหม?',
     choices: [
-      { text:'A. อัปโหลดไฟล์ดั้งเดิมทั้งหมดเลย AI สาธารณะมีระบบรักษาความปลอดภัยอยู่แล้ว', points:0,
-        feedback:'อันตราย! การนำข้อมูลส่วนบุคคลไปป้อนในระบบ AI ถือเป็นการละเมิดความเป็นส่วนตัวอย่างร้ายแรง ข้อมูลอาจถูกนำไปใช้ฝึกฝนโมเดลต่อได้นะ', badge:null, isCorrect:false },
-      { text:'B. แจกจ่ายงาน: ให้เพื่อนแต่ละคนเอาข้อมูลตนเองไปป้อน AI สรุปมาให้ แล้วนำมาประกอบร่างกัน', points:5,
-        feedback:'วิธีนี้ลดภาระได้บางส่วน แต่ข้อมูลส่วนตัวของเพื่อนยังถูกส่งเข้าสู่ระบบ AI ภายนอก จึงยังมีความเสี่ยงด้านความเป็นส่วนตัว', badge:null, isCorrect:false },
-      { text:'C. ปิดข้อมูลส่วนตัวก่อน (Anonymize): ลบชื่อ-นามสกุลและเบอร์โทรออก ให้เหลือแค่สถิติตัวเลข แล้วค่อยให้ AI ช่วยประมวลผล', points:20,
-        feedback:'เยี่ยมมาก! นักเรียนคำนึงถึงจริยธรรมและความเป็นส่วนตัว รู้วิธีปกป้องข้อมูลของผู้อื่นก่อนใช้เทคโนโลยี',
-        badge:{ id:'badge3', name:'ผู้พิทักษ์ข้อมูล', icon:'🛡️', color:'t-mint' }, isCorrect:true }
+      { text:'A. ใช้ทันที เพราะข้อความยาวและมีตัวเลขจึงต้องถูกต้อง', points:0,
+        feedback:'รูปแบบที่ดูเป็นทางการไม่ได้รับประกันความถูกต้อง AI อาจสร้างข้อมูลผิดให้ดูน่าเชื่อได้', badge:null, isCorrect:false },
+      { text:'B. ถาม AI ตัวเดิมซ้ำ ถ้ายืนยันคำตอบเดิมก็ถือว่าเป็นหลักฐาน', points:0,
+        feedback:'การถาม AI ซ้ำยังไม่ใช่หลักฐานอิสระ ต้องตรวจจากแหล่งต้นฉบับภายนอก', badge:null, isCorrect:false },
+      { text:'C. ตรวจเทียบอย่างน้อย 2 แหล่งที่น่าเชื่อถือ พร้อมตรวจผู้เขียน วันที่ และหลักฐานก่อนใช้', points:20,
+        feedback:'ถูกต้อง! นี่คือทักษะตรวจข้อเท็จจริงและประเมินแหล่งข้อมูลก่อนเชื่อหรือเผยแพร่คำตอบจาก AI',
+        badge:{ id:'badge3', name:'นักตรวจสอบข้อมูล', icon:'🔎', color:'t-mint' }, isCorrect:true }
     ]
   },
   {
-    category: 'การประเมินและจริยธรรม',
-    title: 'ด่านที่ 4: มนุษย์เป็นผู้ตัดสินใจ',
+    category: 'บทที่ 4 · ใช้ AI อย่างซื่อสัตย์และรับผิดชอบ',
+    title: 'ด่านที่ 4: มนุษย์ตัดสินใจอย่างรับผิดชอบ',
     context: 'นักเรียนฝันอยากเป็น "นักวาดภาพประกอบ" แต่ AI พยากรณ์อาชีพวิเคราะห์ว่า "อาชีพนี้เสี่ยงตกงาน AI ทำแทนได้ 100% แนะนำให้ไปเรียนเขียนโค้ด"',
     hint: 'ใครควรเป็น "เจ้านาย" ของเทคโนโลยี? รับฟังข้อมูลได้ แต่การตัดสินใจสุดท้ายควรเป็นของใคร?',
     character: 'student',
@@ -1675,12 +1675,31 @@ var scenarios = [
         feedback:'ระวังนะ! การเชื่อ AI 100% โดยไม่ประเมินข้อจำกัดอาจนำไปสู่การตัดสินใจที่ไม่เหมาะสม เพราะ AI วิเคราะห์จากข้อมูลอดีตและไม่เข้าใจเป้าหมายหรือบริบททั้งหมดของมนุษย์', badge:null, isCorrect:false },
       { text:'B. เราตัดสินใจเอง: รับฟังข้อมูล AI แต่ตัดสินใจทำตามความฝัน โดยจะฝึกใช้ AI เป็นเครื่องมือเสริมให้งานวาดเราเจ๋งยิ่งขึ้น', points:20,
         feedback:'ยอดเยี่ยมที่สุด! นักเรียนใช้ AI เป็นข้อมูลประกอบอย่างมีวิจารณญาณ และยังคงให้มนุษย์เป็นผู้ตัดสินใจพร้อมรับผิดชอบผลที่เกิดขึ้น',
-        badge:{ id:'badge4', name:'ผู้บัญชาการสูงสุด', icon:'⚡', color:'t-yellow' }, isCorrect:true },
-      { text:'C. ต่อต้านเทคโนโลยี: โกรธที่ AI มาดูถูกความฝัน เลิกใช้งานเทคโนโลยีทุกชนิด และทำงานแมนนวลต่อไป', points:10,
+        badge:{ id:'badge4', name:'ผู้ตัดสินใจอย่างรับผิดชอบ', icon:'⚖️', color:'t-yellow' }, isCorrect:true },
+      { text:'C. ต่อต้านเทคโนโลยี: โกรธที่ AI มาดูถูกความฝัน เลิกใช้งานเทคโนโลยีทุกชนิด และทำงานแมนนวลต่อไป', points:0,
         feedback:'การยึดมั่นความฝันเป็นเรื่องดี แต่การปฏิเสธเครื่องมืออาจทำให้ตามโลกไม่ทันนะ เราควรเรียนรู้ที่จะเป็น "เจ้านาย" ที่ควบคุม AI ได้ต่างหาก', badge:null, isCorrect:false }
+    ]
+  },
+  {
+    category: 'บทที่ 5 · คุ้มครองข้อมูลส่วนบุคคลและความปลอดภัย',
+    title: 'ด่านที่ 5: ผู้พิทักษ์ข้อมูล',
+    context: 'นักเรียนต้องสรุปข้อมูลสุขภาพของเพื่อนในห้อง ซึ่งมีชื่อ เบอร์โทร และโรคประจำตัว โดยต้องการใช้ AI ช่วยสรุปให้เร็วขึ้น',
+    hint: 'ข้อมูลสุขภาพเป็นข้อมูลอ่อนไหว ต้องลบสิ่งที่ระบุตัวตนได้ก่อนใช้เครื่องมือ AI ภายนอก',
+    character: 'student',
+    dialogue: 'ข้อมูลมีเยอะมาก เราจะอัปโหลดไฟล์ต้นฉบับทั้งหมดให้ AI ช่วยสรุปเลยได้ไหมนะ?',
+    choices: [
+      { text:'A. อัปโหลดไฟล์จริงทั้งหมด เพราะ AI สาธารณะต้องรักษาความลับให้อยู่แล้ว', points:0,
+        feedback:'เสี่ยงมาก ข้อมูลส่วนบุคคลและข้อมูลสุขภาพอาจถูกเก็บ ใช้ต่อ หรือรั่วไหลได้ ไม่ควรอัปโหลดโดยไม่มีการป้องกัน', badge:null, isCorrect:false },
+      { text:'B. เปลี่ยนชื่อไฟล์ใหม่ก็เพียงพอ เพราะ AI จะไม่รู้ว่าเป็นข้อมูลของใคร', points:0,
+        feedback:'การเปลี่ยนชื่อไฟล์ไม่ได้ลบชื่อ เบอร์โทร หรือข้อมูลที่ระบุตัวบุคคลภายในไฟล์', badge:null, isCorrect:false },
+      { text:'C. ลบชื่อ เบอร์โทร และข้อมูลที่ระบุตัวตนได้ ให้เหลือเฉพาะสถิติรวมก่อนใช้ AI', points:20,
+        feedback:'ถูกต้อง! การทำข้อมูลให้ไม่ระบุตัวตนช่วยปกป้องความเป็นส่วนตัวและลดความเสี่ยงก่อนใช้ AI',
+        badge:{ id:'badge5', name:'ผู้พิทักษ์ข้อมูล', icon:'🛡️', color:'t-pink' }, isCorrect:true }
     ]
   }
 ];
+
+function maxScenarioScore() { return scenarios.length * 20; }
 
 /* ---------- แบบทดสอบก่อนเรียน / หลังเรียน ---------- */
 var ASSESSMENT_QUESTIONS = [
@@ -1792,6 +1811,21 @@ function sanitizeStudentRecord(s) {
   delete s.room;
   delete s.gender;
   delete s.renamed;
+  var validScenarioBadges = scenarios.map(function(sc) {
+    var found = sc.choices.find(function(c){ return !!c.badge; });
+    return found && found.badge ? found.badge.id : '';
+  });
+  var storedScenarioBadges = Array.from(new Set(Array.isArray(s.badgeIds) ? s.badgeIds : []))
+    .filter(function(id){ return validScenarioBadges.indexOf(id) !== -1; });
+  var completedScenarioCount = Math.min(scenarios.length, Math.max(
+    storedScenarioBadges.length,
+    Math.floor((Number(s.score) || 0) / 20),
+    Math.min(Number(s.unlockedLevel) || 0, scenarios.length)
+  ));
+  /* ข้อมูลจากระบบ 4 ด่านเดิมอาจมีรหัสตราสลับกัน จัดใหม่ตามลำดับบทโดยไม่ลบจำนวนด่านที่เคยผ่าน */
+  s.badgeIds = validScenarioBadges.slice(0, completedScenarioCount);
+  s.score = completedScenarioCount * 20;
+  s.unlockedLevel = completedScenarioCount;
   return s;
 }
 window.sanitizeStudentRecord = sanitizeStudentRecord;
@@ -2244,8 +2278,8 @@ function teacherMissionPlanHtml() {
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px">' +
       '<div class="innerbox"><p class="small" style="font-weight:700">📚 5 หน่วยเรียน</p><p class="soft tiny">เต็ม 100 คะแนน · 5 ดาว · 5 เหรียญ (ทำแบบทดสอบระหว่างบทได้หน่วยละ 1 ครั้ง)</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">✍️ โบนัสพรอมต์</p><p class="soft tiny">3 โจทย์ · ประเมินคุณภาพโจทย์ละ 1–3 ดาว · สูงสุด 9 ดาว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🎮 ภารกิจสถานการณ์</p><p class="soft tiny">4 ด่าน · สูงสุด 80 แต้ม · ผ่านด่านละ 1 เหรียญ</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เส้นทางรวม</p><p class="soft tiny">5 หน่วย + 3 พรอมต์ + 4 สถานการณ์ = 12 ดาวเดินทาง</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🎮 ภารกิจสถานการณ์</p><p class="soft tiny">5 ด่านตรงกับ 5 บท · ด่านละ 20 แต้ม · สูงสุด 100 แต้ม · ผ่านด่านละ 1 ตรา</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เส้นทางรวม</p><p class="soft tiny">5 หน่วย + 3 พรอมต์ + 5 สถานการณ์ = 13 ดาวเดินทาง</p></div>' +
     '</div>' +
   '</div>';
 }
@@ -2491,7 +2525,7 @@ function teacherStudentDetailHtml() {
       '<div class="student-detail-item"><b>ก่อนเรียน / หลังเรียน</b><span>🧭 ' + assessmentLabel(s, 'pre') + ' · 🏁 ' + assessmentLabel(s, 'post') + '</span></div>' +
       '<div class="student-detail-item"><b>รางวัล 5 หน่วยเรียน</b><span>' + st.lessonPoints + '/100 คะแนน · ⭐ ' + st.stars + '/5 · 🏅 ' + st.lessonMedals + '/5</span></div>' +
       '<div class="student-detail-item"><b>ฝึกเขียนพรอมต์</b><span>' + pStars.map(function(n, i){ return 'ระดับ ' + (i + 1) + ' ' + starRow(n, 3); }).join('<br>') + '<br>รวม ' + st.pstars + '/' + maxPromptStars() + ' ดาว</span></div>' +
-      '<div class="student-detail-item"><b>ภารกิจสถานการณ์</b><span>' + (s.score || 0) + '/80 คะแนน · ผ่าน ' + st.game + '/4 ด่าน</span></div>' +
+      '<div class="student-detail-item"><b>ภารกิจสถานการณ์</b><span>' + (s.score || 0) + '/' + maxScenarioScore() + ' คะแนน · ผ่าน ' + st.game + '/' + scenarios.length + ' ด่าน</span></div>' +
       '<div class="student-detail-item"><b>การเดินทางและรางวัล</b><span>' + journeyDone + '/' + journeyTotal() + ' จุด · ตราสัญลักษณ์ ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></div>' +
     '</div>' +
     '<div class="detail-lessons">' + lessonHtml + '</div>' +
@@ -2936,13 +2970,13 @@ var JOURNEY_NODES = [
   { ic:'🧪', lb:'ห้องวิทยาศาสตร์' }, { ic:'🧭', lb:'ห้องแนะแนว' },      { ic:'👥', lb:'งานกลุ่ม' },
   { ic:'💻', lb:'ห้องคอมพิวเตอร์' }, { ic:'🖥️', lb:'ห้องเรียนออนไลน์' }, { ic:'💬', lb:'กลุ่มแชต' },
   { ic:'📝', lb:'โต๊ะทำรายงาน' },   { ic:'🩺', lb:'ห้องพยาบาล' },       { ic:'🎓', lb:'หอประชุม' },
-  { ic:'✅', lb:'ชีวิตจริง' }
+  { ic:'🌟', lb:'ภารกิจครบ' },       { ic:'✅', lb:'ชีวิตจริง' }
 ];
 /* พิกัดโหนดอิงตามภาพแผนที่ ai-journey-map.png (x%, y%) */
 var JOURNEY_PTS = [
   [16,55],[40,36],[55,28],[77,30],
   [83,52],[67,55],[43,57],[16,24],
-  [18,82],[38,78],[56,82],[74,78],[90,70]
+  [18,82],[38,78],[56,82],[74,78],[84,84],[92,68]
 ];
 var JOURNEY_EVENTS = [{ title:'เริ่มเรียนรู้จากสิ่งใกล้ตัว', obstacle:'เตรียมสังเกตเหตุการณ์ที่พบในโรงเรียนและชีวิตออนไลน์', reward:'เริ่มต้นเส้นทางสถานการณ์จริง' }];
 for (var journeyEventIndex = 1; journeyEventIndex <= JOURNEY_NODES.length - 1; journeyEventIndex++) {
@@ -2964,8 +2998,8 @@ function journeyTotal() { return JOURNEY_NODES.length - 1; }
 var GEM_LEVELS = [
   { name:'Silver', th:'ซิลเวอร์', cls:'silver', min:0, next:4, bonus:0 },
   { name:'Gold', th:'โกลด์', cls:'gold', min:4, next:8, bonus:5 },
-  { name:'Platinum', th:'แพลทินัม', cls:'platinum', min:8, next:12, bonus:10 },
-  { name:'Diamond', th:'ไดมอนด์', cls:'diamond', min:12, next:12, bonus:15 }
+  { name:'Platinum', th:'แพลทินัม', cls:'platinum', min:8, next:13, bonus:10 },
+  { name:'Diamond', th:'ไดมอนด์', cls:'diamond', min:13, next:13, bonus:15 }
 ];
 var ACHIEVEMENT_BADGES = [
   { id:'pre', name:'นักสำรวจ AI', criterion:'ทำแบบทดสอบก่อนเรียน', type:'pre', x:0, y:0 },
@@ -2977,10 +3011,11 @@ var ACHIEVEMENT_BADGES = [
   { id:'prompt1', name:'นักสร้างพรอมต์', criterion:'ผ่านพรอมต์ระดับ 1', type:'prompt', index:0, x:1, y:1 },
   { id:'prompt2', name:'นักปรับพรอมต์', criterion:'ผ่านพรอมต์ระดับ 2', type:'prompt', index:1, x:2, y:1 },
   { id:'prompt3', name:'ปรมาจารย์พรอมต์', criterion:'ผ่านพรอมต์ระดับ 3', type:'prompt', index:2, x:3, y:1 },
-  { id:'scenario1', name:'นักสืบไซเบอร์', criterion:'ผ่านสถานการณ์ที่ 1', type:'scenario', badgeId:'badge1', x:0, y:2 },
-  { id:'scenario2', name:'นักวางแผนอัจฉริยะ', criterion:'ผ่านสถานการณ์ที่ 2', type:'scenario', badgeId:'badge2', x:1, y:2 },
-  { id:'scenario3', name:'ผู้พิทักษ์ความเป็นส่วนตัว', criterion:'ผ่านสถานการณ์ที่ 3', type:'scenario', badgeId:'badge3', x:2, y:2 },
-  { id:'scenario4', name:'ผู้บัญชาการ AI', criterion:'ผ่านสถานการณ์ที่ 4', type:'scenario', badgeId:'badge4', x:3, y:2 }
+  { id:'scenario1', name:'นักสำรวจพื้นฐาน AI', criterion:'ผ่านภารกิจบทที่ 1', type:'scenario', badgeId:'badge1', x:0, y:2 },
+  { id:'scenario2', name:'นักออกแบบพรอมต์', criterion:'ผ่านภารกิจบทที่ 2', type:'scenario', badgeId:'badge2', x:1, y:2 },
+  { id:'scenario3', name:'นักตรวจสอบข้อมูล', criterion:'ผ่านภารกิจบทที่ 3', type:'scenario', badgeId:'badge3', x:2, y:2 },
+  { id:'scenario4', name:'ผู้ตัดสินใจอย่างรับผิดชอบ', criterion:'ผ่านภารกิจบทที่ 4', type:'scenario', badgeId:'badge4', x:3, y:2 },
+  { id:'scenario5', name:'ผู้พิทักษ์ข้อมูล', criterion:'ผ่านภารกิจบทที่ 5', type:'scenario', badgeId:'badge5', x:0, y:2 }
 ];
 function hasAchievement(b, s) {
   s = s || currentStudent() || {};
@@ -3149,7 +3184,7 @@ function renderJourney() {
         '<div class="pcard mint">' +
           '<h3 class="ink sec-label">⭐ ดาวเดินทาง · ' + gem.name + '</h3>' +
           '<p class="ink" style="font-size:30px;font-weight:700;margin-bottom:6px">' + steps + ' <span class="soft" style="font-size:16px">/ ' + total + '</span></p>' +
-          '<p class="soft tiny" style="line-height:1.8">โบนัสอันดับ +' + gem.bonus + ' คะแนน<br>📚 หน่วยเรียน ' + ms.lessons + '/5<br>✍️ พรอมต์ ' + ms.prompts + '/3<br>🎮 สถานการณ์ ' + ms.games + '/4</p>' +
+          '<p class="soft tiny" style="line-height:1.8">โบนัสอันดับ +' + gem.bonus + ' คะแนน<br>📚 หน่วยเรียน ' + ms.lessons + '/5<br>✍️ พรอมต์ ' + ms.prompts + '/3<br>🎮 สถานการณ์ ' + ms.games + '/' + scenarios.length + '</p>' +
         '</div>' +
       '</div>' +
       '<div class="center" style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">' +
@@ -3462,7 +3497,7 @@ function renderLeaderboard(skipLoad) {
     '</div>' +
     '<div class="body-area scroll">' +
       (currentId && rank
-        ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนหน่วย (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม 80) + โบนัสระดับอัญมณี (0/5/10/15)</p></div>'
+        ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนหน่วย (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม ' + maxScenarioScore() + ') + โบนัสระดับอัญมณี (0/5/10/15)</p></div>'
         : secureRankError
           ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">📡</div><p>' + escChat(secureRankError) + '</p><button onclick="retryLeaderboard()" class="btn blueb sm" style="margin-top:16px">ลองโหลดอันดับอีกครั้ง</button></div>'
           : '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>กำลังโหลดอันดับจากห้องเรียน...</p></div>') +
@@ -3518,7 +3553,7 @@ function renderLeaderboard(skipLoad) {
       (list.length === 0
         ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>ยังไม่มีใครบนตารางอันดับเลย<br>เข้าสู่ระบบแล้วเริ่มเก็บดาวกันเถอะ!</p></div>'
         : podiumHtml + rowsHtml) +
-      '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนหน่วย (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม 80) + โบนัสระดับอัญมณี (0/5/10/15)</p>' +
+      '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนหน่วย (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม ' + maxScenarioScore() + ') + โบนัสระดับอัญมณี (0/5/10/15)</p>' +
     '</div>';
 }
 
@@ -3691,7 +3726,7 @@ function renderTeacher() {
       '<td class="t-orange" style="font-weight:700">' + gemShapeHtml(gem, 'mini') + ' ' + gem.name + '<br><span class="soft tiny">⭐ ' + studentJourneyStars(s) + '/' + journeyTotal() + ' · โบนัส +' + gem.bonus + '</span></td>' +
       '<td style="line-height:1.9">' + (perLesson || '-') + '</td>' +
       '<td>🧭 ' + assessmentLabel(s, 'pre') + '<br>🏁 ' + assessmentLabel(s, 'post') + '</td>' +
-      '<td>🏅 ' + (s.score || 0) + '/80<br><span class="soft tiny">ด่าน ' + st.game + '/4 · 🎀 ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></td>' +
+      '<td>🏅 ' + (s.score || 0) + '/' + maxScenarioScore() + '<br><span class="soft tiny">ด่าน ' + st.game + '/' + scenarios.length + ' · 🎀 ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></td>' +
       '<td style="min-width:110px"><div class="pbar" style="height:12px;margin-bottom:4px"><div style="width:' + st.pct + '%;background:' + (st.pct >= 80 ? '#9FD6A4' : st.pct >= 40 ? '#F2D778' : '#F29BB8') + '"></div></div><span class="tiny soft">' + st.pct + '%</span></td>' +
       '<td class="soft tiny">' + (s.last || '-') + '</td>' +
       '<td class="noprint"><div class="teacher-row-actions">' +
@@ -3798,7 +3833,7 @@ function exportCSV() {
     head.push('เหรียญหน่วยที่ ' + (i + 1) + ' (เต็ม 1)');
     head.push('คะแนนระหว่างบทที่ ' + (i + 1));
   });
-  head = head.concat(['ดาวพรอมต์ (เต็ม ' + maxPromptStars() + ')','คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ (เต็ม 80)','ด่านที่ผ่าน (เต็ม 4)','ตราสถานการณ์ (เต็ม 4)','ตราสัญลักษณ์รวม (เต็ม ' + ACHIEVEMENT_BADGES.length + ')','ความคืบหน้า (%)','อัปเดตล่าสุด']);
+  head = head.concat(['ดาวพรอมต์ (เต็ม ' + maxPromptStars() + ')','คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ (เต็ม ' + maxScenarioScore() + ')','ด่านที่ผ่าน (เต็ม ' + scenarios.length + ')','ตราสถานการณ์ (เต็ม ' + scenarios.length + ')','ตราสัญลักษณ์รวม (เต็ม ' + ACHIEVEMENT_BADGES.length + ')','ความคืบหน้า (%)','อัปเดตล่าสุด']);
   var rows = [head];
   Object.keys(db.students).forEach(function(id) {
     var s = db.students[id];
@@ -5072,7 +5107,7 @@ function renderDashboard() {
           '<p class="ink" style="font-size:26px;font-weight:700">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/100 คะแนน</span></p>' +
           '<p class="soft tiny">⭐ ' + totalStars() + '/5 ดาว · 🏅 ' + lessonMedalCount() + '/5 เหรียญ</p></div>' +
         '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:4px">🎮 แต้มจากภารกิจ</p>' +
-          '<p class="ink" style="font-size:32px;font-weight:700">' + state.score + ' <span class="soft" style="font-size:16px">/ 80</span></p>' +
+          '<p class="ink" style="font-size:32px;font-weight:700">' + state.score + ' <span class="soft" style="font-size:16px">/ ' + maxScenarioScore() + '</span></p>' +
           '<p class="soft tiny">ผ่านด่าน ' + Math.min(state.unlockedLevel, scenarios.length) + '/' + scenarios.length + ' · ตราสัญลักษณ์รวม ' + earnedAchievements.length + '/' + ACHIEVEMENT_BADGES.length + '</p></div>' +
         '<div class="pcard yellow center"><p class="t-orange tiny" style="font-weight:700;margin-bottom:4px">✍️ ดาวเขียนพรอมต์</p>' +
           '<p class="ink" style="font-size:32px;font-weight:700">' + totalPromptStars() + ' <span class="soft" style="font-size:16px">/ ' + maxPromptStars() + '</span></p>' +
@@ -5137,7 +5172,7 @@ function renderSendReport() {
       '<div class="pcard blue" style="margin-bottom:18px">' +
         '<div class="tape tape-blue"></div>' +
         '<p style="font-weight:600;line-height:1.9">📦 นี่คือ "โค้ดรายงาน" ของ <b>' + (s ? studentAlias(s) : '-') + '</b><br>' +
-        '<span class="soft small">สรุปผล: ⭐ ' + st.stars + '/' + maxStars() + ' ดาว · เรียนจบ ' + st.done + '/' + lessons.length + ' บท · ภารกิจ ' + st.game + '/4 ด่าน · คืบหน้า ' + st.pct + '%</span></p>' +
+        '<span class="soft small">สรุปผล: ⭐ ' + st.stars + '/' + maxStars() + ' ดาว · เรียนจบ ' + st.done + '/' + lessons.length + ' บท · ภารกิจ ' + st.game + '/' + scenarios.length + ' ด่าน · คืบหน้า ' + st.pct + '%</span></p>' +
       '</div>' +
       '<textarea id="rp-code" class="codebox" readonly>' + code + '</textarea>' +
       '<div class="center" style="margin-top:16px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
@@ -5164,19 +5199,20 @@ function renderTutorial() {
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
     '</div>' +
     '<div class="center-view">' +
-      '<h3 class="ink" style="font-size:24px;font-weight:700;margin-bottom:30px">ง่ายนิดเดียว แค่ 3 ขั้นตอน! ⭐</h3>' +
+      '<h3 class="ink" style="font-size:24px;font-weight:700;margin-bottom:8px">5 ด่าน ตรงกับบทเรียนทั้ง 5 บท ⭐</h3>' +
+      '<p class="soft small" style="max-width:680px;line-height:1.8;margin-bottom:26px">ผ่านแต่ละด่านรับ 20 แต้มและ 1 ตราสัญลักษณ์ รวมสูงสุด 100 แต้ม · ต้องตอบถูกจึงปลดล็อกด่านถัดไป</p>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;width:100%;max-width:760px;margin-bottom:34px">' +
         '<div class="pcard pink pop" style="animation-delay:.1s;text-align:center">' +
           '<div class="tape tape-pink"></div>' +
           '<div style="font-size:40px;margin-bottom:10px">🔍</div>' +
           '<h3 class="t-pink" style="font-size:19px;font-weight:700;margin-bottom:8px">1. อ่านสถานการณ์</h3>' +
-          '<p class="soft" style="font-size:15px">อ่านเหตุการณ์จำลองที่ AI อาจสร้างปัญหาจริยธรรมในโรงเรียน</p>' +
+          '<p class="soft" style="font-size:15px">อ่านเหตุการณ์จากเรื่องใกล้ตัวที่ทบทวนความรู้ของบทนั้น</p>' +
         '</div>' +
         '<div class="pcard blue pop" style="animation-delay:.2s;text-align:center">' +
           '<div class="tape tape-blue"></div>' +
           '<div style="font-size:40px;margin-bottom:10px">✏️</div>' +
           '<h3 class="t-blue" style="font-size:19px;font-weight:700;margin-bottom:8px">2. เลือกคำตอบ</h3>' +
-          '<p class="soft" style="font-size:15px">ใช้ความรู้ การประเมิน และหลักจริยธรรมเลือกทางออกที่เหมาะสมที่สุด</p>' +
+          '<p class="soft" style="font-size:15px">ใช้ความรู้จากบทเรียน วิเคราะห์ แล้วเลือกทางออกที่เหมาะสมที่สุด</p>' +
         '</div>' +
         '<div class="pcard mint pop" style="animation-delay:.3s;text-align:center">' +
           '<div class="tape tape-mint"></div>' +
@@ -5191,7 +5227,7 @@ function renderTutorial() {
 
 function renderGameMap() {
   var missionsHtml = scenarios.map(function(scenario, index) {
-    var theme = themeList[index];
+    var theme = themeList[index % themeList.length];
     var isUnlocked = index <= state.unlockedLevel;
     var isCompleted = index < state.unlockedLevel;
     var badgeForThisMission = null;
@@ -5263,7 +5299,7 @@ function renderGameMap() {
         '<div class="dash-right">' +
           '<div class="pcard orange" style="position:relative">' +
             '<div class="tape tape-yellow"></div>' +
-            '<h3 class="t-orange sec-label" style="margin-bottom:12px">🎖️ ตราสถานการณ์ ' + state.badges.length + '/4</h3>' +
+            '<h3 class="t-orange sec-label" style="margin-bottom:12px">🎖️ ตราสถานการณ์ ' + state.badges.length + '/' + scenarios.length + '</h3>' +
             '<div class="badgegrid">' + badgesInner + '</div>' +
             mascotHtml('สู้ ๆ นะ!') +
           '</div>' +
@@ -5284,7 +5320,7 @@ function startScenario(index) {
 
 function renderScenario() {
   var scenario = scenarios[state.currentScenarioIndex];
-  var theme = themeList[state.currentScenarioIndex];
+  var theme = themeList[state.currentScenarioIndex % themeList.length];
   var isRobot = scenario.character === 'robot';
   var avatarEmoji = isRobot ? '🤖' : '🧑‍🎓';
   var characterName = isRobot ? 'น้องบอท AI' : 'เพื่อนนักเรียน';
@@ -5332,6 +5368,7 @@ function renderScenario() {
 function renderFeedback() {
   var scenario = scenarios[state.currentScenarioIndex];
   var choice = scenario.choices[state.lastChoice];
+  var awardedPoints = Number(choice.lastAwardedPoints) || 0;
   var isGood = choice.isCorrect;
   var icon = isGood ? '🎉' : '😅';
   var titleTxt = isGood ? 'เก่งมาก! ตอบถูกต้อง' : 'ยังไม่ใช่คำตอบที่ดีที่สุดนะ';
@@ -5371,7 +5408,7 @@ function renderFeedback() {
       '</div>' +
       '<div class="innerbox pop" style="display:flex;align-items:center;justify-content:space-between;animation-delay:.2s">' +
         '<span class="soft small" style="font-weight:600">🏅 แต้มที่ได้รับ:</span>' +
-        '<span class="' + (choice.points > 0 ? 't-orange' : 'soft') + '" style="font-size:22px;font-weight:700">+' + choice.points + ' แต้ม</span>' +
+        '<span class="' + (awardedPoints > 0 ? 't-orange' : 'soft') + '" style="font-size:22px;font-weight:700">+' + awardedPoints + ' แต้ม</span>' +
       '</div>' +
       badgeHtml + unlockMessage +
       '<div style="margin-top:18px">' + journeyBanner() + '</div>' +
@@ -5386,11 +5423,11 @@ function renderGameEnd() {
   var assessment = '';
   var cls = '';
   var face = '';
-  if (state.score >= 70) {
-    assessment = 'ระดับ <b>เหรียญทอง 🥇</b>: นักเรียนมีความตระหนักรู้ด้านจริยธรรม AI ในระดับสูงเยี่ยม พร้อมเผชิญหน้ากับโลกอนาคตอย่างปลอดภัยและมีความรับผิดชอบ';
+  if (state.score >= maxScenarioScore() * 0.8) {
+    assessment = 'ระดับ <b>เหรียญทอง 🥇</b>: นักเรียนเข้าใจพื้นฐาน AI เลือกใช้และเขียนพรอมต์ได้ ตรวจสอบข้อมูล ใช้อย่างรับผิดชอบ และปกป้องข้อมูลได้ดีเยี่ยม';
     cls = 't-mint'; face = '🏆';
-  } else if (state.score >= 40) {
-    assessment = 'ระดับ <b>เหรียญเงิน 🥈</b>: มีพื้นฐานที่ดีแล้ว แต่ยังต้องเพิ่ม <b>การวิเคราะห์เชิงลึก</b> ก่อนตัดสินใจใช้ AI ในสถานการณ์ที่มีความเสี่ยงนะ';
+  } else if (state.score >= maxScenarioScore() * 0.4) {
+    assessment = 'ระดับ <b>เหรียญเงิน 🥈</b>: มีพื้นฐานที่ดีแล้ว ลองทบทวนบทที่ยังพลาดเพื่อใช้ AI ได้เหมาะสม รอบคอบ และปลอดภัยยิ่งขึ้นนะ';
     cls = 't-orange'; face = '🎖️';
   } else {
     assessment = 'ระดับ <b>ต้องฝึกเพิ่ม 💪</b>: ยังมีจุดที่พลาดอยู่หลายข้อ ลองกลับไปเล่นซ้ำและอ่านคำอธิบายในแต่ละด่านอีกครั้งนะ เชื่อว่าทำได้แน่นอน!';
@@ -5403,12 +5440,12 @@ function renderGameEnd() {
       '<div class="tape tape-pink right" style="top:22px;right:40px"></div>' +
       '<div class="pop" style="font-size:58px;margin-bottom:10px">' + face + '</div>' +
       '<h1 class="ink" style="font-size:28px;font-weight:700;margin-bottom:6px">สรุปผลภารกิจผจญภัย</h1>' +
-      '<p class="soft tiny" style="margin-bottom:28px">ประเมินจากการตัดสินใจในสถานการณ์การใช้ AI อย่างรับผิดชอบ</p>' +
+      '<p class="soft tiny" style="margin-bottom:28px">ประเมินจาก 5 สถานการณ์ที่สอดคล้องกับบทเรียนทั้ง 5 บท</p>' +
       '<div class="grid2 pop" style="max-width:560px;width:100%;margin-bottom:26px;animation-delay:.15s">' +
         '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:6px">แต้มรวม</p>' +
-        '<p class="ink" style="font-size:34px;font-weight:700">🏅 ' + state.score + ' <span class="soft" style="font-size:16px">/ 80</span></p></div>' +
+        '<p class="ink" style="font-size:34px;font-weight:700">🏅 ' + state.score + ' <span class="soft" style="font-size:16px">/ ' + maxScenarioScore() + '</span></p></div>' +
         '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:6px">ตราสัญลักษณ์ที่สะสมได้</p>' +
-        '<p class="ink" style="font-size:34px;font-weight:700">🎀 ' + state.badges.length + ' <span class="soft" style="font-size:16px">/ 4</span></p></div>' +
+        '<p class="ink" style="font-size:34px;font-weight:700">🎀 ' + state.badges.length + ' <span class="soft" style="font-size:16px">/ ' + scenarios.length + '</span></p></div>' +
       '</div>' +
       '<div class="pcard mint pop" style="max-width:560px;width:100%;text-align:left;animation-delay:.3s">' +
         '<div class="tape tape-mint"></div>' +
@@ -5426,21 +5463,24 @@ function renderGameEnd() {
 function makeChoice(choiceIndex) {
   var scenario = scenarios[state.currentScenarioIndex];
   var choice = scenario.choices[choiceIndex];
+  var alreadyEarned = !!(choice.badge && state.badges.some(function(b){ return b.id === choice.badge.id; }));
+  var awardedPoints = choice.isCorrect && !alreadyEarned ? choice.points : 0;
 
   state.lastChoice = choiceIndex;
-  state.score += choice.points;
+  choice.lastAwardedPoints = awardedPoints;
+  state.score = Math.min(maxScenarioScore(), (state.score || 0) + awardedPoints);
   if (!choice.isCorrect) { state.hintReady = true; state.hintShown = false; }
 
   scenarios.forEach(function(s){ s.choices.forEach(function(c){ c.justEarnedBadge = false; }); });
 
   var beforeJourney = journeySteps();
-  if (choice.badge && !state.badges.some(function(b){ return b.id === choice.badge.id; })) {
+  if (choice.badge && !alreadyEarned) {
     state.badges.push(choice.badge);
     choice.justEarnedBadge = true;
     markJourneyStep(beforeJourney);
   }
 
-  if (state.currentScenarioIndex === state.unlockedLevel) {
+  if (choice.isCorrect && state.currentScenarioIndex === state.unlockedLevel) {
     state.unlockedLevel++;
   }
 
