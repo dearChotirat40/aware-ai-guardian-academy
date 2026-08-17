@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์ เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4</title>
+<title>เกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์เป็นฐาน เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างมีความรับผิดชอบของนักเรียน ชั้นมัธยมศึกษาปีที่ 4 โรงเรียนฤทธิยะวรรณาลัย</title>
  <link rel="icon" type="image/png" href="./app-logo-transparent.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#F6F3EA; --dot:#D9D2C2;
@@ -1276,6 +1276,32 @@ body::after{opacity:.18; filter:drop-shadow(0 6px 4px rgba(47,74,112,.16))}
   body #app .login-view .login-card h3{font-size:clamp(20px,2.4vh,24px) !important;margin-bottom:clamp(10px,1.5vh,18px) !important}
   body #app .login-view .login-card .inp,body #app .login-view .login-card>.btn{min-height:clamp(46px,5.5vh,52px)}
   body #app .login-view .mascot{margin-top:clamp(2px,.8vh,8px)}
+}
+
+/* ชื่อโครงการหน้าเข้าสู่ระบบ: ตัวพาดหัวแบบนิตยสารไทย */
+body #app .login-view .app-name-login{max-width:1120px;padding:0 12px;text-wrap:balance}
+body #app .login-view .app-name-login .app-title-main{
+  font-family:'Chonburi','Sarabun','Leelawadee UI',sans-serif;
+  font-size:clamp(27px,3.2vh,38px);
+  font-weight:900;
+  line-height:1.26;
+  letter-spacing:.01em;
+  color:#25385D;
+  text-shadow:0 2px 0 rgba(255,255,255,.95),0 4px 0 rgba(90,117,157,.16);
+}
+body #app .login-view .app-name-login .app-title-sub{
+  max-width:1080px;
+  margin:clamp(5px,.9vh,10px) auto 0;
+  font-family:'Sarabun','Leelawadee UI',sans-serif;
+  font-size:clamp(18px,2.35vh,26px);
+  font-weight:800;
+  line-height:1.36;
+  color:#24558D;
+}
+@media(max-width:760px){
+  body #app .login-view .app-name-login{padding:0 4px}
+  body #app .login-view .app-name-login .app-title-main{font-size:clamp(22px,7vw,29px);line-height:1.3}
+  body #app .login-view .app-name-login .app-title-sub{font-size:clamp(15px,4.5vw,19px);line-height:1.4}
 }
 
 /* หน้าล็อกอินแบบตัวละครโต้ตอบ: ดัดแปลงแนวคิดจากฟอร์มตัวละครให้เป็นผู้ช่วย AI */
@@ -3839,8 +3865,8 @@ function renderLogin() {
       '<div class="tape tape-blue right" style="top:20px;right:40px"></div>' +
       '<img class="app-logo-animated" src="./app-logo-transparent.png" alt="โลโก้การเรียนรู้เท่าทันปัญญาประดิษฐ์">' +
       '<h1 class="app-name-login">' +
-        '<span class="app-title-main">เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์</span>' +
-        '<span class="app-title-sub">เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4</span>' +
+        '<span class="app-title-main">เกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์เป็นฐาน</span>' +
+        '<span class="app-title-sub">เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างมีความรับผิดชอบของนักเรียน ชั้นมัธยมศึกษาปีที่ 4 โรงเรียนฤทธิยะวรรณาลัย</span>' +
       '</h1>' +
       '<p class="t-blue" style="font-size:18px;font-weight:600;margin:6px 0 24px">หลักสูตรเรียนรู้เท่าทันและใช้ AI อย่างรับผิดชอบ · ระดับชั้น ม.4</p>' +
       '<div class="login-features"><span class="login-feature">🎯 5 ภารกิจเรียนรู้</span><span class="login-feature">⭐ สะสมดาวและเหรียญ</span><span class="login-feature">🏆 แข่งขันอันดับ LIVE</span></div>' +
