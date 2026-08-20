@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์เป็นฐาน เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างมีความรับผิดชอบของนักเรียน ชั้นมัธยมศึกษาปีที่ 4 โรงเรียนฤทธิยะวรรณาลัย</title>
+<title>AI Guardian Academy | เรียนรู้เท่าทัน AI</title>
  <link rel="icon" type="image/png" href="./app-logo-transparent.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -574,19 +574,22 @@ select.inp{appearance:none; -webkit-appearance:none; cursor:pointer;
 .chatfab:hover{transform:translateY(-3px); box-shadow:0 8px 0 var(--ink)}
 .chatfab .face{font-size:28px}
 .buddyimg{border-radius:50%; border:2.5px solid var(--blue-line); background:#EAF4FD; object-fit:cover; object-position:top}
-.chatlog{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px; padding:4px 2px}
-.msgrow{display:flex; gap:10px; align-items:flex-end; max-width:82%}
+.chatlog{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:18px; padding:18px clamp(4px,2vw,20px); background:linear-gradient(180deg,#F8FBFF,#F5F8F1); border:1px solid rgba(66,113,155,.18); border-radius:18px}
+.msgrow{display:flex; gap:10px; align-items:flex-end; max-width:min(84%,680px)}
 .msgrow.me{align-self:flex-end; flex-direction:row-reverse}
 .msgrow .face{font-size:26px; flex-shrink:0}
-.msg{padding:12px 16px; border-radius:16px; line-height:1.8; font-size:16px; word-break:break-word}
-.msgrow:not(.me) .msg{background:var(--yellow); border:2px solid var(--yellow-line); border-bottom-left-radius:4px}
-.msgrow.me .msg{background:var(--blue); border:2px solid var(--blue-line); border-bottom-right-radius:4px}
+.chat-avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;border:2px solid #4B7CB1;background:#EAF4FD;box-shadow:0 2px 5px rgba(29,61,93,.18)}
+.chat-avatar.student{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#6BB0E8,#406FAE);border-color:#2B578E;color:#fff;font-weight:800;font-size:17px;text-shadow:0 1px 1px rgba(0,0,0,.2)}
+.msgwrap{min-width:0}.msg-meta{margin:0 0 4px 3px;font-size:12px;font-weight:700;color:#637487}.msgrow.me .msg-meta{text-align:right;margin:0 3px 4px 0}
+.msg{padding:12px 16px; border-radius:18px; line-height:1.75; font-size:16px; word-break:break-word;box-shadow:0 2px 5px rgba(29,61,93,.10)}
+.msgrow:not(.me) .msg{background:#fff; border:1.5px solid #D7E4EF; border-bottom-left-radius:5px}
+.msgrow.me .msg{background:linear-gradient(135deg,#BDE6FF,#9ED7F6); border:1.5px solid #75B7DF; border-bottom-right-radius:5px}
 .msg .src{display:block; margin-top:6px; font-size:12px; color:var(--ink-soft)}
 .typing span{display:inline-block; width:8px; height:8px; margin:0 2px; border-radius:50%;
   background:var(--yellow-deep); animation:pulse 1s ease-in-out infinite}
 .typing span:nth-child(2){animation-delay:.15s}
 .typing span:nth-child(3){animation-delay:.3s}
-.chatbar{display:flex; gap:10px; margin-top:14px}
+.chatbar{display:flex; gap:10px; margin-top:14px;padding:10px;background:#fff;border:1px solid #D6E2EC;border-radius:16px;box-shadow:0 3px 10px rgba(29,61,93,.08)}
 .chatbar .inp{flex:1}
 
 /* Report code box */
@@ -1354,7 +1357,7 @@ body #app .login-view .app-name-login .app-title-sub{
 .login-character-card{position:relative;overflow:visible}
 .login-ai-companion{position:absolute;right:calc(100% + 18px);top:50%;display:flex;flex-direction:column;align-items:center;width:212px;transform:translateY(-45%)}
 .login-ai-companion .ai-login-bot{margin-bottom:7px}
-.login-reaction-mascot{display:block;width:190px;height:270px;margin:0 auto -7px;object-fit:contain;object-position:center;filter:drop-shadow(0 10px 7px rgba(38,57,85,.24));transform-origin:50% 85%}
+.login-reaction-mascot{display:block;width:190px;height:270px;margin:0 auto -7px;object-fit:contain;object-position:center;filter:drop-shadow(0 10px 7px rgba(38,57,85,.24));transform-origin:50% 85%;animation:loginBuddyFloat 2.8s ease-in-out infinite}
 .login-reaction-mascot.is-success{animation:reactionHappy .44s ease-in-out infinite alternate}
 .login-reaction-mascot.is-error{animation:reactionCrying .54s ease-in-out infinite alternate}
 .ai-bot-tear{position:absolute;z-index:3;top:53px;width:8px;height:22px;border-radius:5px 5px 9px 9px;background:linear-gradient(#BFEFFF,#4CB8EE);opacity:0;transform:translateY(-6px)}
@@ -1373,6 +1376,7 @@ body #app .login-view .app-name-login .app-title-sub{
 @keyframes aiBotSpark{from{transform:scale(.65) rotate(-15deg);opacity:.35}to{transform:scale(1.25) rotate(18deg);opacity:1}}
 @keyframes reactionHappy{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(-11px) rotate(2deg)}}
 @keyframes reactionCrying{from{transform:translateX(-2px) rotate(-1deg)}to{transform:translateX(2px) rotate(1deg)}}
+@keyframes loginBuddyFloat{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-11px) rotate(1.5deg)}}
 @media(max-width:1050px){
   .login-ai-companion{position:static;display:flex;flex-direction:row;justify-content:center;gap:8px;width:100%;margin:-7px auto 8px;transform:none}
   .login-ai-companion .ai-login-bot{width:112px;height:120px;flex:0 0 112px;margin:0;animation:none;transform:scale(.58);transform-origin:center}
@@ -1382,6 +1386,56 @@ body #app .login-view .app-name-login .app-title-sub{
   @keyframes aiBotCelebrateSmall{from{transform:scale(.58) translateY(0) rotate(-3deg)}to{transform:scale(.58) translateY(-12px) rotate(3deg)}}
 }
 @media(max-width:700px){.login-ai-companion{margin:-9px auto 2px}.login-ai-companion .login-reaction-mascot{width:92px;height:144px;flex-basis:92px}.login-ai-companion .ai-login-message{font-size:11px;min-height:34px;padding:6px 10px}}
+
+/* จัดระยะชื่อโครงการเต็มกับบัตรเข้าสู่ระบบให้แยกชัดเจน */
+body #app .login-view .app-name-login{margin-bottom:clamp(16px,2.4vh,24px)}
+body #app .login-view .login-character-card{margin-top:0}
+body #app .login-view .login-ai-companion{top:54%;transform:translateY(-40%)}
+@media(max-width:1050px){
+  body #app .login-view .app-name-login{margin-bottom:14px}
+  body #app .login-view .login-ai-companion{transform:none}
+}
+
+/* ภาพอยู่ในบัตร ส่วนหุ่น AI อยู่ข้างกรอบเข้าสู่ระบบ */
+body #app .login-view .login-character-card .login-visual-row{display:flex;align-items:center;justify-content:center;margin:-4px auto 10px}
+body #app .login-view .login-character-card .login-icon-illustration{width:clamp(132px,17vw,178px);height:clamp(132px,17vw,178px);object-fit:contain;mix-blend-mode:multiply}
+body #app .login-view .login-character-card .login-ai-companion{position:absolute;right:calc(100% + 18px);left:auto;top:50%;display:flex;justify-content:center;width:auto;margin:0;transform:translateY(-45%)}
+body #app .login-view .login-character-card .login-reaction-mascot{width:190px;height:270px;margin:0;object-position:center}
+body #app .login-view .login-character-card .ai-login-message{display:none}
+@media(max-width:700px){
+  body #app .login-view .login-character-card .login-ai-companion{position:static;width:100%;margin:0 auto 7px;transform:none}
+}
+@media(max-width:700px){
+  body #app .login-view .login-character-card .login-visual-row{margin:-2px auto 6px}
+  body #app .login-view .login-character-card .login-icon-illustration{width:120px;height:120px}
+  body #app .login-view .login-character-card .login-reaction-mascot{width:108px;height:126px}
+}
+@media(min-width:761px) and (max-height:680px){
+  body #app .login-view{padding-top:10px;padding-bottom:10px}
+  body #app .login-view .app-logo-animated{width:70px;height:70px}
+  body #app .login-view .app-name-login{margin-bottom:10px}
+  body #app .login-view .app-name-login .app-title-main{font-size:clamp(23px,3vh,29px)}
+  body #app .login-view .app-name-login .app-title-sub{font-size:clamp(16px,2.1vh,21px)}
+  body #app .login-view .login-card{padding:15px 28px}
+  body #app .login-view .login-reaction-mascot{width:160px;height:230px}
+}
+
+/* ตัวอักษรสำหรับนักเรียน ม.4: อ่านชัด สบายตา และแยกข้อความสำคัญได้ง่าย */
+body{font-size:18px;line-height:1.78}
+.soft{color:#4C5B69}
+.small{font-size:16px;line-height:1.72}
+.tiny{font-size:14px;line-height:1.55}
+.btn.sm{font-size:16px}
+.field label{font-size:16px;color:#465664}
+.lesson-submenu-heading p,.lesson-submenu-status{font-size:14px;line-height:1.65}
+.lesson-choice-btn small,.media-stage-title p,.media-state-chip{font-size:13px;line-height:1.6}
+.badgeitem p,.badge-criterion,.slide-audio-note,.slide-progress-label{font-size:12px;line-height:1.5}
+@media(max-width:700px){
+  body{font-size:16px;line-height:1.72}
+  .small{font-size:15px}.tiny{font-size:13px}
+  .btn.sm{font-size:15px}
+  .lesson-submenu-heading p,.lesson-submenu-status{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -1439,13 +1493,13 @@ var APPS_SCRIPT_CODE = [
 "function doPost(e) {",
 "  var d = JSON.parse(e.postData.contents);",
 "  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];",
-"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวบทเรียน','บทที่เรียนจบ','คะแนน E1 ระหว่างเรียน (เต็ม 100)','จำนวนเหรียญหน่วย (เต็ม 5)',",
+"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวบทเรียน','บทที่เรียนจบ','คะแนน E1 ระหว่างเรียน (เต็ม 30)','จำนวนเหรียญหน่วย (เต็ม 5)',",
 "    'ดาวบทที่ 1','คะแนนระหว่างบทที่ 1',",
 "    'ดาวบทที่ 2','คะแนนระหว่างบทที่ 2',",
 "    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
 "    'ดาวบทที่ 4','คะแนนระหว่างบทที่ 4',",
 "    'ดาวบทที่ 5','คะแนนระหว่างบทที่ 5','ดาวพรอมต์',",
-"    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','อัปเดตล่าสุด'];",
+"    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','โบนัสภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','อัปเดตล่าสุด'];",
 "  if (sh.getLastRow() === 0) sh.appendRow(headers);",
 "  else if (sh.getLastColumn() < headers.length) sh.getRange(1, 1, 1, headers.length).setValues([headers]);",
 "  var row = [String(d.code), d.nickname, d.num, d.gem, d.levelBonus, d.journeyStars, d.stars, d.done, d.unitPoints, d.lessonMedals,",
@@ -1479,13 +1533,11 @@ var AVATAR_GIRL = 'data:image/webp;base64,UklGRggdAABXRUJQVlA4IPwcAABQZQCdASrwAP
 function avatarSrc(s) { return (s && s.gender === 'f') ? AVATAR_GIRL : AVATAR_BOY; }
 
 /* =====================================================
-   🤖 ตั้งค่าการเชื่อมต่อ AI สำหรับตรวจพรอมต์
-   - ถ้าเปิดไฟล์นี้ใน Claude.ai (Artifacts) จะเรียก AI ได้ทันทีโดยไม่ต้องใส่ key
-   - ถ้าใช้เป็นไฟล์ในเครื่อง/เว็บโรงเรียน ให้คุณครูใส่ Anthropic API key ด้านล่าง
-   - ถ้าเชื่อมต่อ AI ไม่ได้ ระบบจะสลับเป็น "ตรวจอัตโนมัติออฟไลน์" ให้เอง ใช้งานได้เสมอ
+   🤖 AI ใช้งานผ่าน Supabase Edge Function
+   กุญแจ Anthropic อยู่ใน Supabase Secret เท่านั้น จึงไม่ปรากฏบนเว็บนักเรียน
 ===================================================== */
 var AI_CHECK = {
-  apiKey: '',                      // ← ใส่ API key ตรงนี้ (เว้นว่างได้)
+  endpoint: SUPABASE_CONFIG.url + '/functions/v1/super-function',
   model: 'claude-sonnet-4-6'
 };
 
@@ -1727,7 +1779,7 @@ var scenarios = [
     choices: [
       { text:'A. ใช่ AI ทุกระบบคิด รู้สึก และเข้าใจโลกเหมือนมนุษย์', points:0,
         feedback:'ยังไม่ถูกนะ AI ประมวลผลรูปแบบจากข้อมูลและคำสั่ง แต่ไม่ได้คิดหรือรู้สึกเหมือนมนุษย์ทุกด้าน', badge:null, isCorrect:false },
-      { text:'B. ไม่ใช่ AI เรียนรู้รูปแบบจากข้อมูลเพื่อทำงานเฉพาะด้าน และอาจผิดพลาดหรือไม่เข้าใจบริบทได้', points:20,
+      { text:'B. ไม่ใช่ AI เรียนรู้รูปแบบจากข้อมูลเพื่อทำงานเฉพาะด้าน และอาจผิดพลาดหรือไม่เข้าใจบริบทได้', points:2,
         feedback:'ถูกต้อง! นี่คือพื้นฐานสำคัญของบทที่ 1: AI มีความสามารถเฉพาะด้าน เรียนรู้จากข้อมูล และยังต้องมีมนุษย์ตรวจสอบ',
         badge:{ id:'badge1', name:'นักสำรวจพื้นฐาน AI', icon:'🤖', color:'t-pink' }, isCorrect:true },
       { text:'C. AI คือเครื่องคิดเลขธรรมดาเท่านั้น จึงไม่สามารถเรียนรู้รูปแบบได้', points:0,
@@ -1744,7 +1796,7 @@ var scenarios = [
     choices: [
       { text:'A. ใช้เครื่องมือใดก็ได้และพิมพ์คำสั่งเดิมซ้ำหลายครั้ง', points:0,
         feedback:'การทำซ้ำคำสั่งที่ไม่ชัดเจนอาจยังได้ผลลัพธ์ไม่ตรงงาน ควรกำหนดเป้าหมายและเงื่อนไขให้ครบ', badge:null, isCorrect:false },
-      { text:'B. เลือกเครื่องมือให้ตรงงาน แล้วระบุบทบาท งาน บริบท และรูปแบบอินโฟกราฟิกอย่างชัดเจน', points:20,
+      { text:'B. เลือกเครื่องมือให้ตรงงาน แล้วระบุบทบาท งาน บริบท และรูปแบบอินโฟกราฟิกอย่างชัดเจน', points:2,
         feedback:'ถูกต้อง! พรอมต์ที่ชัดเจนและการเลือกเครื่องมือให้ตรงงานช่วยให้ AI เป็นผู้ช่วยที่มีประสิทธิภาพ โดยนักเรียนยังต้องตรวจและปรับผลงานเอง',
         badge:{ id:'badge2', name:'นักออกแบบพรอมต์', icon:'✍️', color:'t-blue' }, isCorrect:true },
       { text:'C. ส่งบทความทั้งหมดให้ AI ตัดสินใจและทำแทนโดยไม่ตรวจผลลัพธ์', points:0,
@@ -1763,7 +1815,7 @@ var scenarios = [
         feedback:'รูปแบบที่ดูเป็นทางการไม่ได้รับประกันความถูกต้อง AI อาจสร้างข้อมูลผิดให้ดูน่าเชื่อได้', badge:null, isCorrect:false },
       { text:'B. ถาม AI ตัวเดิมซ้ำ ถ้ายืนยันคำตอบเดิมก็ถือว่าเป็นหลักฐาน', points:0,
         feedback:'การถาม AI ซ้ำยังไม่ใช่หลักฐานอิสระ ต้องตรวจจากแหล่งต้นฉบับภายนอก', badge:null, isCorrect:false },
-      { text:'C. ตรวจเทียบอย่างน้อย 2 แหล่งที่น่าเชื่อถือ พร้อมตรวจผู้เขียน วันที่ และหลักฐานก่อนใช้', points:20,
+      { text:'C. ตรวจเทียบอย่างน้อย 2 แหล่งที่น่าเชื่อถือ พร้อมตรวจผู้เขียน วันที่ และหลักฐานก่อนใช้', points:2,
         feedback:'ถูกต้อง! นี่คือทักษะตรวจข้อเท็จจริงและประเมินแหล่งข้อมูลก่อนเชื่อหรือเผยแพร่คำตอบจาก AI',
         badge:{ id:'badge3', name:'นักตรวจสอบข้อมูล', icon:'🔎', color:'t-mint' }, isCorrect:true }
     ]
@@ -1778,7 +1830,7 @@ var scenarios = [
     choices: [
       { text:'A. ทำตาม AI: เปลี่ยนความฝัน เพราะอัลกอริทึมวิเคราะห์สถิติอนาคตได้แม่นยำกว่าความรู้สึกของมนุษย์', points:0,
         feedback:'ระวังนะ! การเชื่อ AI 100% โดยไม่ประเมินข้อจำกัดอาจนำไปสู่การตัดสินใจที่ไม่เหมาะสม เพราะ AI วิเคราะห์จากข้อมูลอดีตและไม่เข้าใจเป้าหมายหรือบริบททั้งหมดของมนุษย์', badge:null, isCorrect:false },
-      { text:'B. เราตัดสินใจเอง: รับฟังข้อมูล AI แต่ตัดสินใจทำตามความฝัน โดยจะฝึกใช้ AI เป็นเครื่องมือเสริมให้งานวาดเราเจ๋งยิ่งขึ้น', points:20,
+      { text:'B. เราตัดสินใจเอง: รับฟังข้อมูล AI แต่ตัดสินใจทำตามความฝัน โดยจะฝึกใช้ AI เป็นเครื่องมือเสริมให้งานวาดเราเจ๋งยิ่งขึ้น', points:2,
         feedback:'ยอดเยี่ยมที่สุด! นักเรียนใช้ AI เป็นข้อมูลประกอบอย่างมีวิจารณญาณ และยังคงให้มนุษย์เป็นผู้ตัดสินใจพร้อมรับผิดชอบผลที่เกิดขึ้น',
         badge:{ id:'badge4', name:'ผู้ตัดสินใจอย่างรับผิดชอบ', icon:'⚖️', color:'t-yellow' }, isCorrect:true },
       { text:'C. ต่อต้านเทคโนโลยี: โกรธที่ AI มาดูถูกความฝัน เลิกใช้งานเทคโนโลยีทุกชนิด และทำงานแมนนวลต่อไป', points:0,
@@ -1797,14 +1849,15 @@ var scenarios = [
         feedback:'เสี่ยงมาก ข้อมูลส่วนบุคคลและข้อมูลสุขภาพอาจถูกเก็บ ใช้ต่อ หรือรั่วไหลได้ ไม่ควรอัปโหลดโดยไม่มีการป้องกัน', badge:null, isCorrect:false },
       { text:'B. เปลี่ยนชื่อไฟล์ใหม่ก็เพียงพอ เพราะ AI จะไม่รู้ว่าเป็นข้อมูลของใคร', points:0,
         feedback:'การเปลี่ยนชื่อไฟล์ไม่ได้ลบชื่อ เบอร์โทร หรือข้อมูลที่ระบุตัวบุคคลภายในไฟล์', badge:null, isCorrect:false },
-      { text:'C. ลบชื่อ เบอร์โทร และข้อมูลที่ระบุตัวตนได้ ให้เหลือเฉพาะสถิติรวมก่อนใช้ AI', points:20,
+      { text:'C. ลบชื่อ เบอร์โทร และข้อมูลที่ระบุตัวตนได้ ให้เหลือเฉพาะสถิติรวมก่อนใช้ AI', points:2,
         feedback:'ถูกต้อง! การทำข้อมูลให้ไม่ระบุตัวตนช่วยปกป้องความเป็นส่วนตัวและลดความเสี่ยงก่อนใช้ AI',
         badge:{ id:'badge5', name:'ผู้พิทักษ์ข้อมูล', icon:'🛡️', color:'t-pink' }, isCorrect:true }
     ]
   }
 ];
 
-function maxScenarioScore() { return scenarios.length * 20; }
+/* ภารกิจผจญภัยเป็นโบนัสเสริมจากคะแนนบทเรียน ไม่รวมในคะแนน E1 30 คะแนน */
+function maxScenarioScore() { return scenarios.length * 2; }
 
 /* ---------- แบบทดสอบก่อนเรียน / หลังเรียน ---------- */
 var ASSESSMENT_QUESTIONS = [
@@ -1929,8 +1982,14 @@ function sanitizeStudentRecord(s) {
   ));
   /* ข้อมูลจากระบบ 4 ด่านเดิมอาจมีรหัสตราสลับกัน จัดใหม่ตามลำดับบทโดยไม่ลบจำนวนด่านที่เคยผ่าน */
   s.badgeIds = validScenarioBadges.slice(0, completedScenarioCount);
-  s.score = completedScenarioCount * 20;
+  s.score = completedScenarioCount * 2;
   s.unlockedLevel = completedScenarioCount;
+  s.chatQuestions = (Array.isArray(s.chatQuestions) ? s.chatQuestions : []).map(function(item){
+    item = item || {};
+    var question = String(item.question || '').trim().replace(/\s+/g, ' ').slice(0, 300);
+    var askedAt = Number(item.askedAt) || 0;
+    return question ? { question:question, askedAt:askedAt } : null;
+  }).filter(Boolean).slice(-80);
   return s;
 }
 window.sanitizeStudentRecord = sanitizeStudentRecord;
@@ -2185,7 +2244,7 @@ function doLogin() {
   var code = (document.getElementById('inp-code').value || '').trim();
   if (!code) { alert('กรอกรหัสผ่านก่อนนะ'); return; }
   if (!firebaseBackend) { alert('กำลังเชื่อมต่อห้องเรียน กรุณารอสักครู่แล้วลองใหม่'); return; }
-  setLoginMascotState('', 'กำลังตรวจรหัสให้...');
+  // ยังไม่แสดงหน้ายิ้มจนกว่ารหัสจะถูกต้องจริง
   firebaseBackend.claimStudent(code).then(function(row){
     setLoginMascotState('success', 'เย้! รหัสถูกต้อง ยินดีต้อนรับนะ 🎉');
     db.students = {};
@@ -2193,9 +2252,13 @@ function doLogin() {
     applyStudent(row.id);
     saveDB();
     setTimeout(function(){ stopLoginReaction(); changeView(hasNickname(row.data) ? 'home' : 'nickname'); }, 900);
-  }).catch(function(){
+  }).catch(function(err){
     setLoginMascotState('error', 'ฮือ... รหัสไม่ถูกต้อง ลองใหม่อีกครั้งนะ 😢');
-    setTimeout(function(){ alert('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสหรือติดต่อคุณครู'); }, 500);
+    setTimeout(function(){
+      var detail = String((err && err.message) || '');
+      if (/network|fetch|failed to fetch/i.test(detail)) alert('เชื่อมต่อฐานข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');
+      else alert('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสหรือติดต่อคุณครู');
+    }, 500);
   });
 }
 function quickLogin(id) {
@@ -2388,8 +2451,10 @@ function playLoginReaction(kind) {
 function setLoginMascotState(name, message) {
   var bot = document.getElementById('ai-login-bot');
   var bubble = document.getElementById('ai-login-message');
+  var companion = bot && bot.closest ? bot.closest('.login-ai-companion') : null;
   if (!bot) return;
   stopLoginReaction();
+  if (companion) companion.classList.toggle('show-reaction', name === 'success' || name === 'error');
   ['is-watching','is-typing','is-peeking','is-loading','is-error','is-success'].forEach(function(cls){ bot.classList.remove(cls); });
   if (name) bot.classList.add('is-' + name);
   if (bubble && message) bubble.textContent = message;
@@ -2401,7 +2466,7 @@ function setLoginMascotState(name, message) {
 function teacherSystemStatusHtml() {
   var sheet = sheetConfigured() ? 'พร้อมส่งขึ้น Google Sheet' : 'ยังไม่เชื่อม Google Sheet';
   var firebase = firebaseStatusLabel();
-  var ai = AI_CHECK.apiKey ? 'ตรวจพรอมต์ด้วย AI key แล้ว' : 'ใช้ระบบตรวจพรอมต์ออฟไลน์สำรอง';
+  var ai = AI_CHECK.endpoint ? 'ผู้ช่วย AI ผ่าน Supabase Edge Function' : 'ใช้ระบบตรวจพรอมต์ออฟไลน์สำรอง';
   return '<div class="pcard yellow noprint" style="margin-bottom:20px">' +
     '<div class="tape tape-yellow"></div>' +
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:10px">🧑‍🏫 ศูนย์ควบคุมสำหรับครู</h3>' +
@@ -2426,9 +2491,9 @@ function teacherMissionPlanHtml() {
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:8px">🗺️ แผนการวัดผลและรางวัล 5 หน่วย</h3>' +
     '<p class="soft small" style="line-height:1.9">คะแนนหน่วยคิดจากคำตอบจริงเพื่อใช้คำนวณ E1 ส่วนดาวและเหรียญใช้สะท้อนความคืบหน้าและระดับผลการเรียน โดยไม่บังคับ 80% เพื่อปลดล็อกบทถัดไป</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px">' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">📚 คะแนน E1</p><p class="soft tiny">นำสัดส่วนข้อที่ตอบถูกของแต่ละบทแปลงเป็นบทละ 20 คะแนน · 5 บทรวมเต็ม 100 คะแนน (ทำได้บทละ 1 ครั้ง)</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">📚 คะแนน E1</p><p class="soft tiny">นำสัดส่วนข้อที่ตอบถูกของแต่ละบทแปลงเป็นบทละ 6 คะแนน · 5 บทรวมเต็ม 30 คะแนน (ทำได้บทละ 1 ครั้ง)</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">✍️ โบนัสพรอมต์</p><p class="soft tiny">3 โจทย์ · ประเมินคุณภาพโจทย์ละ 1–3 ดาว · สูงสุด 9 ดาว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🎮 ภารกิจสถานการณ์</p><p class="soft tiny">5 ด่านตรงกับ 5 บท · ด่านละ 20 แต้ม · สูงสุด 100 แต้ม · ผ่านด่านละ 1 ตรา</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🎮 โบนัสภารกิจผจญภัย</p><p class="soft tiny">5 ด่านตรงกับ 5 บท · ตอบถูกครั้งแรกได้โบนัส 2 แต้มและ 1 ตรา · สูงสุด 10 โบนัส</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เส้นทางรวม</p><p class="soft tiny">5 หน่วย + 3 พรอมต์ + 5 สถานการณ์ = 13 ดาวเดินทาง</p></div>' +
     '</div>' +
   '</div>';
@@ -2673,9 +2738,9 @@ function teacherStudentDetailHtml() {
       '<div class="student-detail-item"><b>ความคืบหน้ารวม</b><span style="font-size:23px;font-weight:700">' + st.pct + '%</span></div>' +
       '<div class="student-detail-item"><b>ระดับอัญมณี</b><span>' + gemShapeHtml(gem, 'mini') + ' ' + gem.name + ' · โบนัสอันดับ +' + gem.bonus + '</span></div>' +
       '<div class="student-detail-item"><b>ก่อนเรียน / หลังเรียน</b><span>🧭 ' + assessmentLabel(s, 'pre') + ' · 🏁 ' + assessmentLabel(s, 'post') + '</span></div>' +
-      '<div class="student-detail-item"><b>ผล 5 หน่วยเรียน (E1)</b><span>' + st.lessonPoints + '/100 คะแนน · ⭐ ' + st.stars + '/5<br>' + lessonMedalSummary(s) + '</span></div>' +
+      '<div class="student-detail-item"><b>ผล 5 หน่วยเรียน (E1)</b><span>' + st.lessonPoints + '/' + maxLessonPoints() + ' คะแนน · ⭐ ' + st.stars + '/5<br>' + lessonMedalSummary(s) + '</span></div>' +
       '<div class="student-detail-item"><b>ฝึกเขียนพรอมต์</b><span>' + pStars.map(function(n, i){ return 'ระดับ ' + (i + 1) + ' ' + starRow(n, 3); }).join('<br>') + '<br>รวม ' + st.pstars + '/' + maxPromptStars() + ' ดาว</span></div>' +
-      '<div class="student-detail-item"><b>ภารกิจสถานการณ์</b><span>' + (s.score || 0) + '/' + maxScenarioScore() + ' คะแนน · ผ่าน ' + st.game + '/' + scenarios.length + ' ด่าน</span></div>' +
+      '<div class="student-detail-item"><b>โบนัสภารกิจผจญภัย</b><span>' + (s.score || 0) + '/' + maxScenarioScore() + ' โบนัส · ผ่าน ' + st.game + '/' + scenarios.length + ' ด่าน</span></div>' +
       '<div class="student-detail-item"><b>การเดินทางและรางวัล</b><span>' + journeyDone + '/' + journeyTotal() + ' จุด · ตราสัญลักษณ์ ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></div>' +
     '</div>' +
     '<div class="detail-lessons">' + lessonHtml + '</div>' +
@@ -2698,7 +2763,7 @@ function copyPlainText(text, doneText) {
 }
 
 function copyStudentInstruction() {
-  var text = 'นักเรียนเปิด “เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์ เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4” แล้วทำตามนี้\\n' +
+  var text = 'นักเรียนเปิด “AI Guardian Academy” แล้วทำตามนี้\\n' +
     '1) กรอกรหัสผ่านที่ได้รับจากคุณครูเพื่อเข้าสู่ระบบ\\n' +
     '2) ทำแบบทดสอบก่อนเรียนรวม 1 ครั้งก่อนเริ่มหน่วย\\n' +
     '3) ศึกษาเนื้อหาทั้ง 5 บทผ่านวิดีโอสั้นและสไลด์ โดยบทที่ 2 ให้ฝึกเขียนและปรับปรุงพรอมต์จากง่ายไปยาก\\n' +
@@ -2948,7 +3013,8 @@ function totalStars() {
   return t;
 }
 function maxStars() { return lessons.length; }
-var UNIT_POINTS = 20;
+var UNIT_POINTS = 6;
+function maxLessonPoints() { return lessons.length * UNIT_POINTS; }
 var RESEARCH_CONTENT_AREAS = [
   { competency:'การรู้และเข้าใจ AI', focus:'ความหมาย หลักการทำงาน ประเภท ความสามารถ ข้อจำกัด และตัวอย่าง AI ในชีวิตประจำวัน' },
   { competency:'การใช้งานและประยุกต์ใช้', focus:'การเลือกเครื่องมือให้ตรงงาน การเขียนพรอมต์ และการใช้ AI เป็นผู้ช่วยโดยมนุษย์ยังตรวจสอบผลงาน' },
@@ -2999,27 +3065,27 @@ function lessonMedalSummary(s) {
 }
 function lessonRewardText(p) {
   p = normalizeLessonProgress(p);
-  if (!p.quizDone) return '0/' + UNIT_POINTS + ' คะแนน E1 · ☆ 0 ดาว · ◯ ยังไม่มีเหรียญ';
+  if (!p.quizDone) return '0/' + UNIT_POINTS + ' คะแนนบทเรียน · ☆ 0 ดาว · ◯ ยังไม่มีเหรียญ';
   var medal = unitMedalInfo(p);
-  return lessonRewardPoints(p) + '/' + UNIT_POINTS + ' คะแนน E1 · ⭐ 1 ดาว · ' + medal.icon + ' ' + medal.name;
+  return lessonRewardPoints(p) + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ 1 ดาว · ' + medal.icon + ' ' + medal.name;
 }
 function rewardCriteriaHtml(audience) {
   var intro = audience === 'teacher'
-    ? 'ใช้เกณฑ์นี้อ่านรายงานและอธิบายให้นักเรียน โดยคะแนน E1 แยกจากรางวัลสร้างแรงจูงใจ'
+    ? 'ใช้เกณฑ์นี้อ่านรายงานและอธิบายให้นักเรียน โดยคะแนนบทเรียนแยกจากรางวัลสร้างแรงจูงใจ'
     : 'คะแนนและรางวัลแต่ละชนิดวัดคนละเรื่อง ดูเงื่อนไขก่อนเริ่มสะสมได้ที่นี่';
   return '<section class="pcard yellow reward-criteria" style="margin-bottom:20px">' +
     '<div class="tape tape-yellow"></div>' +
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:6px">📏 เกณฑ์คะแนน ดาว เหรียญ และรางวัลแต่ละประเภท</h3>' +
     '<p class="soft small" style="line-height:1.8;margin-bottom:12px">' + intro + '</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🎯 คะแนนหน่วย (E1) · เต็ม 100</p><p class="soft tiny" style="line-height:1.8">นำสัดส่วนข้อที่ตอบถูกในแบบทดสอบระหว่างบทแปลงเป็นบทละ 20 คะแนน · รวม 5 บทใช้คำนวณประสิทธิภาพกระบวนการ E1 ตามคะแนนจริง</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🎯 คะแนนบทเรียน · เต็ม 30</p><p class="soft tiny" style="line-height:1.8">คะแนนจากข้อที่ตอบถูกในแบบทดสอบระหว่างบท บทละ 6 คะแนน รวม 5 บท</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">⭐ ดาวบทเรียน · เต็ม 5</p><p class="soft tiny" style="line-height:1.8">ได้บทละ 1 ดาวเมื่อเรียนวิดีโอหรือสไลด์อย่างน้อย 1 รูปแบบและส่งแบบทดสอบระหว่างบทแล้ว ไม่ใช้คะแนน 80% เป็นเงื่อนไขปลดล็อก</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏅 เหรียญผลการเรียนรายบท</p><p class="soft tiny" style="line-height:1.8">🥉 0–59% · 🥈 60–79% · 🥇 80–100% ของแบบทดสอบระหว่างบท เหรียญแสดงระดับผลครั้งแรกและไม่ใช้ล็อกบทถัดไป</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">✍️ ดาวพรอมต์ · เต็ม 9</p><p class="soft tiny" style="line-height:1.8">ประเมินบทบาท–งาน–บริบท–รูปแบบ: 0–3 คะแนน = 0 ดาว, 4–5 = 1 ดาว, 6–7 = 2 ดาว, 8–10 = 3 ดาวต่อโจทย์</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🎀 ตราภารกิจสถานการณ์ · เต็ม 5</p><p class="soft tiny" style="line-height:1.8">ตอบสถานการณ์ถูกครั้งแรกได้ 20 แต้มและ 1 ตราประจำบท · ตอบผิดได้ 0 แต้ม · เล่นซ้ำได้แต่ไม่รับแต้มซ้ำ</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🎀 โบนัสภารกิจผจญภัย · เต็ม 10</p><p class="soft tiny" style="line-height:1.8">ภารกิจ 5 ด่านตรงกับ 5 บท · ตอบถูกครั้งแรกได้โบนัส 2 แต้มและ 1 ตราประจำบท · ตอบผิดได้ 0 โบนัส · เล่นซ้ำได้แต่ไม่รับโบนัสซ้ำ</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🌟 ดาวเดินทางและระดับ · เต็ม 13</p><p class="soft tiny" style="line-height:1.8">5 บทเรียน + 3 โจทย์พรอมต์ที่ได้อย่างน้อย 1 ดาว + 5 ภารกิจสถานการณ์ · Silver 0–3, Gold 4–7, Platinum 8–12, Diamond 13 ดาว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🏆 คะแนนกระดานผู้นำ · เต็ม 260</p><p class="soft tiny" style="line-height:1.8">คะแนน E1 เต็ม 100 + ดาวพรอมต์ × 5 (เต็ม 45) + แต้มภารกิจเต็ม 100 + โบนัสระดับ 0/5/10/15</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🏁 คะแนนหลังเรียน (E2)</p><p class="soft tiny" style="line-height:1.8">คะแนนแบบทดสอบหลังเรียนใช้คำนวณ E2 และเปรียบเทียบก่อน–หลังเรียน แยกออกจากคะแนนแข่งขันและรางวัลทั้งหมด</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🏆 คะแนนกระดานผู้นำ</p><p class="soft tiny" style="line-height:1.8">คะแนนบทเรียนเต็ม 30 + ดาวพรอมต์ × 5 (เต็ม 45) + โบนัสภารกิจเต็ม 10 + โบนัสระดับ</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🏁 คะแนนหลังเรียน</p><p class="soft tiny" style="line-height:1.8">ใช้ดูพัฒนาการก่อนและหลังเรียน แยกออกจากคะแนนแข่งขันและรางวัลทั้งหมด</p></div>' +
     '</div>' +
   '</section>';
 }
@@ -3038,18 +3104,6 @@ function teacherContentBlueprintHtml() {
     '<p class="soft small" style="line-height:1.8;margin-bottom:12px">แต่ละบทจัดพื้นที่ไว้ครบตามขอบเขตงานวิจัย: เนื้อหาสั้น วิดีโอ สไลด์/อินโฟกราฟิก สถานการณ์ชีวิตจริง กิจกรรม และแบบทดสอบระหว่างเรียน</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">' + cards + '</div>' +
   '</section>';
-}
-function lessonResearchBriefHtml(index) {
-  var ls = lessons[index];
-  var area = RESEARCH_CONTENT_AREAS[index] || { competency:'สมรรถนะประจำบท', focus:ls.title };
-  return '<details class="pcard plain" style="margin-bottom:14px;padding:12px 16px">' +
-    '<summary class="small" style="cursor:pointer;font-weight:700;color:var(--blue-deep)">📚 สาระและองค์ประกอบการเรียนรู้ตามกรอบงานวิจัย</summary>' +
-    '<div style="margin-top:10px">' +
-      '<p class="small" style="line-height:1.8"><b>สมรรถนะ:</b> ' + area.competency + '</p>' +
-      '<p class="soft small" style="line-height:1.8"><b>สาระสำคัญ:</b> ' + area.focus + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8;margin-top:6px"><b>องค์ประกอบในบทนี้:</b> เนื้อหาสั้น · วิดีโอสั้น · สไลด์/อินโฟกราฟิก ' + ls.slides.length + ' หน้า · สถานการณ์ชีวิตจริง · แบบทดสอบระหว่างบท ' + ls.quiz.length + ' ข้อ · คำใบ้ · ข้อมูลย้อนกลับ</p>' +
-    '</div>' +
-  '</details>';
 }
 function lessonsCompleted() {
   return lessonProgress.filter(function(p){ return p.quizDone; }).length;
@@ -3127,7 +3181,6 @@ function rankStripHtml() {
   }
   return '<div id="rankstrip" class="rankstrip noprint" onclick="changeView(\'leaderboard\')" title="แตะเพื่อดูอันดับของเรา">' +
     '<span class="rs-me">🏆 อันดับของเรา ' + (meRank || '-') + '/' + (total || '-') + '</span>' +
-    '<span class="rs-live"><span class="livedot"></span> LIVE</span>' +
   '</div>';
 }
 
@@ -3187,7 +3240,7 @@ function render() {
     try { appEl.insertAdjacentHTML('afterbegin', rankStripHtml()); } catch(e) {}
     if (state.view !== 'chat') {
       try { appEl.insertAdjacentHTML('beforeend',
-        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามผู้ช่วยชวนคิด"><img class="buddyimg" src="' + BUDDY_IMG + '" alt=""> ถามผู้ช่วย</button></div>'); } catch(e) {}
+        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + BUDDY_IMG + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
     }
   }
 }
@@ -3529,10 +3582,10 @@ function changeStudentPassword() {
   });
 }
 
-/* ==================== ผู้ช่วยชวนคิด (แชทบอท) ==================== */
+/* ==================== น้องชวนคิด (แชทบอท) ==================== */
 function openChat() {
   if (!state.chat) {
-    state.chat = [{ role:'bot', text:'สวัสดีครับ เราคือ <b>ผู้ช่วยชวนคิด</b> สำหรับทบทวนบทเรียน AI เหตุการณ์ในชีวิตจริง และการเขียนพรอมต์<br><span class="soft small">เราจะช่วยตั้งคำถามและเชื่อมโยงกับสมรรถนะการใช้ AI อย่างรับผิดชอบ</span>' }];
+    state.chat = [{ role:'bot', text:'สวัสดีครับ เราคือ <b>น้องชวนคิด</b> 😊<br>ถามได้เฉพาะเรื่องในบทเรียน AI เช่น การเลือกใช้ AI การเขียนพรอมต์ การตรวจคำตอบ ความปลอดภัยข้อมูล ภารกิจ และความคืบหน้าการเรียน' }];
   }
   state.chatBusy = false;
   changeView('chat');
@@ -3542,24 +3595,51 @@ function escChat(t) {
   return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function chatStudentInitial() {
+  var s = currentStudent() || {};
+  var name = String(s.nickname || s.name || 'น').trim();
+  return escChat(name.charAt(0) || 'น');
+}
+
+function isLearningQuestion(text) {
+  var t = String(text || '').toLowerCase();
+  var terms = ['ai','ปัญญาประดิษฐ์','บทเรียน','บทที่','หน่วย','เนื้อหา','สถานการณ์','ภารกิจ','แบบทดสอบ','ข้อสอบ','คำถาม','เฉลย','คะแนน','ดาว','เหรียญ','อันดับ','ความคืบหน้า','พรอมต์','prompt','คำสั่ง','อคติ','bias','hallucination','ตรวจสอบ','แหล่งข้อมูล','ข้อมูลส่วนตัว','ส่วนบุคคล','privacy','pdpa','ลิขสิทธิ์','จริยธรรม','ซื่อสัตย์','คัดลอก','plagiarism','ความรับผิดชอบ','เลือกใช้','เครื่องมือ','การเรียน','เรียน','ม.4','ครู','งานเรียน','รายงาน','สไลด์','วิดีโอ','วิธีเล่น','เริ่มเรียน'];
+  return terms.some(function(term){ return t.indexOf(term) !== -1; });
+}
+
+function learningOnlyReply() {
+  return 'ผู้ช่วยตอบเฉพาะเรื่องในบทเรียนค่ะ 📚 ลองถามเกี่ยวกับ AI การเขียนพรอมต์ การตรวจคำตอบ ข้อมูลส่วนตัว ภารกิจ หรือความคืบหน้าการเรียนได้เลย';
+}
+
+function saveChatQuestion(text) {
+  var s = currentStudent();
+  if (!currentId || !s) return;
+  var question = String(text || '').trim().replace(/\s+/g, ' ').slice(0, 300);
+  if (!question) return;
+  s.chatQuestions = Array.isArray(s.chatQuestions) ? s.chatQuestions : [];
+  s.chatQuestions.push({ question:question, askedAt:Date.now() });
+  s.chatQuestions = s.chatQuestions.slice(-80);
+  saveProgress();
+}
+
 function renderChat() {
   var msgs = (state.chat || []).map(function(m){
     if (m.role === 'me') {
-      return '<div class="msgrow me"><span class="face">🎒</span><div class="msg">' + escChat(m.text) + '</div></div>';
+      return '<div class="msgrow me"><div class="chat-avatar student" aria-label="รูปโปรไฟล์นักเรียน">' + chatStudentInitial() + '</div><div class="msgwrap"><p class="msg-meta">คุณ</p><div class="msg">' + escChat(m.text) + '</div></div></div>';
     }
-    return '<div class="msgrow"><img class="buddyimg" style="width:46px;height:46px;flex-shrink:0" src="' + BUDDY_IMG + '" alt=""><div class="msg">' + m.text +
-      (m.offline ? '<span class="src">📐 โหมดตอบอัตโนมัติ (ยังเชื่อมต่อ AI ไม่ได้)</span>' : '') + '</div></div>';
+    return '<div class="msgrow"><img class="chat-avatar" src="' + BUDDY_IMG + '" alt="รูปโปรไฟล์น้องชวนคิด"><div class="msgwrap"><p class="msg-meta">น้องชวนคิด</p><div class="msg">' + m.text +
+      (m.offline ? '<span class="src">📐 โหมดตอบอัตโนมัติ (ยังเชื่อมต่อ AI ไม่ได้)</span>' : '') + '</div></div></div>';
   }).join('');
   if (state.chatBusy) {
-    msgs += '<div class="msgrow"><img class="buddyimg" style="width:34px;height:34px;flex-shrink:0" src="' + BUDDY_IMG + '" alt=""><div class="msg typing"><span></span><span></span><span></span></div></div>';
+    msgs += '<div class="msgrow"><img class="chat-avatar" src="' + BUDDY_IMG + '" alt="รูปโปรไฟล์น้องชวนคิด"><div class="msgwrap"><p class="msg-meta">น้องชวนคิดกำลังพิมพ์</p><div class="msg typing"><span></span><span></span><span></span></div></div></div>';
   }
 
   appEl.innerHTML =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="buddyimg wiggle" style="width:66px;height:66px" src="' + BUDDY_IMG + '" alt="">' +
-        '<div><h2 class="ink" style="font-size:21px;font-weight:700">ผู้ช่วยชวนคิด</h2>' +
-        '<p class="soft tiny">ผู้ช่วยทบทวนบทเรียนและภารกิจ AI สำหรับ ม.4</p></div>' +
+        '<div><h2 class="ink" style="font-size:21px;font-weight:700">น้องชวนคิด</h2>' +
+        '<p class="soft tiny">ถามได้เฉพาะเนื้อหาและภารกิจในบทเรียน AI</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:10px">' +
         '<button onclick="state.chat=null;openChat()" class="iconbtn" title="เริ่มคุยใหม่">🧹</button>' +
@@ -3569,7 +3649,7 @@ function renderChat() {
     '<div class="body-area">' +
       '<div id="chatlog" class="chatlog scroll">' + msgs + '</div>' +
       '<div class="chatbar">' +
-        '<input id="chat-inp" class="inp" type="text" maxlength="300" placeholder="พิมพ์คำถามตรงนี้... เช่น อคติของ AI คืออะไร?" onkeydown="if(event.key===\'Enter\')sendChat()"' + (state.chatBusy ? ' disabled' : '') + '>' +
+        '<input id="chat-inp" class="inp" type="text" maxlength="300" placeholder="ถามเรื่องบทเรียน AI เช่น อคติของ AI คืออะไร?" onkeydown="if(event.key===\'Enter\')sendChat()"' + (state.chatBusy ? ' disabled' : '') + '>' +
         '<button onclick="sendChat()" class="btn pinkb" style="padding:11px 20px" ' + (state.chatBusy ? 'disabled' : '') + '>ส่ง 💬</button>' +
       '</div>' +
     '</div>';
@@ -3583,6 +3663,12 @@ function sendChat() {
   var text = (inp ? inp.value : '').trim();
   if (!text) return;
   state.chat.push({ role:'me', text:text });
+  saveChatQuestion(text);
+  if (!isLearningQuestion(text)) {
+    state.chat.push({ role:'bot', text:learningOnlyReply() });
+    render();
+    return;
+  }
   state.chatBusy = true;
   render();
   chatAI(text)
@@ -3592,37 +3678,24 @@ function sendChat() {
 }
 
 function chatAI(latest) {
-  var persona = 'คุณคือ "ผู้ช่วยชวนคิด" ในเว็บแอปพลิเคชันเพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบ สำหรับนักเรียนมัธยมศึกษาปีที่ 4 ชาวไทย ครอบคลุมการรู้และเข้าใจ การใช้งานและประยุกต์ใช้ การประเมินและสร้างสรรค์ และจริยธรรม ' +
-    'ตอบภาษาไทยแบบสุภาพ เป็นกันเองแบบมัธยมปลาย สั้นกระชับ (ไม่เกิน 4-5 ประโยค) ใช้อีโมจิเท่าที่จำเป็น ' +
-    'ใช้วิธีโสเครติส: ชวนตั้งคำถามและใบ้แนวคิดให้นักเรียนคิดต่อเอง ห้ามเฉลยคำตอบแบบทดสอบหรือเกมในแอปตรง ๆ เด็ดขาด ' +
-    'ถ้าถามนอกเรื่องการเรียน/AI/การใช้แอป ให้ตอบสั้น ๆ อย่างสุภาพแล้วชวนกลับมาเรื่องบทเรียน';
   var history = (state.chat || []).slice(-10).map(function(m){
     return { role: m.role === 'me' ? 'user' : 'assistant', content: m.text.replace(/<[^>]*>/g, '') };
   });
   if (history.length === 0 || history[history.length - 1].content !== latest) {
     history.push({ role:'user', content: latest });
   }
-  var headers = { 'Content-Type': 'application/json' };
-  if (AI_CHECK.apiKey) {
-    headers['x-api-key'] = AI_CHECK.apiKey;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  }
-  return fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify({ model: AI_CHECK.model, max_tokens: 500, system: persona, messages: history })
-  }).then(function(res){
-    if (!res.ok) throw new Error('http ' + res.status);
-    return res.json();
-  }).then(function(data){
-    var full = (data.content || []).map(function(b){ return b.type === 'text' ? b.text : ''; }).join('').trim();
-    if (!full) throw new Error('empty');
-    return full;
+  return aiTutorRequest({ action:'chat', messages:history }).then(function(data){
+    if (!data || !data.reply) throw new Error('empty');
+    return String(data.reply);
   });
 }
 
-/* สมองสำรองแบบออฟไลน์ของผู้ช่วยชวนคิด */
+function aiTutorRequest(payload) {
+  if (!window.callAiTutor) return Promise.reject(new Error('AI tutor is not ready'));
+  return window.callAiTutor(payload);
+}
+
+/* สมองสำรองแบบออฟไลน์ของน้องชวนคิด */
 function offlineBot(q) {
   var t = q.toLowerCase();
   function has(){ for (var i=0;i<arguments.length;i++) if (t.indexOf(arguments[i]) !== -1) return true; return false; }
@@ -3641,7 +3714,7 @@ function offlineBot(q) {
   if (has('พรอมต์','prompt','สูตร'))
     return 'สูตรพรอมต์เก่งมี 4 ส่วน: <b>บท-งาน-บริบท-รูปแบบ</b> ✍️ (1) บอกบทบาท (2) บอกงานชัด ๆ (3) ใส่รายละเอียด (4) กำหนดรูปแบบผลลัพธ์ ลองเอาพรอมต์ล่าสุดของเรามาเช็กดูสิว่าครบกี่ส่วน? ไปฝึกที่เมนู ✍️ ได้เลย!';
   if (has('ดาว','คะแนน','แต้ม','อันดับ'))
-    return 'เกณฑ์แยกกันนะ: คะแนน E1 แปลงสัดส่วนข้อที่ตอบถูกเป็นบทละ 20 คะแนน ⭐ ดาวบทเรียนได้เมื่อเรียนสื่อและส่งข้อสอบแล้ว 🥉🥈🥇 เหรียญรายบทขึ้นกับผล 0–59%, 60–79%, 80–100% ✍️ ดาวพรอมต์ขึ้นกับคุณภาพ 0–3 ดาว และ 🎀 ตราภารกิจได้เมื่อตอบสถานการณ์ถูกครั้งแรก ทั้งหมดจะแสดงแยกในหน้าความคืบหน้า';
+    return 'เกณฑ์แยกกันนะ: คะแนนบทเรียนมาจากข้อที่ตอบถูก บทละ 6 คะแนน รวม 5 บทเต็ม 30 คะแนน ⭐ ดาวบทเรียนได้เมื่อเรียนสื่อและส่งข้อสอบแล้ว 🥉🥈🥇 เหรียญรายบทขึ้นกับผล 0–59%, 60–79%, 80–100% ✍️ ดาวพรอมต์ขึ้นกับคุณภาพ 0–3 ดาว และ 🎀 ภารกิจผจญภัย 5 ด่านตรงกับ 5 บท ตอบถูกครั้งแรกได้โบนัส 2 แต้มต่อด่าน ทั้งหมดจะแสดงแยกในหน้าความคืบหน้า';
   if (has('เล่นยังไง','วิธีเล่น','เริ่มยังไง','ทำอะไรก่อน','ช่วย'))
     return 'เริ่มตามกระบวนการนี้นะ: ทำแบบทดสอบก่อนเรียน → อ่านตัวอย่างสถานการณ์ที่นักเรียนอาจพบจริง → เลือกเรียนผ่านวิดีโอหรือสไลด์ → ในบทที่ 2 ฝึกเขียนพรอมต์จากง่ายไปยาก → เลือกเรียนเพิ่มหรือทำแบบทดสอบระหว่างบทซึ่งมีคำถามจากสถานการณ์และทำได้บทละ 1 ครั้ง ⭐ เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน ระหว่างทางถามผู้ช่วยและเก็บคะแนน ระดับ เหรียญรางวัล และอันดับได้เลย 🗺️';
   if (has('เฉลย','คำตอบข้อ','ตอบข้อไหน'))
@@ -3729,12 +3802,12 @@ function renderLeaderboard(skipLoad) {
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px"><div style="font-size:30px">🏆</div>' +
       '<div><h2 class="ink" style="font-size:21px;font-weight:700">อันดับของฉัน</h2>' +
-      '<p class="soft tiny"><span class="livedot"></span> LIVE · คะแนนจริงจากห้องเรียน · อัปเดตทุก 3 วินาที · ล่าสุด <span id="lb-time">' + new Date().toLocaleTimeString('th-TH') + '</span></p></div></div>' +
+      '<p class="soft tiny">คะแนนจากห้องเรียน · อัปเดตทุก 3 วินาที · ล่าสุด <span id="lb-time">' + new Date().toLocaleTimeString('th-TH') + '</span></p></div></div>' +
       '<button onclick="changeView(\'' + (currentId ? 'home' : 'login') + '\')" class="iconbtn" title="กลับ">' + (currentId ? '<img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก">' : '🚪') + '</button>' +
     '</div>' +
     '<div class="body-area scroll">' +
       (currentId && rank
-        ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนน E1 (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม ' + maxScenarioScore() + ') + โบนัสระดับอัญมณี (0/5/10/15)</p></div>'
+        ? '<div class="pcard yellow center pop" style="max-width:520px;margin:18px auto;padding:24px 20px"><div style="font-size:42px">🏆</div><p class="soft small">อันดับของฉัน / นักเรียนทั้งหมด</p><div class="t-orange" style="font-size:54px;font-weight:700;line-height:1.2">' + rank + ' / ' + totalRanked + '</div><p class="ink" style="font-weight:700">อันดับ ' + rank + ' จากนักเรียนทั้งหมด ' + totalRanked + ' คน</p></div><div style="max-width:760px;margin:0 auto">' + boardHtml + '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนบทเรียน (เต็ม ' + maxLessonPoints() + ') + (ดาวพรอมต์ × 5) + โบนัสภารกิจ (เต็ม ' + maxScenarioScore() + ') + โบนัสระดับอัญมณี</p></div>'
         : secureRankError
           ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">📡</div><p>' + escChat(secureRankError) + '</p><button onclick="retryLeaderboard()" class="btn blueb sm" style="margin-top:16px">ลองโหลดอันดับอีกครั้ง</button></div>'
           : '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>กำลังโหลดอันดับจากห้องเรียน...</p></div>') +
@@ -3779,7 +3852,7 @@ function renderLeaderboard(skipLoad) {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:30px">🏆</div>' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">อันดับห้องเรียน</h2>' +
-        '<p class="soft tiny"><span class="livedot"></span> LIVE · อัปเดตอัตโนมัติทุก 3 วินาที · ล่าสุด <span id="lb-time">' + new Date().toLocaleTimeString('th-TH') + '</span></p></div>' +
+        '<p class="soft tiny">อัปเดตอัตโนมัติทุก 3 วินาที · ล่าสุด <span id="lb-time">' + new Date().toLocaleTimeString('th-TH') + '</span></p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         (currentId && myRank() ? '<div class="scorebox"><div class="t-orange" style="font-size:20px;font-weight:700">อันดับ ' + myRank() + '</div><p class="soft tiny">ของเรา</p></div>' : '') +
@@ -3790,7 +3863,7 @@ function renderLeaderboard(skipLoad) {
       (list.length === 0
         ? '<div class="empty" style="padding:60px 20px"><div style="font-size:38px;margin-bottom:10px">🏁</div><p>ยังไม่มีใครบนตารางอันดับเลย<br>เข้าสู่ระบบแล้วเริ่มเก็บดาวกันเถอะ!</p></div>'
         : podiumHtml + rowsHtml) +
-      '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนน E1 (เต็ม 100) + (ดาวพรอมต์ × 5) + แต้มภารกิจ (เต็ม ' + maxScenarioScore() + ') + โบนัสระดับอัญมณี (0/5/10/15)</p>' +
+      '<p class="soft tiny" style="margin-top:14px">💡 คะแนนอันดับ = คะแนนบทเรียน (เต็ม ' + maxLessonPoints() + ') + (ดาวพรอมต์ × 5) + โบนัสภารกิจ (เต็ม ' + maxScenarioScore() + ') + โบนัสระดับอัญมณี</p>' +
     '</div>';
 }
 
@@ -3850,7 +3923,7 @@ function renderLogin() {
       '<div class="login-world" aria-hidden="true"><span class="login-orb o1">🤖</span><span class="login-orb o2">💡</span><span class="login-orb o3">🛡️</span><span class="login-star s1">✦</span><span class="login-star s2">★</span><span class="login-star s3">✦</span><span class="login-star s4">★</span><div class="login-gridcity"></div></div>' +
       '<div id="teacher-corner" class="teacher-corner">' +
         '<button id="teacher-trigger" type="button" class="teacher-trigger" aria-expanded="false" aria-controls="teacher-login-panel" onclick="toggleTeacherLogin()">' +
-          '<span aria-hidden="true">▣</span><span>สำหรับครู</span>' +
+          '<span aria-hidden="true">▣</span>' +
         '</button>' +
         '<div id="teacher-login-panel" class="teacher-login-panel">' +
           '<p class="tc-title">สำหรับคุณครูผู้ดูแลห้องเรียน</p>' +
@@ -3868,19 +3941,20 @@ function renderLogin() {
         '<span class="app-title-main">เกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์เป็นฐาน</span>' +
         '<span class="app-title-sub">เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างมีความรับผิดชอบของนักเรียน ชั้นมัธยมศึกษาปีที่ 4 โรงเรียนฤทธิยะวรรณาลัย</span>' +
       '</h1>' +
-      '<p class="t-blue" style="font-size:18px;font-weight:600;margin:6px 0 24px">หลักสูตรเรียนรู้เท่าทันและใช้ AI อย่างรับผิดชอบ · ระดับชั้น ม.4</p>' +
-      '<div class="login-features"><span class="login-feature">🎯 5 ภารกิจเรียนรู้</span><span class="login-feature">⭐ สะสมดาวและเหรียญ</span><span class="login-feature">🏆 แข่งขันอันดับ LIVE</span></div>' +
+      '<div class="login-features"><span class="login-feature">🎯 5 ภารกิจเรียนรู้</span><span class="login-feature">⭐ สะสมดาวและเหรียญ</span><span class="login-feature">🏆 อันดับห้องเรียน</span></div>' +
       '<div class="pcard yellow pop login-card login-character-card">' +
           '<div class="tape tape-yellow"></div>' +
           '<h3 class="ink center" style="font-size:20px;font-weight:700;margin-bottom:16px">🎒 เข้าสู่ระบบนักเรียน</h3>' +
+          '<div class="login-visual-row">' +
+            '<img class="login-icon-illustration" src="./login-icon.png" alt="ภาพประกอบการเข้าสู่ระบบ">' +
+          '</div>' +
           '<div class="login-ai-companion" aria-live="polite">' +
-              '<img id="ai-login-bot" class="login-reaction-mascot is-watching" src="./login-reactions/happy-01.png" alt="ผู้ช่วย AI แสดงความดีใจหรือเสียใจตามผลการเข้าสู่ระบบ">' +
-              '<p id="ai-login-message" class="ai-login-message">กรอกรหัสผ่าน แล้วเราไปเรียนรู้เรื่อง AI กัน</p>' +
+              '<img id="ai-login-bot" class="login-reaction-mascot is-watching" src="./login-reactions/happy-01.png" alt="หุ่นยนต์ผู้ช่วยสำหรับเข้าสู่ระบบ">' +
           '</div>' +
           '<div class="field"><label>กรอกรหัสผ่านเพื่อเข้าสู่ระบบ *</label>' +
             '<div class="password-wrap"><input id="inp-code" class="inp" type="password" inputmode="text" maxlength="20" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="กรอกรหัสผ่าน" onkeydown="if(event.key===\'Enter\') doLogin()"><button type="button" class="password-eye" aria-label="ดูรหัสผ่าน" aria-pressed="false" onclick="togglePasswordVisibility(\'inp-code\',this)">👁️</button></div></div>' +
-          '<button onclick="doLogin()" class="btn pinkb" style="width:100%;margin-top:6px">🚪 เข้าสู่ระบบนักเรียน</button>' +
-          '<div class="login-live">เชื่อมต่อห้องเรียนออนไลน์แล้ว</div>' +
+          '<button onclick="doLogin()" class="btn pinkb" style="width:100%;margin-top:6px">🚪 เข้าสู่ระบบ</button>' +
+          '<div class="login-live">พร้อมเริ่มเรียนรู้แล้ว</div>' +
           '<p class="soft tiny center" style="margin-top:10px">ถามรหัสจากคุณครู 🙋</p>' +
       '</div>' +
     '</div>';
@@ -3942,6 +4016,30 @@ function teacherSupabaseDashboardHtml() {
   '</section>';
 }
 
+function teacherChatQuestionsHtml() {
+  var logs = [];
+  Object.keys(db.students || {}).forEach(function(id){
+    var student = db.students[id] || {};
+    (Array.isArray(student.chatQuestions) ? student.chatQuestions : []).forEach(function(item){
+      if (!item || !item.question) return;
+      logs.push({ student:student, question:String(item.question), askedAt:Number(item.askedAt) || 0 });
+    });
+  });
+  logs.sort(function(a,b){ return b.askedAt - a.askedAt; });
+  var latest = logs.slice(0, 80).map(function(item){
+    var when = item.askedAt ? new Date(item.askedAt).toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' }) : '-';
+    return '<div class="innerbox" style="margin-bottom:8px;padding:10px 12px">' +
+      '<p class="small" style="font-weight:700;margin-bottom:3px">👤 ' + escChat(studentAlias(item.student)) + ' <span class="soft tiny">· เลขที่ ' + escChat(item.student.num || '-') + ' · ' + escChat(when) + '</span></p>' +
+      '<p class="soft small" style="line-height:1.7;word-break:break-word">' + escChat(item.question) + '</p>' +
+    '</div>';
+  }).join('');
+  return '<details class="pcard plain noprint" style="margin-bottom:20px;padding:14px 16px">' +
+    '<summary class="small" style="cursor:pointer;font-weight:700;color:var(--blue-deep)">💬 คำถามที่นักเรียนถามน้องชวนคิด <span class="soft tiny">(' + logs.length + ' คำถาม)</span></summary>' +
+    '<p class="soft tiny" style="margin:10px 0">บันทึกคำถามพร้อมชื่อเล่น เลขที่ และเวลา เพื่อใช้ดูประเด็นที่นักเรียนอยากเรียนรู้</p>' +
+    (latest || '<p class="soft small">ยังไม่มีคำถามที่บันทึกไว้</p>') +
+  '</details>';
+}
+
 function renderTeacher() {
   var ids = Object.keys(db.students);
   var totalStudents = ids.length;
@@ -3966,7 +4064,7 @@ function renderTeacher() {
       '<td class="t-orange" style="font-weight:700">' + gemShapeHtml(gem, 'mini') + ' ' + gem.name + '<br><span class="soft tiny">⭐ ' + studentJourneyStars(s) + '/' + journeyTotal() + ' · โบนัส +' + gem.bonus + '</span></td>' +
       '<td style="line-height:1.9">' + (perLesson || '-') + '</td>' +
       '<td>🧭 ' + assessmentLabel(s, 'pre') + '<br>🏁 ' + assessmentLabel(s, 'post') + '</td>' +
-      '<td>🏅 ' + (s.score || 0) + '/' + maxScenarioScore() + '<br><span class="soft tiny">ด่าน ' + st.game + '/' + scenarios.length + ' · 🎀 ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></td>' +
+      '<td>🎁 ' + (s.score || 0) + '/' + maxScenarioScore() + ' โบนัส<br><span class="soft tiny">ด่าน ' + st.game + '/' + scenarios.length + ' · 🎀 ' + st.achievements + '/' + ACHIEVEMENT_BADGES.length + '</span></td>' +
       '<td style="min-width:110px"><div class="pbar" style="height:12px;margin-bottom:4px"><div style="width:' + st.pct + '%;background:' + (st.pct >= 80 ? '#9FD6A4' : st.pct >= 40 ? '#F2D778' : '#F29BB8') + '"></div></div><span class="tiny soft">' + st.pct + '%</span></td>' +
       '<td class="soft tiny">' + (s.last || '-') + '</td>' +
       '<td class="noprint"><div class="teacher-row-actions">' +
@@ -3996,6 +4094,7 @@ function renderTeacher() {
     '</div>' +
     '<div class="body-area scroll">' +
       teacherSupabaseDashboardHtml() +
+      teacherChatQuestionsHtml() +
       teacherSystemStatusHtml() +
       teacherStudentDetailHtml() +
       teacherRosterHtml() +
@@ -4023,7 +4122,7 @@ function renderTeacher() {
       '</div>' +
       '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:20px">' +
         '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700">👨‍👩‍👧‍👦 นักเรียนทั้งหมด</p><p class="ink" style="font-size:30px;font-weight:700">' + totalStudents + ' คน</p></div>' +
-        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700">📚 คะแนน E1 เฉลี่ย</p><p class="ink" style="font-size:25px;font-weight:700">' + avgLessonPoints + '/100</p><p class="soft tiny">ดาวบทเรียนเฉลี่ย ⭐ ' + avgStars + '/5</p></div>' +
+        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700">📚 คะแนน E1 เฉลี่ย</p><p class="ink" style="font-size:25px;font-weight:700">' + avgLessonPoints + '/' + maxLessonPoints() + '</p><p class="soft tiny">ดาวบทเรียนเฉลี่ย ⭐ ' + avgStars + '/5</p></div>' +
         '<div class="pcard mint center"><p class="t-mint tiny" style="font-weight:700">🎓 เรียนจบครบทุกบท</p><p class="ink" style="font-size:30px;font-weight:700">' + finishedAll + ' คน</p></div>' +
         '<div class="pcard yellow center"><p class="t-orange tiny" style="font-weight:700">🚀 คืบหน้าเฉลี่ย</p><p class="ink" style="font-size:30px;font-weight:700">' + avgPct + '%</p></div>' +
       '</div>' +
@@ -4068,14 +4167,14 @@ function delStudent(id) {
 }
 
 function exportCSV() {
-  var head = ['ชื่อเล่น','เลขที่','เลขประจำตัวนักเรียน','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','คะแนน E1 ระหว่างเรียนรวม (เต็ม 100)','ดาวบทเรียน (เต็ม 5)','จำนวนเหรียญหน่วย (เต็ม 5)','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
+  var head = ['ชื่อเล่น','เลขที่','เลขประจำตัวนักเรียน','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง (เต็ม ' + journeyTotal() + ')','คะแนน E1 ระหว่างเรียนรวม (เต็ม ' + maxLessonPoints() + ')','ดาวบทเรียน (เต็ม 5)','จำนวนเหรียญหน่วย (เต็ม 5)','บทที่เรียนจบ (เต็ม ' + lessons.length + ')'];
   lessons.forEach(function(ls, i){
-    head.push('คะแนน E1 หน่วยที่ ' + (i + 1) + ' (เต็ม 20)');
+    head.push('คะแนน E1 หน่วยที่ ' + (i + 1) + ' (เต็ม ' + UNIT_POINTS + ')');
     head.push('ดาวหน่วยที่ ' + (i + 1) + ' (เต็ม 1)');
     head.push('ระดับเหรียญหน่วยที่ ' + (i + 1));
     head.push('คะแนนระหว่างบทที่ ' + (i + 1));
   });
-  head = head.concat(['ดาวพรอมต์ (เต็ม ' + maxPromptStars() + ')','คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','แต้มภารกิจ (เต็ม ' + maxScenarioScore() + ')','ด่านที่ผ่าน (เต็ม ' + scenarios.length + ')','ตราสถานการณ์ (เต็ม ' + scenarios.length + ')','ตราสัญลักษณ์รวม (เต็ม ' + ACHIEVEMENT_BADGES.length + ')','ความคืบหน้า (%)','อัปเดตล่าสุด']);
+  head = head.concat(['ดาวพรอมต์ (เต็ม ' + maxPromptStars() + ')','คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','โบนัสภารกิจ (เต็ม ' + maxScenarioScore() + ')','ด่านที่ผ่าน (เต็ม ' + scenarios.length + ')','ตราสถานการณ์ (เต็ม ' + scenarios.length + ')','ตราสัญลักษณ์รวม (เต็ม ' + ACHIEVEMENT_BADGES.length + ')','ความคืบหน้า (%)','อัปเดตล่าสุด']);
   var rows = [head];
   Object.keys(db.students).forEach(function(id) {
     var s = db.students[id];
@@ -4532,7 +4631,7 @@ function checkPrompt() {
     .then(function(r){ finishCheck(i, r, '🤖 ตรวจโดย AI (' + AI_CHECK.model + ')'); })
     .catch(function(){
       var r = offlineCheck(PROMPT_CHALLENGES[i], text);
-      finishCheck(i, r, '📐 ตรวจอัตโนมัติแบบออฟไลน์ (เชื่อมต่อ AI ไม่ได้ในขณะนี้ — คุณครูสามารถใส่ API key ที่ตัวแปร AI_CHECK เพื่อให้ AI ตรวจละเอียดขึ้น)');
+      finishCheck(i, r, '📐 ตรวจอัตโนมัติแบบออฟไลน์ (ระบบ AI ยังเชื่อมต่อไม่ได้ในขณะนี้)');
     });
 }
 
@@ -4554,33 +4653,8 @@ function finishCheck(i, r, modeNote) {
 }
 
 function callAI(ch, text) {
-  var ask = 'คุณคือครูผู้เชี่ยวชาญการสอนเขียนพรอมต์ AI ให้นักเรียนมัธยมศึกษาปีที่ 4 (ม.ปลาย) ชาวไทย จงประเมินพรอมต์ของนักเรียนตามโจทย์ ' +
-    'ให้คะแนนตามหลัก 4 ส่วน: ระบุบทบาท, งานชัดเจน, มีบริบท/รายละเอียด, กำหนดรูปแบบผลลัพธ์ ' +
-    'ตอบกลับเป็น JSON ล้วนเท่านั้น ห้ามมีข้อความอื่นหรือ markdown รูปแบบ: ' +
-    '{"score": ตัวเลข 0-10, "good": ["จุดเด่น 1-3 ข้อ ภาษาไทยให้กำลังใจ"], "improve": ["สิ่งที่ควรปรับ 1-3 ข้อ"], "better": "ตัวอย่างพรอมต์ฉบับปรับปรุงสั้น ๆ"}\n\n' +
-    'โจทย์: ' + ch.mission + '\n\nพรอมต์ของนักเรียน: """' + text + '"""';
-  var headers = { 'Content-Type': 'application/json' };
-  if (AI_CHECK.apiKey) {
-    headers['x-api-key'] = AI_CHECK.apiKey;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  }
-  return fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify({
-      model: AI_CHECK.model,
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: ask }]
-    })
-  }).then(function(res){
-    if (!res.ok) throw new Error('http ' + res.status);
-    return res.json();
-  }).then(function(data){
-    var full = (data.content || []).map(function(b){ return b.type === 'text' ? b.text : ''; }).join('');
-    var clean = full.replace(/```json|```/g, '').trim();
-    var m = clean.match(/\{[\s\S]*\}/);
-    var obj = JSON.parse(m ? m[0] : clean);
+  return aiTutorRequest({ action:'prompt_check', mission:ch.mission, text:String(text || '').slice(0, 2000) }).then(function(data){
+    var obj = data && data.result;
     if (typeof obj.score !== 'number') throw new Error('bad json');
     return obj;
   });
@@ -4799,8 +4873,8 @@ function renderHome() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="avimg" style="width:58px;height:58px" src="' + avatarSrc(stu) + '" alt="โปรไฟล์">' +
         '<div class="app-name-header"><h2 class="ink">' +
-          '<span class="app-title-main">เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์</span>' +
-          '<span class="app-title-sub">เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4</span>' +
+          '<span class="app-title-main">AI Guardian Academy</span>' +
+          '<span class="app-title-sub">เรียนรู้เท่าทัน AI อย่างรับผิดชอบ</span>' +
         '</h2>' +
         '<p class="soft tiny">🎒 ผู้เรียน: <b>' + stuName + '</b>' + (stu && stu.num ? ' · เลขที่ ' + stu.num : '') + '</p></div>' +
       '</div>' +
@@ -4861,7 +4935,7 @@ function renderLessonList() {
     var p = lessonProgress[i];
     var unlocked = p.quizDone || lessonUnlocked(i);
     var status;
-    if (p.quizDone) status = 'ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post') + ' · บันทึกคะแนน E1 และรางวัลแล้ว';
+    if (p.quizDone) status = 'ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post') + ' · บันทึกคะแนนและรางวัลแล้ว';
     else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
     else if (!unlocked) status = '🔒 ทำข้อสอบบทที่ ' + i + ' ให้เสร็จก่อน';
     else if (lessonMediaCompleted(p)) status = i === 1 && totalPromptStars() === 0
@@ -4895,13 +4969,13 @@ function renderLessonList() {
         '<p class="soft tiny">เลือกบทเรียน แล้วเริ่มเรียนรู้จากสถานการณ์ใกล้ตัว</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
-        '<div class="scorebox"><div class="t-orange" style="font-size:18px;font-weight:700">E1 ' + totalLessonRewardPoints() + '/100 · ⭐' + totalStars() + '/5</div><p class="soft tiny">' + lessonMedalSummary() + '</p></div>' +
+        '<div class="scorebox"><div class="t-orange" style="font-size:18px;font-weight:700">คะแนน ' + totalLessonRewardPoints() + '/' + maxLessonPoints() + ' · ⭐' + totalStars() + '/5</div><p class="soft tiny">' + lessonMedalSummary() + '</p></div>' +
         '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
       '</div>' +
     '</div>' +
     '<div class="body-area scroll">' +
       '<div class="pcard yellow" style="margin-bottom:14px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน อ่านสถานการณ์ แล้วเลือกเรียนวิดีโอหรือสไลด์/อินโฟกราฟิกอย่างน้อย 1 รูปแบบ จึงทำแบบทดสอบระหว่างบทได้ 1 ครั้ง คะแนนคิดตามข้อที่ตอบถูกจริงเพื่อใช้เป็น E1 ส่วนดาวและเหรียญเป็นรางวัลความคืบหน้า ไม่ใช้ 80% ล็อกบทถัดไป เมื่อครบ 5 บทจึงทำแบบทดสอบหลังเรียน (E2)</p>' +
+        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน อ่านสถานการณ์ แล้วเลือกเรียนวิดีโอหรือสไลด์/อินโฟกราฟิกอย่างน้อย 1 รูปแบบ จึงทำแบบทดสอบระหว่างบทได้ 1 ครั้ง ดาวและเหรียญเป็นรางวัลความคืบหน้า ไม่ใช้คะแนน 80% เพื่อล็อกบทถัดไป เมื่อครบ 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
       '</div>' +
       rewardCriteriaHtml('student') +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>อ่านตัวอย่างสถานการณ์ แล้วเลือกสื่อที่เหมาะกับตนเองก่อนทำแบบทดสอบ</p></div><span class="chip">สถานการณ์เป็นฐาน</span></div>' +
@@ -5129,7 +5203,6 @@ function renderLesson() {
     '</div>' +
     '<div class="body-area scroll">' +
       lessonTabBar(p) +
-      lessonResearchBriefHtml(i) +
       content +
     '</div>';
 }
@@ -5294,7 +5367,7 @@ function renderQuizResult() {
     '</div>' +
     '<div class="center-view">' +
       journeyBanner() +
-      '<div class="pop" style="font-size:34px;margin-bottom:10px">🎯 ' + unitPoints + '/' + UNIT_POINTS + ' คะแนน E1 · ⭐ 1 ดาว · ' + unitMedal.icon + ' ' + unitMedal.name + '</div>' +
+      '<div class="pop" style="font-size:34px;margin-bottom:10px">🎯 ' + unitPoints + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ 1 ดาว · ' + unitMedal.icon + ' ' + unitMedal.name + '</div>' +
       '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
@@ -5350,11 +5423,11 @@ function renderDashboard() {
       rewardCriteriaHtml('student') +
       gemSystemHtml(journeySteps()) +
       '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:20px">' +
-        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:4px">📚 คะแนน E1 และรางวัล 5 หน่วย</p>' +
-          '<p class="ink" style="font-size:26px;font-weight:700">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/100 คะแนน</span></p>' +
+        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:4px">📚 คะแนนและรางวัล 5 บท</p>' +
+          '<p class="ink" style="font-size:26px;font-weight:700">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/' + maxLessonPoints() + ' คะแนน</span></p>' +
           '<p class="soft tiny">⭐ ' + totalStars() + '/5 ดาว · ' + lessonMedalSummary() + '</p></div>' +
-        '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:4px">🎮 แต้มจากภารกิจ</p>' +
-          '<p class="ink" style="font-size:32px;font-weight:700">' + state.score + ' <span class="soft" style="font-size:16px">/ ' + maxScenarioScore() + '</span></p>' +
+        '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:4px">🎮 โบนัสภารกิจผจญภัย</p>' +
+          '<p class="ink" style="font-size:32px;font-weight:700">' + state.score + ' <span class="soft" style="font-size:16px">/ ' + maxScenarioScore() + ' โบนัส</span></p>' +
           '<p class="soft tiny">ผ่านด่าน ' + Math.min(state.unlockedLevel, scenarios.length) + '/' + scenarios.length + ' · ตราสัญลักษณ์รวม ' + earnedAchievements.length + '/' + ACHIEVEMENT_BADGES.length + '</p></div>' +
         '<div class="pcard yellow center"><p class="t-orange tiny" style="font-weight:700;margin-bottom:4px">✍️ ดาวเขียนพรอมต์</p>' +
           '<p class="ink" style="font-size:32px;font-weight:700">' + totalPromptStars() + ' <span class="soft" style="font-size:16px">/ ' + maxPromptStars() + '</span></p>' +
@@ -5447,7 +5520,7 @@ function renderTutorial() {
     '</div>' +
     '<div class="center-view">' +
       '<h3 class="ink" style="font-size:24px;font-weight:700;margin-bottom:8px">5 ด่าน ตรงกับบทเรียนทั้ง 5 บท ⭐</h3>' +
-      '<p class="soft small" style="max-width:680px;line-height:1.8;margin-bottom:26px">ผ่านแต่ละด่านรับ 20 แต้มและ 1 ตราสัญลักษณ์ รวมสูงสุด 100 แต้ม · ต้องตอบถูกจึงปลดล็อกด่านถัดไป</p>' +
+      '<p class="soft small" style="max-width:680px;line-height:1.8;margin-bottom:26px">แต่ละด่านสอดคล้องกับบทเรียน 1 บท · ตอบถูกครั้งแรกได้โบนัส 2 แต้มและ 1 ตราสัญลักษณ์ รวมสูงสุด 10 โบนัส · โบนัสแยกจากคะแนนบทเรียน 30 คะแนน</p>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;width:100%;max-width:760px;margin-bottom:34px">' +
         '<div class="pcard pink pop" style="animation-delay:.1s;text-align:center">' +
           '<div class="tape tape-pink"></div>' +
@@ -5513,7 +5586,7 @@ function renderGameMap() {
       '<div class="pcard mint center" style="margin-top:8px">' +
         '<div style="font-size:40px;margin-bottom:8px">🎓</div>' +
         '<h4 class="t-mint" style="font-size:19px;font-weight:700;margin-bottom:14px">ผ่านครบทุกด่านแล้ว เก่งมาก!</h4>' +
-        '<button onclick="changeView(\'gameend\')" class="btn mintb sm">🏆 ดูผลคะแนนภารกิจ</button>' +
+        '<button onclick="changeView(\'gameend\')" class="btn mintb sm">🏆 ดูโบนัสภารกิจ</button>' +
       '</div>';
   }
 
@@ -5532,8 +5605,8 @@ function renderGameMap() {
         '<p class="soft tiny">ผ่านแล้ว ' + Math.min(state.unlockedLevel, scenarios.length) + ' / ' + scenarios.length + ' ด่าน</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:12px">' +
-        '<div class="scorebox"><div class="t-orange" style="font-size:22px;font-weight:700">🏅 ' + state.score + ' <span class="soft" style="font-size:14px;font-weight:400">แต้ม</span></div>' +
-        '<p class="soft tiny">แต้ม</p></div>' +
+        '<div class="scorebox"><div class="t-orange" style="font-size:22px;font-weight:700">🎁 ' + state.score + ' <span class="soft" style="font-size:14px;font-weight:400">โบนัส</span></div>' +
+        '<p class="soft tiny">โบนัสภารกิจ</p></div>' +
         '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
       '</div>' +
     '</div>' +
@@ -5654,8 +5727,8 @@ function renderFeedback() {
         '<p style="line-height:1.9">' + choice.feedback + '</p>' +
       '</div>' +
       '<div class="innerbox pop" style="display:flex;align-items:center;justify-content:space-between;animation-delay:.2s">' +
-        '<span class="soft small" style="font-weight:600">🏅 แต้มที่ได้รับ:</span>' +
-        '<span class="' + (awardedPoints > 0 ? 't-orange' : 'soft') + '" style="font-size:22px;font-weight:700">+' + awardedPoints + ' แต้ม</span>' +
+        '<span class="soft small" style="font-weight:600">🎁 โบนัสที่ได้รับ:</span>' +
+        '<span class="' + (awardedPoints > 0 ? 't-orange' : 'soft') + '" style="font-size:22px;font-weight:700">+' + awardedPoints + ' โบนัส</span>' +
       '</div>' +
       badgeHtml + unlockMessage +
       '<div style="margin-top:18px">' + journeyBanner() + '</div>' +
@@ -5689,8 +5762,8 @@ function renderGameEnd() {
       '<h1 class="ink" style="font-size:28px;font-weight:700;margin-bottom:6px">สรุปผลภารกิจผจญภัย</h1>' +
       '<p class="soft tiny" style="margin-bottom:28px">ประเมินจาก 5 สถานการณ์ที่สอดคล้องกับบทเรียนทั้ง 5 บท</p>' +
       '<div class="grid2 pop" style="max-width:560px;width:100%;margin-bottom:26px;animation-delay:.15s">' +
-        '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:6px">แต้มรวม</p>' +
-        '<p class="ink" style="font-size:34px;font-weight:700">🏅 ' + state.score + ' <span class="soft" style="font-size:16px">/ ' + maxScenarioScore() + '</span></p></div>' +
+        '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700;margin-bottom:6px">โบนัสภารกิจรวม</p>' +
+        '<p class="ink" style="font-size:34px;font-weight:700">🎁 ' + state.score + ' <span class="soft" style="font-size:16px">/ ' + maxScenarioScore() + '</span></p></div>' +
         '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:6px">ตราสัญลักษณ์ที่สะสมได้</p>' +
         '<p class="ink" style="font-size:34px;font-weight:700">🎀 ' + state.badges.length + ' <span class="soft" style="font-size:16px">/ ' + scenarios.length + '</span></p></div>' +
       '</div>' +
@@ -5890,7 +5963,27 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       var session = check(result).session;
       if (session) return session;
       return supabase.auth.signInAnonymously().then(function(signInResult){ return check(signInResult).session; });
-    }).then(function(session){ window.onFirebaseReady(buildBackend(session)); });
+    }).then(function(session){
+      window.callAiTutor = function(payload) {
+        return supabase.auth.getSession().then(function(result) {
+          var active = check(result).session;
+          if (!active || !active.access_token) throw new Error('Student session is not ready');
+          return fetch(window.AI_CHECK.endpoint, {
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json',
+              'apikey':window.SUPABASE_CONFIG.publishableKey,
+              'Authorization':'Bearer ' + active.access_token
+            },
+            body:JSON.stringify(payload || {})
+          });
+        }).then(function(response){
+          if (!response.ok) throw new Error('AI tutor HTTP ' + response.status);
+          return response.json();
+        });
+      };
+      window.onFirebaseReady(buildBackend(session));
+    });
   }).catch(function(error) {
     window.onFirebaseError(error);
   });
