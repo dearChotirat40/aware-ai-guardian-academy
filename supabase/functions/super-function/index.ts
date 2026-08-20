@@ -33,8 +33,18 @@ async function askGemini(system: string, messages: Array<{ role: string; content
   const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("Gemini_API_KEY") || Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) throw new Error("Gemini API key has not been configured");
   const preferred = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
-  const models = [...new Set([preferred, "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"])];
+  const catalogResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models", {
+    headers: { "x-goog-api-key": apiKey },
+  });
+  const catalog = catalogResponse.ok ? await catalogResponse.json() : { models: [] };
+  const available = (catalog.models || []).filter((model: { name?: string; supportedGenerationMethods?: string[] }) =>
+    (model.supportedGenerationMethods || []).includes("generateContent") && typeof model.name === "string",
+  ).map((model: { name: string }) => model.name.replace(/^models\//, ""));
+  const flashModels = available.filter((model: string) => /flash/i.test(model) && !/(image|audio|tts|live)/i.test(model));
+  const models = [...new Set([preferred, ...flashModels, ...available])];
+  if (!models.length) throw new Error("Gemini API has no available text model for this key");
   let response: Response | null = null;
+  let errorBody = "";
   for (const model of models) {
     response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
@@ -56,8 +66,9 @@ async function askGemini(system: string, messages: Array<{ role: string; content
       }),
     });
     if (response.ok || response.status !== 404) break;
+    errorBody = await response.text();
   }
-  if (!response || !response.ok) throw new Error(`Gemini API ${response ? response.status : "unavailable"}`);
+  if (!response || !response.ok) throw new Error(`Gemini API ${response ? response.status : "unavailable"}${errorBody ? `: ${errorBody}` : ""}`);
   const data = await response.json();
   const answer = (data.candidates?.[0]?.content?.parts || [])
     .map((part: { text?: string }) => part.text || "")
