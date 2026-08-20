@@ -30,7 +30,7 @@ function text(value: unknown, max = 2000) {
 
 async function askGemini(system: string, messages: Array<{ role: string; content: string }>, maxTokens: number, jsonMode = false) {
   // ANTHROPIC_API_KEY รองรับชั่วคราว เพื่อให้คีย์ Gemini ที่บันทึกไว้ก่อนหน้านี้ยังใช้ได้
-  const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("ANTHROPIC_API_KEY");
+  const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("Gemini_API_KEY") || Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) throw new Error("Gemini API key has not been configured");
   const model = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
