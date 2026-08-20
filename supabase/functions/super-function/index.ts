@@ -65,7 +65,7 @@ async function askGemini(system: string, messages: Array<{ role: string; content
         },
       }),
     });
-    if (response.ok || response.status !== 404) break;
+    if (response.ok) break;
     errorBody = await response.text();
   }
   if (!response || !response.ok) throw new Error(`Gemini API ${response ? response.status : "unavailable"}${errorBody ? `: ${errorBody}` : ""}`);
