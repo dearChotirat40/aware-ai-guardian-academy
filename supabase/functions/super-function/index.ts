@@ -32,27 +32,32 @@ async function askGemini(system: string, messages: Array<{ role: string; content
   // ANTHROPIC_API_KEY รองรับชั่วคราว เพื่อให้คีย์ Gemini ที่บันทึกไว้ก่อนหน้านี้ยังใช้ได้
   const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("Gemini_API_KEY") || Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) throw new Error("Gemini API key has not been configured");
-  const model = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-goog-api-key": apiKey,
-    },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: system }] },
-      contents: messages.map((message) => ({
-        role: message.role === "assistant" ? "model" : "user",
-        parts: [{ text: message.content }],
-      })),
-      generationConfig: {
-        maxOutputTokens: maxTokens,
-        temperature: 0.35,
-        ...(jsonMode ? { responseMimeType: "application/json" } : {}),
+  const preferred = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
+  const models = [...new Set([preferred, "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"])];
+  let response: Response | null = null;
+  for (const model of models) {
+    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
       },
-    }),
-  });
-  if (!response.ok) throw new Error(`Gemini API ${response.status}`);
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: system }] },
+        contents: messages.map((message) => ({
+          role: message.role === "assistant" ? "model" : "user",
+          parts: [{ text: message.content }],
+        })),
+        generationConfig: {
+          maxOutputTokens: maxTokens,
+          temperature: 0.35,
+          ...(jsonMode ? { responseMimeType: "application/json" } : {}),
+        },
+      }),
+    });
+    if (response.ok || response.status !== 404) break;
+  }
+  if (!response || !response.ok) throw new Error(`Gemini API ${response ? response.status : "unavailable"}`);
   const data = await response.json();
   const answer = (data.candidates?.[0]?.content?.parts || [])
     .map((part: { text?: string }) => part.text || "")
@@ -97,6 +102,7 @@ serve(async (request) => {
     return json({ error: "Unknown action" }, 400);
   } catch (error) {
     console.error(error);
-    return json({ error: "AI request failed" }, 502);
+    const detail = error instanceof Error ? error.message.slice(0, 120) : "Unknown error";
+    return json({ error: "AI request failed", detail }, 502);
   }
 });
