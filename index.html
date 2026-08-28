@@ -1534,11 +1534,11 @@ function avatarSrc(s) { return (s && s.gender === 'f') ? AVATAR_GIRL : AVATAR_BO
 
 /* =====================================================
    🤖 AI ใช้งานผ่าน Supabase Edge Function
-   กุญแจ Anthropic อยู่ใน Supabase Secret เท่านั้น จึงไม่ปรากฏบนเว็บนักเรียน
+   กุญแจ Gemini อยู่ใน Supabase Secret เท่านั้น จึงไม่ปรากฏบนเว็บนักเรียน
 ===================================================== */
 var AI_CHECK = {
   endpoint: SUPABASE_CONFIG.url + '/functions/v1/super-function',
-  model: 'claude-sonnet-4-6'
+  model: 'gemini-2.5-flash'
 };
 
 /* โจทย์ฝึกเขียนพรอมต์ */
