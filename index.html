@@ -7,7 +7,7 @@
  <link rel="icon" type="image/png" href="./app-logo-transparent.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#F6F3EA; --dot:#D9D2C2;
@@ -1284,22 +1284,27 @@ body::after{opacity:.18; filter:drop-shadow(0 6px 4px rgba(47,74,112,.16))}
 /* ชื่อโครงการหน้าเข้าสู่ระบบ: ตัวพาดหัวแบบนิตยสารไทย */
 body #app .login-view .app-name-login{max-width:1120px;padding:0 12px;text-wrap:balance}
 body #app .login-view .app-name-login .app-title-main{
-  font-family:'Chonburi','Sarabun','Leelawadee UI',sans-serif;
-  font-size:clamp(27px,3.2vh,38px);
-  font-weight:900;
-  line-height:1.26;
-  letter-spacing:.01em;
-  color:#25385D;
-  text-shadow:0 2px 0 rgba(255,255,255,.95),0 4px 0 rgba(90,117,157,.16);
+  font-family:'Mitr','Sarabun','Leelawadee UI',sans-serif;
+  font-size:clamp(29px,3.45vh,42px);
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:.015em;
+  color:#234E9B;
+  background:linear-gradient(105deg,#1F4E99 4%,#386FD0 46%,#B34F91 96%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 3px 0 rgba(255,255,255,.95),0 6px 0 rgba(95,121,170,.14);
+  filter:drop-shadow(0 4px 4px rgba(60,85,137,.13));
 }
 body #app .login-view .app-name-login .app-title-sub{
   max-width:1080px;
   margin:clamp(5px,.9vh,10px) auto 0;
-  font-family:'Sarabun','Leelawadee UI',sans-serif;
-  font-size:clamp(18px,2.35vh,26px);
-  font-weight:800;
-  line-height:1.36;
-  color:#24558D;
+  font-family:'Mitr','Sarabun','Leelawadee UI',sans-serif;
+  font-size:clamp(18px,2.28vh,25px);
+  font-weight:600;
+  line-height:1.42;
+  color:#2C5F9E;
 }
 @media(max-width:760px){
   body #app .login-view .app-name-login{padding:0 4px}
