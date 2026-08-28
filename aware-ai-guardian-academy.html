@@ -1282,20 +1282,15 @@ body::after{opacity:.18; filter:drop-shadow(0 6px 4px rgba(47,74,112,.16))}
 }
 
 /* ชื่อโครงการหน้าเข้าสู่ระบบ: ตัวพาดหัวแบบนิตยสารไทย */
-body #app .login-view .app-name-login{max-width:1120px;padding:0 12px;text-wrap:balance}
+body #app .login-view .app-name-login{max-width:1120px;padding:0 12px;text-wrap:balance;transform:translateY(clamp(6px,1.1vh,13px))}
 body #app .login-view .app-name-login .app-title-main{
-  font-family:'Mitr','Sarabun','Leelawadee UI',sans-serif;
-  font-size:clamp(29px,3.45vh,42px);
-  font-weight:700;
-  line-height:1.2;
-  letter-spacing:.015em;
-  color:#234E9B;
-  background:linear-gradient(105deg,#1F4E99 4%,#386FD0 46%,#B34F91 96%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-shadow:0 3px 0 rgba(255,255,255,.95),0 6px 0 rgba(95,121,170,.14);
-  filter:drop-shadow(0 4px 4px rgba(60,85,137,.13));
+  font-family:'Chonburi','Sarabun','Leelawadee UI',sans-serif;
+  font-size:clamp(28px,3.35vh,40px);
+  font-weight:900;
+  line-height:1.25;
+  letter-spacing:.01em;
+  color:#213B69;
+  text-shadow:0 2px 0 #FFFFFF,0 4px 0 rgba(69,105,161,.2);
 }
 body #app .login-view .app-name-login .app-title-sub{
   max-width:1080px;
@@ -1307,7 +1302,7 @@ body #app .login-view .app-name-login .app-title-sub{
   color:#2C5F9E;
 }
 @media(max-width:760px){
-  body #app .login-view .app-name-login{padding:0 4px}
+  body #app .login-view .app-name-login{padding:0 4px;transform:translateY(5px)}
   body #app .login-view .app-name-login .app-title-main{font-size:clamp(22px,7vw,29px);line-height:1.3}
   body #app .login-view .app-name-login .app-title-sub{font-size:clamp(15px,4.5vw,19px);line-height:1.4}
 }
