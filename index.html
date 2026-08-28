@@ -1770,6 +1770,30 @@ lessons.forEach(function(lesson) {
   });
 });
 
+/* เนื้อหาที่ครูแก้จากหน้ารายงาน: เก็บสำรองในเครื่อง และซิงก์ฐานข้อมูลเมื่อเชื่อมต่อได้ */
+var CURRICULUM_KEY = 'awareai_curriculum_v1';
+var DEFAULT_LESSONS = JSON.parse(JSON.stringify(lessons));
+var DEFAULT_VIDEO_LINKS = VIDEO_LINKS.slice();
+function curriculumSnapshot() {
+  return { lessons:JSON.parse(JSON.stringify(lessons)), videos:VIDEO_LINKS.slice(), updatedAt:Date.now() };
+}
+function applyCurriculum(data) {
+  if (!data || !Array.isArray(data.lessons) || data.lessons.length !== DEFAULT_LESSONS.length) return false;
+  lessons = JSON.parse(JSON.stringify(data.lessons));
+  VIDEO_LINKS = Array.isArray(data.videos) ? data.videos.slice(0, lessons.length) : DEFAULT_VIDEO_LINKS.slice();
+  while (VIDEO_LINKS.length < lessons.length) VIDEO_LINKS.push('');
+  return true;
+}
+function saveCurriculumLocal() {
+  try { localStorage.setItem(CURRICULUM_KEY, JSON.stringify(curriculumSnapshot())); } catch(e) {}
+}
+function loadCurriculumLocal() {
+  try { var raw = localStorage.getItem(CURRICULUM_KEY); if (raw) applyCurriculum(JSON.parse(raw)); } catch(e) {}
+}
+function escTextarea(value) {
+  return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 /* ---------- เกมภารกิจ 5 ด่าน สอดคล้องกับบทเรียนทั้ง 5 บท ---------- */
 var scenarios = [
   {
@@ -1903,6 +1927,7 @@ var state = {
   journeyGain: 0,
   teacherEditingRoster: null,
   teacherDetailId: null,
+  teacherContentLesson: 0,
   // เกม
   score: 0,
   currentScenarioIndex: null,
@@ -2141,6 +2166,9 @@ function mergeFirebaseStudents(cloudStudents) {
 function onFirebaseReady(backend) {
   firebaseBackend = backend;
   firebaseStatus = 'ready';
+  if (backend.loadCurriculum) backend.loadCurriculum().then(function(curriculum){
+    if (applyCurriculum(curriculum)) { saveCurriculumLocal(); render(); }
+  }).catch(function(){ /* ใช้เนื้อหาในเครื่องได้เสมอ หากยังไม่ได้ติดตั้งตารางเนื้อหา */ });
   backend.loadAll().then(function(cloud){
     var changed = mergeFirebaseStudents(cloud.students || {});
     if (Array.isArray(cloud.roster) && cloud.roster.length &&
@@ -4045,6 +4073,49 @@ function teacherChatQuestionsHtml() {
   '</details>';
 }
 
+function teacherContentEditorHtml() {
+  var i = Math.max(0, Math.min(Number(state.teacherContentLesson || 0), lessons.length - 1));
+  var lesson = lessons[i];
+  var options = lessons.map(function(item, n){ return '<option value="' + n + '" ' + (n === i ? 'selected' : '') + '>บทที่ ' + (n + 1) + ': ' + item.short + '</option>'; }).join('');
+  return '<section class="pcard blue noprint" style="margin-bottom:20px">' +
+    '<div class="tape tape-blue"></div>' +
+    '<h3 class="t-blue" style="font-weight:700;margin-bottom:6px">✏️ จัดการเนื้อหาที่นักเรียนเห็น</h3>' +
+    '<p class="soft tiny" style="line-height:1.8;margin-bottom:12px">แก้ชื่อบท สถานการณ์ สไลด์ ข้อสอบ และลิงก์วิดีโอได้จากตรงนี้ กดบันทึกแล้วหน้าเรียนของนักเรียนจะใช้เนื้อหาใหม่ทันที</p>' +
+    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px"><label class="small" for="teacher-content-lesson">เลือกบท</label><select id="teacher-content-lesson" class="inp" style="max-width:360px" onchange="teacherContentLessonChanged()">' + options + '</select><input id="teacher-video-link" class="inp" style="flex:1;min-width:240px" value="' + escTextarea(VIDEO_LINKS[i] || '') + '" placeholder="วางลิงก์วิดีโอ (เว้นว่างได้)"></div>' +
+    '<details open><summary class="small" style="cursor:pointer;font-weight:700">แก้เนื้อหาของบทที่เลือก</summary><p class="soft tiny" style="margin:7px 0">แก้ข้อความในรูปแบบ JSON ได้ครบทุกส่วน: ชื่อบท สถานการณ์ สไลด์ และข้อสอบ (ตัวเลือกอยู่ใน <code>choices</code> และคำตอบที่ถูกเป็นเลขเริ่มจาก 0 ใน <code>answer</code>)</p><textarea id="teacher-lesson-json" class="codebox" style="min-height:360px;white-space:pre;line-height:1.55">' + escTextarea(JSON.stringify(lesson, null, 2)) + '</textarea></details>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn mintb sm" onclick="saveTeacherLessonContent()">💾 บันทึกเนื้อหาบทนี้</button><button class="btn whiteb sm" onclick="resetTeacherLessonContent()">↺ คืนค่าเนื้อหาเดิมของบทนี้</button></div>' +
+  '</section>';
+}
+function teacherContentLessonChanged() {
+  var select = document.getElementById('teacher-content-lesson');
+  state.teacherContentLesson = Number(select && select.value || 0);
+  render();
+}
+function saveTeacherLessonContent() {
+  var i = Number(state.teacherContentLesson || 0);
+  var textarea = document.getElementById('teacher-lesson-json');
+  var video = document.getElementById('teacher-video-link');
+  try {
+    var next = JSON.parse(textarea.value);
+    if (!next || !next.title || !Array.isArray(next.slides) || !Array.isArray(next.quiz)) throw new Error('ต้องมี title, slides และ quiz');
+    lessons[i] = next;
+    VIDEO_LINKS[i] = String(video && video.value || '').trim();
+    saveCurriculumLocal();
+    if (firebaseBackend && firebaseBackend.saveCurriculum) firebaseBackend.saveCurriculum(curriculumSnapshot()).catch(function(err){ console.warn('Supabase curriculum sync:', err); });
+    alert('บันทึกเนื้อหาบทที่ ' + (i + 1) + ' แล้ว ✅');
+    render();
+  } catch(err) { alert('ยังบันทึกไม่ได้: รูปแบบเนื้อหาไม่ถูกต้อง\n' + err.message); }
+}
+function resetTeacherLessonContent() {
+  var i = Number(state.teacherContentLesson || 0);
+  if (!confirm('คืนค่าเนื้อหาเดิมของบทที่ ' + (i + 1) + ' ใช่ไหม?')) return;
+  lessons[i] = JSON.parse(JSON.stringify(DEFAULT_LESSONS[i]));
+  VIDEO_LINKS[i] = DEFAULT_VIDEO_LINKS[i] || '';
+  saveCurriculumLocal();
+  if (firebaseBackend && firebaseBackend.saveCurriculum) firebaseBackend.saveCurriculum(curriculumSnapshot()).catch(function(err){ console.warn('Supabase curriculum sync:', err); });
+  render();
+}
+
 function renderTeacher() {
   var ids = Object.keys(db.students);
   var totalStudents = ids.length;
@@ -4103,6 +4174,7 @@ function renderTeacher() {
       teacherSystemStatusHtml() +
       teacherStudentDetailHtml() +
       teacherRosterHtml() +
+      teacherContentEditorHtml() +
       teacherContentBlueprintHtml() +
       rewardCriteriaHtml('teacher') +
       teacherMissionPlanHtml() +
@@ -5043,6 +5115,7 @@ function lessonTabBar(p) {
   return '<div class="lesson-inner-menu">' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
     '<button class="tab ' + (state.lessonTab === 'mission' ? 'active' : (p.scenarioDone ? 'done' : '')) + '" onclick="setTab(\'mission\')"><img class="mission-tab-icon" src="./mission-badge.png" alt="">สถานการณ์ชีวิตจริง ' + (p.scenarioDone ? '✅' : '') + '</button>' +
+    '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : '') + '" onclick="setTab(\'video\')">🎬 วิดีโอประกอบ</button>' +
     (state.currentLesson === 1 ? '<button class="tab ' + (totalPromptStars() > 0 ? 'done' : '') + '" onclick="changeView(\'prompt\')">✍️ ฝึกเขียนพรอมต์ ' + (totalPromptStars() > 0 ? '⭐' + totalPromptStars() : '') + '</button>' : '') +
     '<button class="tab ' + (state.lessonTab === 'quizchoice' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (p.quizDone ? '📝 ดูผลข้อสอบ ' + lessonAssessmentLabel(p, 'post') : (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท')) + '</button>' +
     '</div>' +
@@ -5109,7 +5182,7 @@ function renderLesson() {
       media = '<div class="videobox"><div class="vph">' +
         '<div style="font-size:44px">🎬</div>' +
         '<p style="font-weight:700;font-size:18px">พื้นที่สำหรับคลิปสั้นประจำบท</p>' +
-        '<p class="tiny" style="opacity:.8">(คุณครูสามารถใส่ลิงก์ TikTok, YouTube หรือ Google Drive ได้ที่ตัวแปร VIDEO_LINKS ด้านบนของไฟล์)</p>' +
+        '<p class="tiny" style="opacity:.8">ยังไม่มีวิดีโอสำหรับบทนี้ · คุณครูเพิ่มลิงก์ YouTube, TikTok, Google Drive หรือ .mp4 ได้จากเมนู “จัดการเนื้อหา” ในรายงานครู</p>' +
       '</div></div>';
     }
     content =
@@ -5829,6 +5902,7 @@ try {
     history.replaceState(null, '', window.location.pathname + '?teacherPinReset=done');
   }
 } catch(e) {}
+loadCurriculumLocal();
 loadDB();
 autoFit();
 render();
@@ -5940,6 +6014,13 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
           data: { items: clean(roster) },
           updated_at: updatedAt
         }).then(check);
+      },
+      loadCurriculum: function() {
+        return supabase.rpc('get_curriculum').then(check);
+      },
+      saveCurriculum: function(curriculum) {
+        if (!teacherPin) return Promise.reject(new Error('Teacher PIN required'));
+        return supabase.rpc('teacher_save_curriculum', {p_pin:teacherPin, p_data:clean(curriculum)}).then(check);
       },
       loadAll: function() {
         if (teacherPin) return supabase.rpc('teacher_load_all', {p_pin:teacherPin}).then(function(result){
