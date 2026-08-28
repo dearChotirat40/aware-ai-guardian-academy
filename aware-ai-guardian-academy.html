@@ -1314,6 +1314,13 @@ body #app .login-view .app-name-login .app-title-sub{
 
 /* หน้าล็อกอินแบบตัวละครโต้ตอบ: ดัดแปลงแนวคิดจากฟอร์มตัวละครให้เป็นผู้ช่วย AI */
 .login-view .login-card.ai-login-card{width:min(790px,calc(100% - 32px));max-width:790px;padding:clamp(18px,2.4vh,28px) clamp(22px,3vw,40px)}
+.claw-game{width:min(390px,100%);margin:22px auto 8px;padding:12px;border-radius:22px;background:linear-gradient(150deg,#1E3151,#17243B);border:4px solid #90D7ED;box-shadow:0 8px 0 #274A73,0 15px 26px rgba(22,41,69,.22);color:#fff;overflow:hidden}
+.claw-game-title{font-family:'Mitr','Sarabun',sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;text-align:center;color:#EFFFFF;text-shadow:0 2px 0 #245175;margin:2px 0 9px}.claw-game-title span{color:#FFD764}
+.claw-window{position:relative;min-height:214px;border:4px solid #EDF9FF;border-radius:13px;background:linear-gradient(#90E8F3 0 45%,#58C3E5 46% 72%,#2175A6 73%);overflow:hidden;box-shadow:inset 0 0 0 3px rgba(28,92,139,.5)}
+.claw-rail{position:absolute;left:0;right:0;top:62px;height:8px;background:#703B23;box-shadow:0 3px 0 rgba(255,255,255,.4)}.claw-cable{position:absolute;left:50%;top:0;width:5px;height:76px;background:#F7F7EF;transform:translateX(-50%);box-shadow:0 0 2px #456}.claw-head{position:absolute;z-index:2;left:50%;top:67px;width:48px;height:26px;border:5px solid #F6F8F5;border-top:0;border-radius:0 0 25px 25px;transform:translateX(-50%)}.claw-head:before,.claw-head:after{content:'';position:absolute;top:19px;width:16px;height:30px;border:5px solid #F6F8F5;border-top:0;border-radius:0 0 18px 18px}.claw-head:before{left:-15px;transform:rotate(24deg)}.claw-head:after{right:-15px;transform:rotate(-24deg)}
+.claw-prizes{position:absolute;display:flex;justify-content:center;align-items:flex-end;gap:5px;left:10px;right:10px;bottom:10px;min-height:72px}.claw-toy{width:48px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:15px 15px 12px 12px;background:#FFF9E8;border:2px solid rgba(32,69,100,.4);font-size:31px;box-shadow:0 5px 0 rgba(20,83,126,.25)}.claw-toy:nth-child(2){transform:translateY(10px) rotate(-6deg);background:#FFE0ED}.claw-toy:nth-child(3){transform:translateY(4px) rotate(4deg);background:#E9F6D0}.claw-toy:nth-child(4){transform:translateY(11px) rotate(-3deg);background:#E6E1FF}.claw-toy:nth-child(5){transform:translateY(2px) rotate(5deg);background:#FFE8B7}
+.claw-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 2px 0}.claw-token{font-size:12px;color:#CDEEFF;font-weight:700}.claw-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#EAFBF2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}.claw-game.played .claw-cable{height:116px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-head{top:107px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-prizes{animation:toyShake .5s ease-in-out 2}@keyframes clawDrop{50%{transform:translateX(-50%) translateY(32px)}100%{transform:translateX(-50%) translateY(0)}}@keyframes toyShake{50%{transform:translateX(5px)}}
+@media(max-width:520px){.claw-game{max-width:320px;padding:9px}.claw-window{min-height:194px}.claw-toy{width:40px;height:46px;font-size:27px}.claw-game-title{font-size:17px}}
 .ai-login-stage{display:grid;grid-template-columns:minmax(190px,.78fr) minmax(290px,1.35fr);gap:clamp(18px,3vw,38px);align-items:center;text-align:left}
 .ai-login-side{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
 .ai-login-bot{--bot-screen:#263955;position:relative;width:188px;height:205px;margin:0 auto 7px;filter:drop-shadow(0 9px 6px rgba(45,63,98,.22));transform-origin:50% 85%;animation:aiBotFloat 3.2s ease-in-out infinite}
@@ -1957,7 +1964,7 @@ var state = {
 };
 
 function newLessonProgress() {
-  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, scenarioDone:false, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0 }; });
+  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, scenarioDone:false, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0, clawPlayed:false, clawPrize:'' }; });
 }
 var lessonProgress = newLessonProgress();
 
@@ -1981,7 +1988,9 @@ function normalizeLessonProgress(p) {
     quizDone: attempted,
     postScore: postScore,
     postTotal: Math.max(0, Number(p.postTotal || 0)),
-    stars: attempted ? 1 : 0
+    stars: attempted ? 1 : 0,
+    clawPlayed: !!p.clawPlayed,
+    clawPrize: String(p.clawPrize || '')
   };
 }
 
@@ -5475,6 +5484,35 @@ function nextQuestion() {
   }
 }
 
+var CLAW_PRIZES = [
+  { icon:'🤖', name:'สติกเกอร์น้องชวนคิด' },
+  { icon:'⭐', name:'สติกเกอร์ดาวนักคิด' },
+  { icon:'🧠', name:'สติกเกอร์สมองไว' },
+  { icon:'🛡️', name:'สติกเกอร์นักใช้ AI อย่างรับผิดชอบ' },
+  { icon:'🎈', name:'สติกเกอร์กำลังใจ' }
+];
+function clawGameHtml(p) {
+  var prize = CLAW_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
+  var toys = CLAW_PRIZES.map(function(item){ return '<span class="claw-toy" aria-hidden="true">' + item.icon + '</span>'; }).join('');
+  return '<section class="claw-game ' + (p.clawPlayed ? 'played' : '') + '">' +
+    '<p class="claw-game-title">AI <span>Claw</span> โบนัสท้ายบท</p>' +
+    '<div class="claw-window"><div class="claw-cable"></div><div class="claw-head"></div><div class="claw-rail"></div><div class="claw-prizes">' + toys + '</div></div>' +
+    (p.clawPlayed
+      ? '<p class="claw-win">🎉 คุณคีบได้ ' + (prize ? prize.icon + ' ' + prize.name : 'ของรางวัลพิเศษ') + '<br><span class="tiny">เก็บเป็นที่ระลึกของบทนี้แล้ว</span></p>'
+      : '<div class="claw-controls"><span class="claw-token">เหรียญคีบ 1 ครั้ง</span><button onclick="playClawPrize()" class="btn pinkb sm">🕹️ กดคีบรางวัล</button></div>') +
+  '</section>';
+}
+function playClawPrize() {
+  var i = state.currentLesson;
+  var p = lessonProgress[i];
+  if (!p || p.clawPlayed) return;
+  var pick = CLAW_PRIZES[Math.floor(Math.random() * CLAW_PRIZES.length)];
+  p.clawPlayed = true;
+  p.clawPrize = pick.name;
+  saveProgress();
+  render();
+}
+
 function renderQuizResult() {
   var i = state.currentLesson;
   var ls = lessons[i];
@@ -5506,6 +5544,7 @@ function renderQuizResult() {
       '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
+      clawGameHtml(p) +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
         nextStepButton +
         '<button onclick="openLesson(' + i + ')" class="btn whiteb sm">📖 ทบทวนบทเรียน</button>' +
