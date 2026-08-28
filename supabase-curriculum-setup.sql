@@ -40,3 +40,6 @@ begin
 end;
 $$;
 grant execute on function public.teacher_save_curriculum(text, jsonb) to anon, authenticated;
+
+-- ให้ Supabase API เห็นฟังก์ชันที่เพิ่งสร้างทันที
+notify pgrst, 'reload schema';
