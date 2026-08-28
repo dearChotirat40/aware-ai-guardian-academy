@@ -5009,39 +5009,31 @@ function lessonMissionHtml(ls, t) {
   var mission = ls.mission || {};
   var progress = normalizeLessonProgress(lessonProgress[state.currentLesson]);
   var mediaCompleted = lessonMediaCompleted(progress);
-  var bullets = ls.slides.map(function(s){
-    return '<div class="innerbox" style="margin-bottom:10px">' +
-      '<p class="small" style="font-weight:700;line-height:1.7">' + s.emoji + ' ' + s.title + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8;margin-top:2px">' + s.text + '</p>' +
-    '</div>';
-  }).join('');
+  var idx = Math.max(0, Math.min(state.slideIdx || 0, ls.slides.length - 1));
+  var slide = ls.slides[idx];
+  var isFirst = idx === 0;
+  var isLast = idx === ls.slides.length - 1;
+  var dots = ls.slides.map(function(_, n){ return '<span class="dot ' + (n === idx ? 'on' : (n <= progress.slideSeen ? 'seen' : '')) + '"></span>'; }).join('');
   return '<div class="pcard ' + t.card + ' pop">' +
     '<div class="tape ' + t.tape + '"></div>' +
     '<div class="mission-heading"><img class="mission-badge-img" src="./mission-badge.png" alt="เหตุการณ์"><h3 class="' + t.deep + '" style="font-size:22px;font-weight:700;margin:0">' + (mission.name || 'เหตุการณ์จริงประจำบท') + '</h3></div>' +
-    '<div class="innerbox" style="margin-bottom:12px">' +
-      '<p class="small" style="line-height:1.9"><b>ผู้ที่อยู่ในตัวอย่าง:</b> ' + (mission.role || 'ผู้เรียนรู้เท่าทัน AI') + '</p>' +
-      '<p class="small" style="line-height:1.9"><b>สิ่งที่จะเรียนรู้:</b> ' + (mission.goal || 'ใช้ AI อย่างรับผิดชอบในสถานการณ์จริง') + '</p>' +
+    (isFirst ? '<div class="innerbox" style="margin-bottom:12px"><p class="small" style="line-height:1.9"><b>ผู้ที่อยู่ในตัวอย่าง:</b> ' + (mission.role || 'ผู้เรียนรู้เท่าทัน AI') + '</p><p class="small" style="line-height:1.9"><b>สิ่งที่จะเรียนรู้:</b> ' + (mission.goal || 'ใช้ AI อย่างรับผิดชอบในสถานการณ์จริง') + '</p><p class="soft tiny" style="line-height:1.8;margin-top:6px">📍 เหตุการณ์ที่พบ: ' + (sim.place || 'โรงเรียนและชีวิตออนไลน์') + '</p><p class="soft tiny" style="line-height:1.8;margin-top:2px">' + (sim.context || 'นักเรียนพบสถานการณ์ที่ต้องใช้ AI อย่างรอบคอบ') + '</p></div>' : '') +
+    '<div class="pcard plain" style="margin-top:12px;padding:20px 22px;min-height:260px;display:flex;flex-direction:column;justify-content:center">' +
+      '<div class="center" style="margin-bottom:14px"><span style="font-size:50px">' + slide.emoji + '</span><p class="tiny ' + t.deep + '" style="font-weight:700;margin-top:6px">สถานการณ์สไลด์ ' + (idx + 1) + ' / ' + ls.slides.length + '</p></div>' +
+      '<h3 class="' + t.deep + '" style="font-size:23px;text-align:center;line-height:1.45">' + slide.title + '</h3>' +
+      '<p class="small" style="line-height:2;text-align:left;margin-top:14px">' + slide.text + '</p>' +
     '</div>' +
-    '<div class="pcard plain" style="margin-top:12px;padding:14px 18px">' +
-      '<p class="small" style="font-weight:700;line-height:1.8">📍 เหตุการณ์ที่พบ: ' + (sim.place || 'โรงเรียนและชีวิตออนไลน์') + '</p>' +
-      '<p class="soft small" style="line-height:1.9;margin-top:4px">' + (sim.context || 'นักเรียนพบสถานการณ์ที่ต้องใช้ AI อย่างรอบคอบ') + '</p>' +
-      '<div class="pcard blue" style="margin-top:12px;padding:14px 16px">' +
-        '<p class="small t-blue" style="font-weight:700;line-height:1.8">💡 ประเด็นสำหรับเรียนรู้</p>' +
-        '<p class="small" style="line-height:1.9;margin-top:4px">' + (sim.task || 'พิจารณาแนวทางใช้ AI อย่างรับผิดชอบ') + '</p>' +
-        '<p class="soft tiny" style="line-height:1.8;margin-top:6px">หน้านี้เป็นตัวอย่างประกอบการสอน ยังไม่ต้องตอบ คำถามจากสถานการณ์จะอยู่ในแบบทดสอบระหว่างบท</p>' +
-      '</div>' +
-    '</div>' +
-    '<div class="pcard plain" style="margin-top:12px;padding:14px 18px">' +
-      '<p class="small" style="font-weight:700;text-align:center;margin-bottom:10px">🔎 ลองคิดจากเหตุการณ์นี้</p>' +
-      bullets +
+    '<div class="slide-progress-wrap"><div class="dots">' + dots + '</div><span class="slide-progress-label">' + (idx + 1) + ' / ' + ls.slides.length + '</span></div>' +
+    '<div class="slide-navigation" style="margin-top:8px">' +
+      '<button onclick="prevScenarioSlide()" class="image-nav-btn back-nav-btn lesson-back-btn" aria-label="ย้อนกลับ" ' + (isFirst ? 'disabled' : '') + '><img src="./return-button.png" alt="ย้อนกลับ"></button>' +
+      '<span class="soft small" style="font-weight:600">อ่านทีละสไลด์</span>' +
+      (isLast
+        ? (mediaCompleted ? '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>' : '<button onclick="finishScenarioSlides()" class="btn mintb sm">✅ อ่านสถานการณ์จบแล้ว</button>')
+        : '<button onclick="nextScenarioSlide()" class="image-nav-btn" aria-label="ถัดไป"><img src="./next-button.png" alt="ถัดไป"></button>') +
     '</div>' +
     '<div class="center" style="margin-top:14px">' +
-      '<p class="small" style="font-weight:700;margin-bottom:10px">' + (mediaCompleted ? 'เรียนรู้จากสถานการณ์ครบแล้ว แบบทดสอบระหว่างบทปลดล็อกแล้ว' : 'อ่านเหตุการณ์และประเด็นเรียนรู้ครบแล้ว กดปุ่มด้านล่างเพื่อไปทำแบบทดสอบ') + '</p>' +
       '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">' +
         (state.currentLesson === 1 ? '<button onclick="changeView(\'prompt\')" class="btn whiteb sm">✍️ ฝึกเขียนพรอมต์</button>' : '') +
-        (mediaCompleted
-          ? '<button onclick="tryOpenQuiz()" class="btn pinkb sm">📝 ทำแบบทดสอบระหว่างบท</button>'
-          : '<button onclick="markScenarioDone()" class="btn mintb sm">✅ เรียนรู้จากสถานการณ์จบแล้ว</button>') +
       '</div>' +
     '</div>' +
   '</div>';
@@ -5212,6 +5204,25 @@ function markVideoDone() {
 }
 function markScenarioDone() {
   lessonProgress[state.currentLesson].scenarioDone = true;
+  saveProgress();
+  render();
+}
+function nextScenarioSlide() {
+  var p = lessonProgress[state.currentLesson];
+  var last = lessons[state.currentLesson].slides.length - 1;
+  state.slideIdx = Math.min(last, state.slideIdx + 1);
+  p.slideSeen = Math.max(p.slideSeen || 0, state.slideIdx);
+  saveProgress();
+  render();
+}
+function prevScenarioSlide() {
+  state.slideIdx = Math.max(0, state.slideIdx - 1);
+  render();
+}
+function finishScenarioSlides() {
+  var p = lessonProgress[state.currentLesson];
+  p.scenarioDone = true;
+  p.slideSeen = lessons[state.currentLesson].slides.length - 1;
   saveProgress();
   render();
 }
