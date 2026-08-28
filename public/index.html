@@ -1793,6 +1793,21 @@ function loadCurriculumLocal() {
 function escTextarea(value) {
   return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function safeMediaUrl(value) {
+  var url = String(value || '').trim();
+  return /^https:\/\//i.test(url) ? url : '';
+}
+function lessonMediaResourcesHtml(lesson) {
+  var media = Array.isArray(lesson.media) ? lesson.media : [];
+  var cards = media.map(function(item){
+    var url = safeMediaUrl(item && item.url);
+    if (!url) return '';
+    var label = escChat(item.title || 'สื่อเพิ่มเติม');
+    var type = escChat(item.type || 'ลิงก์');
+    return '<a class="innerbox" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-top:9px;padding:11px 13px" href="' + escChat(url) + '" target="_blank" rel="noopener noreferrer"><span style="font-size:24px">' + (type === 'เอกสาร' ? '📄' : type === 'รูปภาพ' ? '🖼️' : '🔗') + '</span><span><b class="t-blue">' + label + '</b><br><span class="soft tiny">' + type + ' · เปิดสื่อในแท็บใหม่</span></span></a>';
+  }).join('');
+  return cards ? '<div class="pcard plain" style="margin-top:14px;padding:14px 16px"><p class="small" style="font-weight:700">📚 สื่อเพิ่มเติมจากคุณครู</p>' + cards + '</div>' : '';
+}
 
 /* ---------- เกมภารกิจ 5 ด่าน สอดคล้องกับบทเรียนทั้ง 5 บท ---------- */
 var scenarios = [
@@ -4080,10 +4095,11 @@ function teacherContentEditorHtml() {
   return '<section class="pcard blue noprint" style="margin-bottom:20px">' +
     '<div class="tape tape-blue"></div>' +
     '<h3 class="t-blue" style="font-weight:700;margin-bottom:6px">✏️ จัดการเนื้อหาที่นักเรียนเห็น</h3>' +
-    '<p class="soft tiny" style="line-height:1.8;margin-bottom:12px">แก้ชื่อบท สถานการณ์ สไลด์ ข้อสอบ และลิงก์วิดีโอได้จากตรงนี้ กดบันทึกแล้วหน้าเรียนของนักเรียนจะใช้เนื้อหาใหม่ทันที</p>' +
-    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px"><label class="small" for="teacher-content-lesson">เลือกบท</label><select id="teacher-content-lesson" class="inp" style="max-width:360px" onchange="teacherContentLessonChanged()">' + options + '</select><input id="teacher-video-link" class="inp" style="flex:1;min-width:240px" value="' + escTextarea(VIDEO_LINKS[i] || '') + '" placeholder="วางลิงก์วิดีโอ (เว้นว่างได้)"></div>' +
-    '<details open><summary class="small" style="cursor:pointer;font-weight:700">แก้เนื้อหาของบทที่เลือก</summary><p class="soft tiny" style="margin:7px 0">แก้ข้อความในรูปแบบ JSON ได้ครบทุกส่วน: ชื่อบท สถานการณ์ สไลด์ และข้อสอบ (ตัวเลือกอยู่ใน <code>choices</code> และคำตอบที่ถูกเป็นเลขเริ่มจาก 0 ใน <code>answer</code>)</p><textarea id="teacher-lesson-json" class="codebox" style="min-height:360px;white-space:pre;line-height:1.55">' + escTextarea(JSON.stringify(lesson, null, 2)) + '</textarea></details>' +
-    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn mintb sm" onclick="saveTeacherLessonContent()">💾 บันทึกเนื้อหาบทนี้</button><button class="btn whiteb sm" onclick="resetTeacherLessonContent()">↺ คืนค่าเนื้อหาเดิมของบทนี้</button></div>' +
+    '<p class="soft tiny" style="line-height:1.8;margin-bottom:12px">เพิ่มและแก้ข้อความ สถานการณ์ สไลด์ ข้อสอบ วิดีโอ และสื่อเสริมได้ทั้งหมด แล้วกดบันทึกเพื่อส่งให้นักเรียนทุกเครื่อง</p>' +
+    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px"><label class="small" for="teacher-content-lesson">เลือกบท</label><select id="teacher-content-lesson" class="inp" style="max-width:360px" onchange="teacherContentLessonChanged()">' + options + '</select><input id="teacher-video-link" class="inp" style="flex:1;min-width:240px" value="' + escTextarea(VIDEO_LINKS[i] || '') + '" placeholder="วางลิงก์วิดีโอ YouTube, TikTok, Drive หรือ .mp4"></div>' +
+    '<details open><summary class="small" style="cursor:pointer;font-weight:700">แก้เนื้อหาบท สถานการณ์ สไลด์ และข้อสอบ</summary><p class="soft tiny" style="margin:7px 0">กดเพิ่มสไลด์หรือเพิ่มข้อสอบได้ทันที แล้วแก้ข้อความในกล่องด้านล่างได้ครบทุกส่วน</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0"><button type="button" class="btn whiteb sm" onclick="addTeacherSlide()">＋ เพิ่มสไลด์</button><button type="button" class="btn whiteb sm" onclick="addTeacherQuiz()">＋ เพิ่มข้อสอบ</button></div><textarea id="teacher-lesson-json" class="codebox" style="min-height:360px;white-space:pre;line-height:1.55">' + escTextarea(JSON.stringify(lesson, null, 2)) + '</textarea></details>' +
+    '<details style="margin-top:12px"><summary class="small" style="cursor:pointer;font-weight:700">📎 สื่อเพิ่มเติม (ลิงก์เอกสาร รูปภาพ เว็บไซต์)</summary><p class="soft tiny" style="margin:7px 0">ใส่รายการสื่อเป็น JSON เช่น <code>[{"title":"อินโฟกราฟิก","type":"รูปภาพ","url":"https://..."}]</code></p><textarea id="teacher-media-json" class="codebox" style="min-height:120px;white-space:pre;line-height:1.55">' + escTextarea(JSON.stringify(Array.isArray(lesson.media) ? lesson.media : [], null, 2)) + '</textarea></details>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn mintb sm" onclick="saveTeacherLessonContent()">💾 บันทึกและส่งให้นักเรียน</button><button class="btn whiteb sm" onclick="resetTeacherLessonContent()">↺ คืนค่าเนื้อหาเดิมของบทนี้</button></div>' +
   '</section>';
 }
 function teacherContentLessonChanged() {
@@ -4095,9 +4111,13 @@ function saveTeacherLessonContent() {
   var i = Number(state.teacherContentLesson || 0);
   var textarea = document.getElementById('teacher-lesson-json');
   var video = document.getElementById('teacher-video-link');
+  var mediaTextarea = document.getElementById('teacher-media-json');
   try {
     var next = JSON.parse(textarea.value);
     if (!next || !next.title || !Array.isArray(next.slides) || !Array.isArray(next.quiz)) throw new Error('ต้องมี title, slides และ quiz');
+    var media = JSON.parse(mediaTextarea.value || '[]');
+    if (!Array.isArray(media)) throw new Error('สื่อเพิ่มเติมต้องเป็นรายการ []');
+    next.media = media.filter(function(item){ return item && safeMediaUrl(item.url); }).map(function(item){ return { title:String(item.title || 'สื่อเพิ่มเติม').slice(0, 120), type:String(item.type || 'ลิงก์').slice(0, 40), url:safeMediaUrl(item.url) }; });
     lessons[i] = next;
     VIDEO_LINKS[i] = String(video && video.value || '').trim();
     saveCurriculumLocal();
@@ -4105,6 +4125,28 @@ function saveTeacherLessonContent() {
     alert('บันทึกเนื้อหาบทที่ ' + (i + 1) + ' แล้ว ✅');
     render();
   } catch(err) { alert('ยังบันทึกไม่ได้: รูปแบบเนื้อหาไม่ถูกต้อง\n' + err.message); }
+}
+function editorLessonFromTextarea() {
+  var textarea = document.getElementById('teacher-lesson-json');
+  var lesson = JSON.parse(textarea.value);
+  if (!lesson || typeof lesson !== 'object') throw new Error('เนื้อหาบทเรียนไม่ถูกต้อง');
+  lesson.slides = Array.isArray(lesson.slides) ? lesson.slides : [];
+  lesson.quiz = Array.isArray(lesson.quiz) ? lesson.quiz : [];
+  return { lesson:lesson, textarea:textarea };
+}
+function addTeacherSlide() {
+  try {
+    var editor = editorLessonFromTextarea();
+    editor.lesson.slides.push({ emoji:'📚', title:'หัวข้อสไลด์ใหม่', text:'พิมพ์เนื้อหาที่ต้องการให้นักเรียนเรียนรู้ที่นี่' });
+    editor.textarea.value = JSON.stringify(editor.lesson, null, 2);
+  } catch(err) { alert('เพิ่มสไลด์ไม่ได้: ' + err.message); }
+}
+function addTeacherQuiz() {
+  try {
+    var editor = editorLessonFromTextarea();
+    editor.lesson.quiz.push({ q:'คำถามใหม่', choices:['ตัวเลือกที่ 1','ตัวเลือกที่ 2','ตัวเลือกที่ 3','ตัวเลือกที่ 4'], answer:0, hint:'ใส่คำใบ้', explain:'ใส่คำอธิบายหลังตอบ' });
+    editor.textarea.value = JSON.stringify(editor.lesson, null, 2);
+  } catch(err) { alert('เพิ่มข้อสอบไม่ได้: ' + err.message); }
 }
 function resetTeacherLessonContent() {
   var i = Number(state.teacherContentLesson || 0);
@@ -5197,6 +5239,7 @@ function renderLesson() {
         '<span class="video-summary-icon">💡</span>' +
         '<p><b class="' + t.deep + '">สิ่งที่จะได้เรียนรู้จากคลิป</b><br>' + ls.videoDesc + '</p>' +
       '</div>' +
+      lessonMediaResourcesHtml(ls) +
       '<div class="media-actions center">' +
         (p.videoDone
           ? '<p class="t-mint" style="font-weight:700">✅ ดูคลิปจบแล้ว พร้อมทำแบบทดสอบระหว่างบท</p>' +
