@@ -5608,13 +5608,13 @@ function clawGameHtml(p) {
     '<div class="claw-window"><div class="claw-cable"></div><div class="claw-head"></div><div class="claw-rail"></div><div class="claw-prizes">' + toys + '</div></div>' +
     (p.clawPlayed
       ? '<p class="claw-win">🎉 คุณคีบได้ ' + (prize ? prize.icon + ' ' + prize.name : 'ของรางวัลพิเศษ') + '<br><span class="tiny">เก็บเป็นที่ระลึกของบทนี้แล้ว</span></p>'
-      : '<div class="claw-controls"><span class="claw-token">เหรียญคีบ 1 ครั้ง</span><button onclick="playClawPrize()" class="btn pinkb sm">🕹️ กดคีบรางวัล</button></div>') +
+      : '<p class="claw-token" style="text-align:center;margin:10px 2px 0">🎁 ปลดล็อกแล้ว! ใช้สิทธิ์คีบรางวัลของบทนี้ได้ทันที 1 ครั้ง</p><div class="claw-controls"><span class="claw-token">สิทธิ์คีบรางวัล 1 ครั้ง</span><button onclick="playClawPrize()" class="btn pinkb sm" aria-label="คีบรางวัลโบนัสท้ายบท">🕹️ กดคีบรางวัล</button></div>') +
   '</section>';
 }
 function playClawPrize() {
   var i = state.currentLesson;
   var p = lessonProgress[i];
-  if (!p || p.clawPlayed) return;
+  if (!p || !p.quizDone || p.clawPlayed) return;
   var pick = CLAW_PRIZES[Math.floor(Math.random() * CLAW_PRIZES.length)];
   p.clawPlayed = true;
   p.clawPrize = pick.name;
