@@ -5603,23 +5603,35 @@ var CLAW_PRIZES = [
 function clawGameHtml(p) {
   var prize = CLAW_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
   var toys = CLAW_PRIZES.map(function(item){ return '<span class="claw-toy" aria-hidden="true">' + item.icon + '</span>'; }).join('');
-  return '<section class="claw-game ' + (p.clawPlayed ? 'played' : '') + '">' +
+  var picking = !!state.clawPicking && state.currentLesson === state.clawLesson;
+  return '<section class="claw-game ' + ((p.clawPlayed || picking) ? 'played' : '') + '">' +
     '<p class="claw-game-title">AI <span>Claw</span> โบนัสท้ายบท</p>' +
     '<div class="claw-window"><div class="claw-cable"></div><div class="claw-head"></div><div class="claw-rail"></div><div class="claw-prizes">' + toys + '</div></div>' +
     (p.clawPlayed
       ? '<p class="claw-win">🎉 คุณคีบได้ ' + (prize ? prize.icon + ' ' + prize.name : 'ของรางวัลพิเศษ') + '<br><span class="tiny">เก็บเป็นที่ระลึกของบทนี้แล้ว</span></p>'
-      : '<p class="claw-token" style="text-align:center;margin:10px 2px 0">🎁 ปลดล็อกแล้ว! ใช้สิทธิ์คีบรางวัลของบทนี้ได้ทันที 1 ครั้ง</p><div class="claw-controls"><span class="claw-token">สิทธิ์คีบรางวัล 1 ครั้ง</span><button onclick="playClawPrize()" class="btn pinkb sm" aria-label="คีบรางวัลโบนัสท้ายบท">🕹️ กดคีบรางวัล</button></div>') +
+      : picking
+        ? '<p class="claw-win">🕹️ กำลังคีบและสุ่มรางวัล…</p>'
+        : '<p class="claw-token" style="text-align:center;margin:10px 2px 0">🎁 ปลดล็อกแล้ว! ใช้สิทธิ์คีบรางวัลของบทนี้ได้ทันที 1 ครั้ง</p><div class="claw-controls"><span class="claw-token">สิทธิ์คีบรางวัล 1 ครั้ง</span><button onclick="playClawPrize()" class="btn pinkb sm" aria-label="คีบรางวัลโบนัสท้ายบท">🕹️ คลิกคีบรางวัลสุ่ม</button></div>') +
   '</section>';
 }
 function playClawPrize() {
   var i = state.currentLesson;
   var p = lessonProgress[i];
-  if (!p || !p.quizDone || p.clawPlayed) return;
-  var pick = CLAW_PRIZES[Math.floor(Math.random() * CLAW_PRIZES.length)];
-  p.clawPlayed = true;
-  p.clawPrize = pick.name;
-  saveProgress();
+  if (!p || !p.quizDone || p.clawPlayed || state.clawPicking) return;
+  state.clawPicking = true;
+  state.clawLesson = i;
   render();
+  setTimeout(function(){
+    var latest = lessonProgress[i];
+    if (!latest || latest.clawPlayed) { state.clawPicking = false; render(); return; }
+    var pick = CLAW_PRIZES[Math.floor(Math.random() * CLAW_PRIZES.length)];
+    latest.clawPlayed = true;
+    latest.clawPrize = pick.name;
+    state.clawPicking = false;
+    state.clawLesson = -1;
+    saveProgress();
+    render();
+  }, 900);
 }
 
 function renderQuizResult() {
