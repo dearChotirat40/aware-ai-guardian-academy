@@ -1500,7 +1500,7 @@ var APPS_SCRIPT_CODE = [
 "function doPost(e) {",
 "  var d = JSON.parse(e.postData.contents);",
 "  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];",
-"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวบทเรียน','บทที่เรียนจบ','คะแนน E1 ระหว่างเรียน (เต็ม 30)','จำนวนเหรียญหน่วย (เต็ม 5)',",
+"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวบทเรียน','บทที่เรียนจบ','คะแนน E1 ระหว่างเรียน (เต็ม 20)','จำนวนเหรียญหน่วย (เต็ม 5)',",
 "    'ดาวบทที่ 1','คะแนนระหว่างบทที่ 1',",
 "    'ดาวบทที่ 2','คะแนนระหว่างบทที่ 2',",
 "    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
@@ -1877,7 +1877,8 @@ STORYBOARD_SCENARIOS.forEach(function(story, index){
 lessons.forEach(function(lesson) {
   var sim = lesson.simulation || {};
   if (sim.questions && sim.questions.length) {
-    lesson.quiz = sim.questions.concat(lesson.quiz || []);
+    /* แบบทดสอบระหว่างบทใช้คำถามสถานการณ์จากสตอรี่บอร์ดเท่านั้น: บทละ 4 ข้อ */
+    lesson.quiz = sim.questions.slice(0, 4);
     return;
   }
   if (!sim.choices || !sim.choices.length) return;
@@ -2018,7 +2019,7 @@ var scenarios = [
   }
 ];
 
-/* ภารกิจผจญภัยเป็นโบนัสเสริมจากคะแนนบทเรียน ไม่รวมในคะแนน E1 30 คะแนน */
+/* ภารกิจผจญภัยเป็นโบนัสเสริมจากคะแนนบทเรียน ไม่รวมในคะแนน E1 20 คะแนน */
 function maxScenarioScore() { return scenarios.length * 2; }
 
 /* ---------- แบบทดสอบก่อนเรียน / หลังเรียน ---------- */
@@ -2661,7 +2662,7 @@ function teacherMissionPlanHtml() {
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:8px">🗺️ แผนการวัดผลและรางวัล 5 หน่วย</h3>' +
     '<p class="soft small" style="line-height:1.9">คะแนนหน่วยคิดจากคำตอบจริงเพื่อใช้คำนวณ E1 ส่วนดาวและเหรียญใช้สะท้อนความคืบหน้าและระดับผลการเรียน โดยไม่บังคับ 80% เพื่อปลดล็อกบทถัดไป</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px">' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">📚 คะแนน E1</p><p class="soft tiny">นำสัดส่วนข้อที่ตอบถูกของแต่ละบทแปลงเป็นบทละ 6 คะแนน · 5 บทรวมเต็ม 30 คะแนน (ทำได้บทละ 1 ครั้ง)</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">📚 คะแนน E1</p><p class="soft tiny">แบบทดสอบระหว่างบทมีบทละ 4 ข้อ · ข้อละ 1 คะแนน · 5 บทรวมเต็ม 20 คะแนน (ทำได้บทละ 1 ครั้ง)</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">✍️ โบนัสพรอมต์</p><p class="soft tiny">3 โจทย์ · ประเมินคุณภาพโจทย์ละ 1–3 ดาว · สูงสุด 9 ดาว</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🎮 โบนัสภารกิจผจญภัย</p><p class="soft tiny">5 ด่านตรงกับ 5 บท · ตอบถูกครั้งแรกได้โบนัส 2 แต้มและ 1 ตรา · สูงสุด 10 โบนัส</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏰 เส้นทางรวม</p><p class="soft tiny">5 หน่วย + 3 พรอมต์ + 5 สถานการณ์ = 13 ดาวเดินทาง</p></div>' +
@@ -3183,7 +3184,7 @@ function totalStars() {
   return t;
 }
 function maxStars() { return lessons.length; }
-var UNIT_POINTS = 6;
+var UNIT_POINTS = 4;
 function maxLessonPoints() { return lessons.length * UNIT_POINTS; }
 var RESEARCH_CONTENT_AREAS = [
   { competency:'การรู้และเข้าใจ AI', focus:'ความหมาย หลักการทำงาน ประเภท ความสามารถ ข้อจำกัด และตัวอย่าง AI ในชีวิตประจำวัน' },
@@ -3248,13 +3249,13 @@ function rewardCriteriaHtml(audience) {
     '<h3 class="t-orange" style="font-weight:700;margin-bottom:6px">📏 เกณฑ์คะแนน ดาว เหรียญ และรางวัลแต่ละประเภท</h3>' +
     '<p class="soft small" style="line-height:1.8;margin-bottom:12px">' + intro + '</p>' +
     '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🎯 คะแนนบทเรียน · เต็ม 30</p><p class="soft tiny" style="line-height:1.8">คะแนนจากข้อที่ตอบถูกในแบบทดสอบระหว่างบท บทละ 6 คะแนน รวม 5 บท</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🎯 คะแนนบทเรียน · เต็ม 20</p><p class="soft tiny" style="line-height:1.8">คะแนนจากข้อที่ตอบถูกในแบบทดสอบระหว่างบท บทละ 4 ข้อ ข้อละ 1 คะแนน รวม 5 บท</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">⭐ ดาวบทเรียน · เต็ม 5</p><p class="soft tiny" style="line-height:1.8">ได้บทละ 1 ดาวเมื่อเรียนรู้จากสถานการณ์ชีวิตจริงและส่งแบบทดสอบระหว่างบทแล้ว ไม่ใช้คะแนน 80% เป็นเงื่อนไขปลดล็อก</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏅 เหรียญผลการเรียนรายบท</p><p class="soft tiny" style="line-height:1.8">🥉 0–59% · 🥈 60–79% · 🥇 80–100% ของแบบทดสอบระหว่างบท เหรียญแสดงระดับผลครั้งแรกและไม่ใช้ล็อกบทถัดไป</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">✍️ ดาวพรอมต์ · เต็ม 9</p><p class="soft tiny" style="line-height:1.8">ประเมินบทบาท–งาน–บริบท–รูปแบบ: 0–3 คะแนน = 0 ดาว, 4–5 = 1 ดาว, 6–7 = 2 ดาว, 8–10 = 3 ดาวต่อโจทย์</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🎀 โบนัสภารกิจผจญภัย · เต็ม 10</p><p class="soft tiny" style="line-height:1.8">ภารกิจ 5 ด่านตรงกับ 5 บท · ตอบถูกครั้งแรกได้โบนัส 2 แต้มและ 1 ตราประจำบท · ตอบผิดได้ 0 โบนัส · เล่นซ้ำได้แต่ไม่รับโบนัสซ้ำ</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🌟 ดาวเดินทางและระดับ · เต็ม 13</p><p class="soft tiny" style="line-height:1.8">5 บทเรียน + 3 โจทย์พรอมต์ที่ได้อย่างน้อย 1 ดาว + 5 ภารกิจสถานการณ์ · Silver 0–3, Gold 4–7, Platinum 8–12, Diamond 13 ดาว</p></div>' +
-      '<div class="innerbox"><p class="small" style="font-weight:700">🏆 คะแนนกระดานผู้นำ</p><p class="soft tiny" style="line-height:1.8">คะแนนบทเรียนเต็ม 30 + ดาวพรอมต์ × 5 (เต็ม 45) + โบนัสภารกิจเต็ม 10 + โบนัสระดับ</p></div>' +
+      '<div class="innerbox"><p class="small" style="font-weight:700">🏆 คะแนนกระดานผู้นำ</p><p class="soft tiny" style="line-height:1.8">คะแนนบทเรียนเต็ม 20 + ดาวพรอมต์ × 5 (เต็ม 45) + โบนัสภารกิจเต็ม 10 + โบนัสระดับ</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏁 คะแนนหลังเรียน</p><p class="soft tiny" style="line-height:1.8">ใช้ดูพัฒนาการก่อนและหลังเรียน แยกออกจากคะแนนแข่งขันและรางวัลทั้งหมด</p></div>' +
     '</div>' +
   '</section>';
@@ -3884,7 +3885,7 @@ function offlineBot(q) {
   if (has('พรอมต์','prompt','สูตร'))
     return 'สูตรพรอมต์เก่งมี 4 ส่วน: <b>บท-งาน-บริบท-รูปแบบ</b> ✍️ (1) บอกบทบาท (2) บอกงานชัด ๆ (3) ใส่รายละเอียด (4) กำหนดรูปแบบผลลัพธ์ ลองเอาพรอมต์ล่าสุดของเรามาเช็กดูสิว่าครบกี่ส่วน? ไปฝึกที่เมนู ✍️ ได้เลย!';
   if (has('ดาว','คะแนน','แต้ม','อันดับ'))
-    return 'เกณฑ์แยกกันนะ: คะแนนบทเรียนมาจากข้อที่ตอบถูก บทละ 6 คะแนน รวม 5 บทเต็ม 30 คะแนน ⭐ ดาวบทเรียนได้เมื่อเรียนรู้จากสถานการณ์และส่งข้อสอบแล้ว 🥉🥈🥇 เหรียญรายบทขึ้นกับผล 0–59%, 60–79%, 80–100% ✍️ ดาวพรอมต์ขึ้นกับคุณภาพ 0–3 ดาว และ 🎀 ภารกิจผจญภัย 5 ด่านตรงกับ 5 บท ตอบถูกครั้งแรกได้โบนัส 2 แต้มต่อด่าน ทั้งหมดจะแสดงแยกในหน้าความคืบหน้า';
+    return 'เกณฑ์แยกกันนะ: แบบทดสอบระหว่างบทมีบทละ 4 ข้อ ข้อละ 1 คะแนน รวม 5 บทเต็ม 20 คะแนน ⭐ ดาวบทเรียนได้เมื่อเรียนรู้จากสถานการณ์และส่งข้อสอบแล้ว 🥉🥈🥇 เหรียญรายบทขึ้นกับผล 0–59%, 60–79%, 80–100% ✍️ ดาวพรอมต์ขึ้นกับคุณภาพ 0–3 ดาว และ 🎀 ภารกิจผจญภัย 5 ด่านตรงกับ 5 บท ตอบถูกครั้งแรกได้โบนัส 2 แต้มต่อด่าน ทั้งหมดจะแสดงแยกในหน้าความคืบหน้า';
   if (has('เล่นยังไง','วิธีเล่น','เริ่มยังไง','ทำอะไรก่อน','ช่วย'))
     return 'เริ่มตามกระบวนการนี้นะ: ทำแบบทดสอบก่อนเรียน → เรียนรู้จากสถานการณ์ที่นักเรียนอาจพบจริง → ในบทที่ 2 ฝึกเขียนพรอมต์จากง่ายไปยาก → ทำแบบทดสอบระหว่างบทซึ่งมีคำถามจากสถานการณ์และทำได้บทละ 1 ครั้ง ⭐ เมื่อทำครบทั้ง 5 บทจึงทำแบบทดสอบหลังเรียน ระหว่างทางถามผู้ช่วยและเก็บคะแนน ระดับ เหรียญรางวัล และอันดับได้เลย 🗺️';
   if (has('เฉลย','คำตอบข้อ','ตอบข้อไหน'))
