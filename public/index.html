@@ -2021,6 +2021,21 @@ var scenarios = [
 
 /* ภารกิจผจญภัยเป็นโบนัสเสริมจากคะแนนบทเรียน ไม่รวมในคะแนน E1 20 คะแนน */
 function maxScenarioScore() { return scenarios.length * 2; }
+function scenarioBadge(index) {
+  var scenario = scenarios[index];
+  if (!scenario || !Array.isArray(scenario.choices)) return null;
+  for (var i = 0; i < scenario.choices.length; i++) {
+    if (scenario.choices[i].badge) return scenario.choices[i].badge;
+  }
+  return null;
+}
+function scenarioCompleted(index) {
+  var badge = scenarioBadge(index);
+  return !!(badge && state.badges.some(function(item){ return item && item.id === badge.id; }));
+}
+function completedScenarioCount() {
+  return scenarios.reduce(function(total, _, index){ return total + (scenarioCompleted(index) ? 1 : 0); }, 0);
+}
 
 /* ---------- แบบทดสอบก่อนเรียน / หลังเรียน ---------- */
 var ASSESSMENT_QUESTIONS = [
@@ -2067,6 +2082,7 @@ var state = {
   // เกม
   score: 0,
   currentScenarioIndex: null,
+  lessonBonusMode: false,
   unlockedLevel: 0,
   badges: [],
   lastChoice: null
@@ -3650,7 +3666,6 @@ function renderJourney() {
       '</div>' +
       '<div class="center" style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">' +
         '<button onclick="changeView(\'lessons\')" class="btn pinkb sm">📚 ห้องเรียน</button>' +
-        '<button onclick="changeView(\'tutorial\')" class="btn blueb sm">🎮 ภารกิจ</button>' +
         '<button onclick="changeView(\'leaderboard\')" class="btn sm" style="background:var(--orange)">🏆 อันดับ</button>' +
       '</div>' +
     '</div>';
@@ -5141,12 +5156,6 @@ function renderHome() {
           '<h3 class="t-pink" style="font-size:20px;font-weight:700;margin-bottom:6px">บทเรียนและเนื้อหา</h3>' +
           '<p class="small t-pink" style="margin-top:10px;font-weight:700">บทเรียนที่ผ่าน ' + lessonsCompleted() + '/' + lessons.length + '</p>' +
         '</div>' +
-        '<div class="pcard blue menucard pop" style="animation-delay:.15s" onclick="changeView(\'tutorial\')">' +
-          '<div class="tape tape-blue"></div>' +
-          '<img class="menu-card-img" src="./mission-badge.png" alt="ภารกิจผจญภัย">' +
-          '<h3 class="t-blue" style="font-size:20px;font-weight:700;margin-bottom:6px">ภารกิจผจญภัย</h3>' +
-          '<p class="small t-blue" style="margin-top:10px;font-weight:700">ภารกิจที่ผ่าน ' + Math.min(state.unlockedLevel, scenarios.length) + '/' + scenarios.length + '</p>' +
-        '</div>' +
         '<div class="pcard mint menucard pop" style="animation-delay:.35s" onclick="changeView(\'dashboard\')">' +
           '<div class="tape tape-mint"></div>' +
           '<img class="menu-card-img" src="./progress-icon.png" alt="ความคืบหน้า">' +
@@ -5235,6 +5244,7 @@ function openLesson(i) {
     return;
   }
   state.currentLesson = i;
+  state.lessonBonusMode = false;
   state.lessonTab = 'mission';
   state.slideIdx = 0;
   changeView('lesson');
@@ -5275,6 +5285,64 @@ function lessonMissionHtml(ls, t) {
     '</div>' +
   '</div>';
 }
+function lessonBonusHtml(ls, t, p) {
+  var index = state.currentLesson;
+  var scenario = scenarios[index];
+  var badge = scenarioBadge(index);
+  var completed = scenarioCompleted(index);
+  if (!scenario) return '<div class="pcard plain"><p class="soft">ยังไม่มีภารกิจโบนัสสำหรับบทนี้</p></div>';
+  if (!p.quizDone) {
+    return '<section class="lesson-choice-card pop">' +
+      '<div class="lesson-choice-head"><h3>🎮 โบนัสภารกิจท้ายบท</h3><p>ปลดล็อกเมื่อทำแบบทดสอบระหว่างบทนี้เสร็จแล้ว</p></div>' +
+      '<div class="lesson-choice-grid"><button class="lesson-choice-btn" onclick="tryOpenQuiz()"><span class="lesson-choice-icon">📝</span><span><b>ไปทำแบบทดสอบระหว่างบท</b><small>เมื่อส่งข้อสอบแล้ว ภารกิจโบนัสจะเปิดให้ทำทันที</small></span></button></div>' +
+    '</section>';
+  }
+  if (completed) {
+    return '<section class="lesson-choice-card pop">' +
+      '<div class="lesson-choice-head"><h3>🎉 ทำภารกิจโบนัสบทนี้สำเร็จแล้ว</h3><p>คุณได้รับโบนัส 2 แต้มและตราสัญลักษณ์ประจำบท เก็บไว้ในหน้าความคืบหน้าเรียบร้อย</p></div>' +
+      '<div class="pcard mint center" style="margin-top:14px"><div style="font-size:46px">' + (badge ? badge.icon : '🎖️') + '</div><p class="t-mint" style="font-weight:700;font-size:19px;margin-top:8px">' + (badge ? badge.name : 'ตราสัญลักษณ์ประจำบท') + '</p><p class="soft tiny">🎁 โบนัส 2 แต้ม · ทบทวนสถานการณ์และคำอธิบายได้ทุกเมื่อ</p></div>' +
+      '<div class="lesson-choice-grid" style="margin-top:14px"><button class="lesson-choice-btn" onclick="setTab(\'mission\')"><span class="lesson-choice-icon">📚</span><span><b>ทบทวนเนื้อหาบทเรียน</b><small>กลับไปอ่านสถานการณ์และสื่อประกอบ</small></span></button></div>' +
+    '</section>';
+  }
+  var choicesHtml = scenario.choices.map(function(choice, choiceIndex) {
+    return '<button onclick="answerLessonBonus(' + choiceIndex + ')" class="choice">' +
+      '<span class="key">' + String.fromCharCode(65 + choiceIndex) + '</span>' +
+      '<span style="line-height:1.8;padding-top:3px">' + choice.text + '</span>' +
+    '</button>';
+  }).join('');
+  return '<section class="lesson-bonus-stage pop">' +
+    '<div class="pcard ' + t.card + '"><div class="tape ' + t.tape + '"></div>' +
+      '<div class="mission-heading"><img class="mission-badge-img" src="./mission-badge.png" alt="ภารกิจโบนัส"><div><p class="tiny ' + t.deep + '" style="font-weight:700;margin-bottom:3px">🎁 โบนัสท้ายบท · ทำได้ 1 ครั้ง</p><h3 class="' + t.deep + '" style="font-size:22px;font-weight:700;margin:0">' + scenario.title + '</h3></div></div>' +
+      '<p class="small" style="line-height:1.9;margin-top:12px"><b>สถานการณ์:</b> ' + scenario.context + '</p>' +
+    '</div>' +
+    '<div class="chatrow pop" style="margin-top:16px"><div class="avatar" style="border-color:var(--blue-line)">🧑‍🎓</div><div style="flex:1;min-width:0"><p class="tiny ' + t.deep + '" style="font-weight:700;margin:0 0 4px 8px">💬 เพื่อนนักเรียน</p><div class="bubble"><p style="line-height:1.9">' + scenario.dialogue + '</p></div></div></div>' +
+    '<div class="pcard plain pop" style="margin-top:16px"><p class="ink" style="font-weight:700;margin-bottom:12px">🤔 เลือกแนวทางที่เหมาะสมที่สุด</p>' + hintBlock(scenario.hint) + choicesHtml + '</div>' +
+    '<p class="soft tiny center" style="margin-top:12px">ตอบถูกจะได้รับโบนัส 2 แต้มและตราสัญลักษณ์ของบทนี้</p>' +
+  '</section>';
+}
+function openLessonBonus() {
+  var p = normalizeLessonProgress(lessonProgress[state.currentLesson]);
+  if (!p.quizDone) {
+    alert('ทำแบบทดสอบระหว่างบทนี้ให้เสร็จก่อน แล้วภารกิจโบนัสจะปลดล็อกทันที');
+    tryOpenQuiz();
+    return;
+  }
+  state.lessonTab = 'bonus';
+  changeView('lesson');
+}
+function answerLessonBonus(choiceIndex) {
+  if (!lessonProgress[state.currentLesson] || !lessonProgress[state.currentLesson].quizDone) return;
+  state.currentScenarioIndex = state.currentLesson;
+  state.lessonBonusMode = true;
+  makeChoice(choiceIndex);
+}
+function returnToLessonBonus() {
+  var index = Number(state.currentScenarioIndex);
+  state.lessonBonusMode = false;
+  state.currentLesson = isNaN(index) ? state.currentLesson : index;
+  state.lessonTab = 'bonus';
+  changeView('lesson');
+}
 function lessonTabBar(p) {
   var quizUnlocked = p.quizDone || lessonMediaCompleted(p);
   return '<div class="lesson-inner-menu">' +
@@ -5283,6 +5351,7 @@ function lessonTabBar(p) {
     '<button class="tab ' + (state.lessonTab === 'video' ? 'active' : '') + '" onclick="setTab(\'video\')">🎬 วิดีโอประกอบ</button>' +
     (state.currentLesson === 1 ? '<button class="tab ' + (totalPromptStars() > 0 ? 'done' : '') + '" onclick="changeView(\'prompt\')">✍️ ฝึกเขียนพรอมต์ ' + (totalPromptStars() > 0 ? '⭐' + totalPromptStars() : '') + '</button>' : '') +
     '<button class="tab ' + (state.lessonTab === 'quizchoice' ? 'active' : '') + (quizUnlocked ? '' : ' lockt') + '" onclick="tryOpenQuiz()">' + (p.quizDone ? '📝 ดูผลข้อสอบ ' + lessonAssessmentLabel(p, 'post') : (quizUnlocked ? '📝 แบบทดสอบระหว่างบท' : '🔒 แบบทดสอบระหว่างบท')) + '</button>' +
+    '<button class="tab ' + (state.lessonTab === 'bonus' ? 'active' : '') + (p.quizDone ? '' : ' lockt') + '" onclick="openLessonBonus()">' + (p.quizDone ? (scenarioCompleted(state.currentLesson) ? '🎁 โบนัสภารกิจ ✅' : '🎁 โบนัสภารกิจท้ายบท') : '🔒 โบนัสท้ายบท') + '</button>' +
     '</div>' +
   '</div>';
 }
@@ -5334,6 +5403,9 @@ function renderLesson() {
   }
   else if (state.lessonTab === 'mission') {
     content = lessonMissionHtml(ls, t);
+  }
+  else if (state.lessonTab === 'bonus') {
+    content = lessonBonusHtml(ls, t, p);
   }
   else if (state.lessonTab === 'video') {
     var link = VIDEO_LINKS[i];
@@ -5667,6 +5739,7 @@ function renderQuizResult() {
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
       clawGameHtml(p) +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
+        '<button onclick="openLessonBonus()" class="btn pinkb sm">🎁 ทำโบนัสภารกิจท้ายบท</button>' +
         nextStepButton +
         '<button onclick="openLesson(' + i + ')" class="btn whiteb sm">📖 ทบทวนบทเรียน</button>' +
         '<button onclick="changeView(\'lessons\')" class="btn blueb sm">🎯 กลับห้องเรียน</button>' +
@@ -5683,15 +5756,16 @@ function renderDashboard() {
     var t = themeList[i % themeList.length];
     var p = lessonProgress[i];
     var mediaDone = lessonMediaCompleted(p);
-    var steps = (mediaDone ? 1 : 0) + (p.quizDone ? 1 : 0);
-    var pct = Math.round(steps / 2 * 100);
+    var bonusDone = scenarioCompleted(i);
+    var steps = (mediaDone ? 1 : 0) + (p.quizDone ? 1 : 0) + (bonusDone ? 1 : 0);
+    var pct = Math.round(steps / 3 * 100);
     return '<div class="innerbox" style="margin-bottom:12px">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">' +
         '<span class="small ink" style="font-weight:700">' + t.emoji + ' ' + ls.title + '</span>' +
         '<span class="t-orange tiny" style="font-weight:700">' + lessonRewardText(p) + '</span>' +
       '</div>' +
       '<div class="pbar" style="height:12px"><div style="width:' + pct + '%;background:' + t.bar + '"></div></div>' +
-      '<p class="soft tiny" style="margin-top:6px">🧑‍🏫 สถานการณ์ชีวิตจริง ' + (mediaDone ? '✅ เรียนรู้ครบแล้ว' : '⬜ ยังไม่จบ') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅ ทำแล้ว' : '⬜ ยังไม่ได้ทำ') + '</p>' +
+      '<p class="soft tiny" style="margin-top:6px">🧑‍🏫 สถานการณ์ชีวิตจริง ' + (mediaDone ? '✅ เรียนรู้ครบแล้ว' : '⬜ ยังไม่จบ') + ' · 📝 ระหว่างบท ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') + ' ✅ ทำแล้ว' : '⬜ ยังไม่ได้ทำ') + ' · 🎁 โบนัสท้ายบท ' + (bonusDone ? '✅ สำเร็จแล้ว' : (p.quizDone ? 'พร้อมทำ' : '🔒')) + '</p>' +
     '</div>';
   }).join('');
 
@@ -5746,7 +5820,6 @@ function renderDashboard() {
             '<button onclick="changeView(\'leaderboard\')" class="btn sm" style="width:100%;background:var(--orange)">🏆 ดูอันดับห้อง (LIVE)</button>' +
             '<button onclick="changeView(\'journey\')" class="btn blueb sm" style="width:100%">🗺️ เส้นทางสถานการณ์จริง</button>' +
             '<button onclick="changeView(\'lessons\')" class="btn pinkb sm" style="width:100%">🎯 ไปห้องเรียน</button>' +
-            '<button onclick="changeView(\'tutorial\')" class="btn blueb sm" style="width:100%">🎮 ไปภารกิจสถานการณ์จริง</button>' +
             '<button onclick="resetAll()" class="btn whiteb sm" style="width:100%">🗑️ ล้างข้อมูลเริ่มใหม่</button>' +
             '<button onclick="logout()" class="btn pinkb sm" style="width:100%">🚪 ออกจากระบบ</button>' +
           '</div>' +
@@ -5983,6 +6056,7 @@ function renderScenario() {
 function renderFeedback() {
   var scenario = scenarios[state.currentScenarioIndex];
   var choice = scenario.choices[state.lastChoice];
+  var fromLessonBonus = !!state.lessonBonusMode;
   var awardedPoints = Number(choice.lastAwardedPoints) || 0;
   var isGood = choice.isCorrect;
   var icon = isGood ? '🎉' : '😅';
@@ -6002,7 +6076,12 @@ function renderFeedback() {
   }
 
   var unlockMessage = '';
-  if (state.unlockedLevel === state.currentScenarioIndex + 1 && state.unlockedLevel < scenarios.length) {
+  if (fromLessonBonus && isGood) {
+    unlockMessage =
+      '<div class="t-blue small pop center" style="margin-top:14px;padding:10px;background:var(--blue);border:2px dashed var(--blue-line);border-radius:14px;font-weight:600;animation-delay:.3s">' +
+        '✅ ภารกิจโบนัสของบทนี้สำเร็จแล้ว · กลับไปเรียนบทถัดไปได้เลย!' +
+      '</div>';
+  } else if (state.unlockedLevel === state.currentScenarioIndex + 1 && state.unlockedLevel < scenarios.length) {
     unlockMessage =
       '<div class="t-blue small pop center" style="margin-top:14px;padding:10px;background:var(--blue);border:2px dashed var(--blue-line);border-radius:14px;font-weight:600;animation-delay:.3s">' +
         '🔓 ปลดล็อกด่านที่ ' + (state.unlockedLevel + 1) + ' แล้ว!' +
@@ -6028,8 +6107,8 @@ function renderFeedback() {
       badgeHtml + unlockMessage +
       '<div style="margin-top:18px">' + journeyBanner() + '</div>' +
       '<div class="pop" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;animation-delay:.35s">' +
-        (!isGood ? '<button onclick="changeView(\'scenario\')" class="btn pinkb sm">🔄 ลองตอบใหม่</button>' : '') +
-        '<button onclick="changeView(\'gamemap\')" class="btn blueb sm">🗺️ กลับหน้าแผนที่</button>' +
+        (!isGood ? '<button onclick="' + (fromLessonBonus ? 'returnToLessonBonus()' : "changeView('scenario')") + '" class="btn pinkb sm">🔄 ลองตอบใหม่</button>' : '') +
+        '<button onclick="' + (fromLessonBonus ? 'returnToLessonBonus()' : "changeView('gamemap')") + '" class="btn blueb sm">' + (fromLessonBonus ? '📚 กลับบทเรียน' : '🗺️ กลับหน้าแผนที่') + '</button>' +
       '</div>' +
     '</div>';
 }
@@ -6095,9 +6174,7 @@ function makeChoice(choiceIndex) {
     markJourneyStep(beforeJourney);
   }
 
-  if (choice.isCorrect && state.currentScenarioIndex === state.unlockedLevel) {
-    state.unlockedLevel++;
-  }
+  if (choice.isCorrect) state.unlockedLevel = completedScenarioCount();
 
   saveProgress();
   changeView('feedback');
