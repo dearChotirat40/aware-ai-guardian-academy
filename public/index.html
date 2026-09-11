@@ -1958,9 +1958,10 @@ RESEARCH_ALIGNED_CONTENT.forEach(function(content, index){
 });
 
 /* เนื้อหาที่ครูแก้จากหน้ารายงาน: เก็บสำรองในเครื่อง และซิงก์ฐานข้อมูลเมื่อเชื่อมต่อได้ */
-/* เปลี่ยนรุ่นเมื่อปรับโครงสร้างเนื้อหาตามกรอบวิจัย เพื่อไม่ให้สำเนาเก่าทับบทเรียนใหม่ */
-var CURRICULUM_VERSION = 2;
-var CURRICULUM_KEY = 'awareai_curriculum_v2';
+/* ใช้เนื้อหาจากไฟล์ “เนื้อหาบทเรียนความรู้เท่าทัน AI ม4” เป็นค่าเริ่มต้น
+   เปลี่ยนรุ่นเพื่อไม่ให้สำเนาเดิมบนเบราว์เซอร์หรือฐานข้อมูลทับบทเรียนตามไฟล์ */
+var CURRICULUM_VERSION = 3;
+var CURRICULUM_KEY = 'awareai_curriculum_v3';
 var DEFAULT_LESSONS = JSON.parse(JSON.stringify(lessons));
 var DEFAULT_VIDEO_LINKS = VIDEO_LINKS.slice();
 function curriculumSnapshot() {
