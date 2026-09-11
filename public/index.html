@@ -1317,6 +1317,8 @@ body #app .login-view .app-name-login .app-title-sub{
 .claw-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 2px 0}.claw-token{font-size:12px;color:#CDEEFF;font-weight:700}.claw-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#EAFBF2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}.claw-game.played .claw-cable{height:116px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-head{top:107px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-prizes{animation:toyShake .5s ease-in-out 2}@keyframes clawDrop{50%{transform:translateX(-50%) translateY(32px)}100%{transform:translateX(-50%) translateY(0)}}@keyframes toyShake{50%{transform:translateX(5px)}}
 .random-cabinet{width:min(390px,100%);margin:22px auto 8px;padding:12px;border:4px solid #2a5e97;border-radius:22px;background:linear-gradient(145deg,#1d4476,#102c53);box-shadow:0 8px 0 #163b68,0 15px 26px rgba(22,41,69,.22);color:#fff;overflow:hidden}.random-cabinet-title{font-family:'Kanit','Noto Sans Thai',sans-serif;font-size:20px;font-weight:800;letter-spacing:.02em;text-align:center;color:#fff;margin:2px 0 9px;text-shadow:0 2px 0 #17365d}.random-cabinet-title span{color:#ffd764}.cabinet-window{position:relative;min-height:220px;border:6px solid #eafcff;border-radius:15px;background:linear-gradient(180deg,#39c8e5 0 50%,#177caf 51%);overflow:hidden;box-shadow:inset 0 0 0 5px #0b5a87,inset 0 0 30px #063c6c99}.cabinet-sign{position:absolute;z-index:1;top:15px;left:18px;right:18px;padding:9px;border:3px solid #fff;border-radius:12px;background:#173d6e;color:#fff;text-align:center;font-weight:800;line-height:1.35}.cabinet-bots{position:absolute;left:15px;right:15px;bottom:16px;min-height:100px;padding:13px 8px;display:flex;align-items:end;justify-content:space-evenly;gap:5px;border:5px solid #0a416b;border-radius:15px;background:linear-gradient(#0c5b8b,#073559)}.cabinet-bot,.random-toy-slot.got .toy-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:56px;border:2px solid rgba(255,255,255,.85);border-radius:17px;font-size:32px;box-shadow:0 5px 0 rgba(0,39,76,.38)}.cabinet-bot:nth-child(2){transform:translateY(9px) rotate(-5deg)}.cabinet-bot:nth-child(3){transform:translateY(3px) rotate(3deg)}.cabinet-bot:nth-child(4){transform:translateY(10px) rotate(-3deg)}.cabinet-bot:nth-child(5){transform:translateY(4px) rotate(5deg)}.bot-blue{background:#bdeeff}.bot-pink{background:#ffc9df}.bot-mint{background:#c8f6df}.bot-yellow{background:#fff0a4}.bot-purple{background:#e2d1ff}.bot-locked{background:#dce7ed}.random-cabinet.picking .cabinet-bots{animation:cabinetRoll .18s linear infinite}.random-cabinet.picking .cabinet-bot{animation:cabinetBounce .22s ease-in-out infinite alternate}.cabinet-token{font-size:12px;color:#d9f8ff;font-weight:700;text-align:center;margin:10px 2px 0}.cabinet-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px 0}.cabinet-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#eafbf2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}.random-toy-collection{margin-bottom:20px}.random-toy-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}.random-toy-slot{min-height:138px;padding:10px 6px;border:3px solid #80cddd;border-radius:16px;background:#effcff;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.random-toy-slot .toy-icon{font-size:46px;filter:grayscale(1) brightness(.25);opacity:.2}.random-toy-slot.got{background:linear-gradient(145deg,#fff,#d9fff5);border-color:#55cdb5;box-shadow:0 5px 0 #b7e9df}.random-toy-slot.got .toy-icon{filter:none;opacity:1;animation:toyCollected .6s ease}.random-toy-slot .toy-name{font-size:11px;line-height:1.45;margin-top:6px;color:#41687b}.random-toy-slot .toy-lesson{font-size:10px;font-weight:700;color:#1683a0;margin-top:4px}@keyframes cabinetRoll{50%{transform:translateX(6px) scale(1.025)}}@keyframes cabinetBounce{to{transform:translateY(-8px) rotate(-3deg)}}@keyframes toyCollected{50%{transform:scale(1.15) rotate(5deg)}}@media(max-width:650px){.random-toy-grid{grid-template-columns:repeat(3,1fr)}}
 .toy-pair{display:flex;align-items:center;justify-content:center;gap:7px;min-height:58px}.toy-mini{display:inline-flex;align-items:center;justify-content:center;width:42px;height:48px;border:2px solid rgba(59,101,139,.2);border-radius:15px;font-size:28px;filter:grayscale(1) brightness(.55);opacity:.32;overflow:hidden}.cabinet-bot{overflow:hidden}.cabinet-bot img,.toy-mini img{max-width:100%;max-height:100%;object-fit:contain}.toy-mini.got{filter:none;opacity:1;box-shadow:0 4px 0 rgba(0,63,105,.2);animation:toyCollected .6s ease}.cabinet-locked{margin:10px 2px 0;padding:10px;border-radius:12px;background:#f8e1e5;color:#924159;font-size:13px;font-weight:800;text-align:center}
+/* ตู้สุ่มเต็มหน้าพร้อมเอฟเฟกต์สมุดโน้ต */
+.cabinet-launcher{max-width:470px;text-align:center}.cabinet-launcher .cabinet-token{margin:4px auto 12px}.random-cabinet.cabinet-fullscreen{position:fixed;z-index:9999;inset:0;width:100%;min-height:100dvh;margin:0;padding:clamp(14px,3vw,34px);border:0;border-radius:0;background:radial-gradient(circle at 50% 7%,#fdf9d7 0 3%,#e8f7fa 24%,#b9e2e8 70%,#75b5c8 100%);box-shadow:none;display:grid;place-items:center;overflow:auto}.cabinet-fullscreen::before{content:'';position:absolute;inset:clamp(10px,2vw,28px);border-radius:25px;background:repeating-linear-gradient(to bottom,transparent 0 29px,rgba(75,145,183,.18) 30px 31px),linear-gradient(90deg,rgba(255,255,255,.94) 0 49.5%,rgba(249,247,231,.98) 50.5% 100%);box-shadow:0 12px 30px rgba(29,77,112,.28),inset 0 0 0 2px rgba(78,142,177,.32);transform:rotate(-.35deg)}.cabinet-fullscreen::after{content:'';position:absolute;top:clamp(16px,3vw,42px);bottom:clamp(16px,3vw,42px);left:50%;width:9px;border-radius:99px;background:linear-gradient(90deg,#d2b08f,#fff3dc 46%,#a87c57);box-shadow:0 0 0 1px rgba(91,62,41,.22),0 0 18px rgba(88,61,39,.2);transform:translateX(-50%)}.cabinet-book-rings{position:absolute;z-index:2;top:clamp(16px,3vw,42px);bottom:clamp(16px,3vw,42px);left:50%;display:flex;flex-direction:column;justify-content:space-around;transform:translateX(-50%);pointer-events:none}.cabinet-book-rings i{display:block;width:26px;height:13px;border:4px solid #486b83;border-radius:50%;background:transparent;box-shadow:0 1px 0 #fff}.cabinet-full-panel{position:relative;z-index:3;width:min(620px,calc(100vw - 38px));padding:clamp(15px,2.8vw,28px);border:5px solid #0a6895;border-radius:28px;background:linear-gradient(145deg,#087fac,#075076);box-shadow:0 12px 0 #063f62,0 24px 42px rgba(25,76,106,.35);color:#fff;text-align:center}.cabinet-close{position:absolute;right:13px;top:12px;width:38px;height:38px;border:0;border-radius:50%;background:#fff;color:#1e4d76;font-size:22px;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 3px 0 rgba(6,63,98,.4)}.cabinet-fullscreen .random-cabinet-title{font-size:clamp(23px,5vw,34px);margin:0 42px 14px}.cabinet-fullscreen .cabinet-window{min-height:clamp(300px,48vh,400px);border-width:8px}.cabinet-fullscreen .cabinet-sign{top:clamp(18px,4vh,35px);left:clamp(24px,7vw,70px);right:clamp(24px,7vw,70px);font-size:clamp(16px,3vw,21px);padding:12px}.cabinet-fullscreen .cabinet-bots{left:clamp(16px,4vw,42px);right:clamp(16px,4vw,42px);bottom:clamp(16px,4vh,38px);min-height:clamp(140px,25vh,190px);padding:15px}.cabinet-fullscreen .cabinet-bot{width:clamp(50px,11vw,82px);height:clamp(60px,13vw,96px);border-width:3px}.cabinet-fullscreen .cabinet-token{font-size:clamp(14px,2.5vw,17px);margin-top:15px}.cabinet-fullscreen .cabinet-controls{justify-content:center;gap:14px;padding-top:12px}.cabinet-fullscreen .cabinet-controls .btn{font-size:clamp(15px,2.7vw,18px);padding:12px 18px}.cabinet-fullscreen .cabinet-win{font-size:clamp(15px,2.7vw,18px);margin-top:14px}.cabinet-fullscreen .cabinet-win img{width:clamp(88px,20vw,140px)!important;height:clamp(88px,20vw,140px)!important}@media(max-width:520px){.cabinet-full-panel{width:calc(100vw - 24px);padding:13px}.cabinet-fullscreen .cabinet-full-panel{border-width:4px}.cabinet-fullscreen .cabinet-controls{flex-direction:column}.cabinet-fullscreen .cabinet-controls .btn{width:100%}.cabinet-fullscreen .cabinet-bot{width:44px;height:54px}.cabinet-book-rings{display:none}.cabinet-fullscreen::after{width:5px}}
 @media(max-width:520px){.claw-game{max-width:320px;padding:9px}.claw-window{min-height:194px}.claw-toy{width:40px;height:46px;font-size:27px}.claw-game-title{font-size:17px}}
 .ai-login-stage{display:grid;grid-template-columns:minmax(190px,.78fr) minmax(290px,1.35fr);gap:clamp(18px,3vw,38px);align-items:center;text-align:left}
 .ai-login-side{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
@@ -2246,7 +2248,8 @@ var state = {
   lessonBonusMode: false,
   unlockedLevel: 0,
   badges: [],
-  lastChoice: null
+  lastChoice: null,
+  randomCabinetOpen: false
 };
 
 function newLessonProgress() {
@@ -5873,54 +5876,60 @@ function randomBotPrizesForProgress(p) {
   if (!names.length && p && p.clawPrize) names = [p.clawPrize];
   return names.map(randomBotByName).filter(Boolean);
 }
+function randomBotCollectedPrizes() {
+  return lessonProgress.reduce(function(all, p){ return all.concat(randomBotPrizesForProgress(p)); }, []);
+}
+function randomBotBadgeCount() { return state.badges.length; }
+function randomBotDrawCount() { return randomBotCollectedPrizes().length; }
+function randomBotDrawRemaining() { return Math.max(0, randomBotBadgeCount() - randomBotDrawCount()); }
 function randomBotCollectionHtml() {
-  var gotCount = lessonProgress.reduce(function(total, p){ return total + randomBotPlayCount(p); }, 0);
-  var slots = lessons.map(function(ls, i){
-    var p = normalizeLessonProgress(lessonProgress[i]);
-    var prizes = randomBotPrizesForProgress(p);
-    var plays = randomBotPlayCount(p);
-    var bots = [0, 1].map(function(slot){
-      var prize = prizes[slot];
-      return '<span class="toy-mini bot-' + (prize ? prize.tone : 'locked') + (prize ? ' got' : '') + '">' + (prize ? randomBotImage(prize, 54) : '🤖') + '</span>';
-    }).join('');
-    return '<div class="random-toy-slot ' + (plays ? 'got' : '') + '">' +
-      '<div class="toy-pair">' + bots + '</div>' +
-      '<div class="toy-name">' + (plays ? 'ได้รับน้องชวนคิด ' + plays + '/2 ตัว' : 'ยังไม่ได้รับน้องชวนคิด') + '</div>' +
-      '<div class="toy-lesson">บทที่ ' + (i + 1) + (plays >= 2 ? ' ✓ ครบแล้ว' : ' • ' + plays + '/2 ตัว') + '</div></div>';
+  var prizes = randomBotCollectedPrizes();
+  var badgeCount = randomBotBadgeCount();
+  var remaining = randomBotDrawRemaining();
+  var slots = Array.from({length:Math.max(5, badgeCount, prizes.length)}, function(_, i){
+    var prize = prizes[i];
+    return '<div class="random-toy-slot ' + (prize ? 'got' : '') + '"><div class="toy-pair"><span class="toy-mini bot-' + (prize ? prize.tone : 'locked') + (prize ? ' got' : '') + '">' + (prize ? randomBotImage(prize, 54) : '🤖') + '</span></div><div class="toy-name">' + (prize ? prize.name : 'รอปลดล็อกจากตรา') + '</div><div class="toy-lesson">ตราสัญลักษณ์ที่ ' + (i + 1) + '</div></div>';
   }).join('');
   return '<div class="pcard blue random-toy-collection"><div class="tape tape-blue"></div>' +
-    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 class="ink sec-label">🤖 คอลเลกชันน้องชวนคิด</h3><p class="soft tiny">สุ่มได้บทละ 2 ตัว แล้วล็อกสิทธิ์ของบทนั้น</p></div><strong class="t-blue">' + gotCount + '/' + (lessons.length * 2) + ' ตัว</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 class="ink sec-label">🤖 คอลเลกชันน้องชวนคิด</h3><p class="soft tiny">ตราสัญลักษณ์สะสม ' + badgeCount + ' ตรา · สุ่มแล้ว ' + prizes.length + ' ตัว · เหลือสิทธิ์ ' + remaining + ' ครั้ง</p></div><strong class="t-blue">' + prizes.length + '/' + badgeCount + ' ตัว</strong></div>' +
+    (remaining ? '<div class="center" style="margin-top:12px"><button onclick="openRandomCabinet()" class="btn pinkb sm">🎁 เปิดตู้สุ่มเต็มหน้าจอ</button></div>' : '') +
     '<div class="random-toy-grid">' + slots + '</div></div>';
 }
-function randomCabinetHtml(p) {
-  var prizes = randomBotPrizesForProgress(p);
-  var plays = randomBotPlayCount(p);
-  var remaining = Math.max(0, 2 - plays);
+function randomCabinetHtml() {
+  var prizes = randomBotCollectedPrizes();
+  var plays = prizes.length;
+  var badgeCount = randomBotBadgeCount();
+  var remaining = randomBotDrawRemaining();
   var prize = prizes[prizes.length - 1];
-  var medal = unitMedalInfo(p);
   var toys = RANDOM_BOT_PRIZES.slice(0, 5).map(function(item){ return '<span class="cabinet-bot bot-' + item.tone + '" aria-hidden="true">' + randomBotImage(item, 48) + '</span>'; }).join('');
-  var picking = !!state.clawPicking && state.currentLesson === state.clawLesson;
-  return '<section class="random-cabinet ' + (picking ? 'picking' : '') + '">' +
-    '<p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p>' +
-    '<div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">เหรียญตราบทนี้ปลดล็อกหุ่นได้ 2 ตัว</span></div><div class="cabinet-bots">' + toys + '</div></div>' +
-    (picking
-      ? '<p class="cabinet-win">🏅 กำลังปลดล็อกหุ่นจากเหรียญตราบทนี้…</p>'
-      : (plays ? '<div class="cabinet-win">🎉 คุณได้รับ<div style="display:flex;justify-content:center;margin:7px">' + (prize ? randomBotImage(prize, 88) : '') + '</div><b>' + (prize ? prize.name : 'AI BOT พิเศษ') + '</b><br><span class="tiny">เหรียญตราบทนี้ปลดล็อกแล้ว ' + plays + '/2 ตัว · เก็บในความคืบหน้าเรียบร้อย</span><br><button onclick="changeView(\'dashboard\')" class="btn blueb sm" style="margin-top:8px">🤖 ดูหุ่นของฉันในความคืบหน้า</button></div>' : '') +
-        (remaining ? '<p class="cabinet-token">' + medal.icon + ' เหรียญตรา ' + medal.name + ' ปลดล็อกหุ่นได้อีก ' + remaining + '/2 ตัว</p><div class="cabinet-controls"><span class="cabinet-token">🏅 เหรียญตรา 1 เหรียญ ปลดล็อกสิทธิ์สุ่ม 2 ตัว</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="สุ่มหุ่นที่เหรียญตราบทนี้ปลดล็อกแล้ว">🎁 สุ่มหุ่นที่ปลดล็อกแล้ว</button></div>' : '<p class="cabinet-locked">🔒 เหรียญตราบทนี้ปลดล็อกหุ่นครบ 2 ตัวแล้ว</p>')) +
-  '</section>';
+  var picking = !!state.clawPicking;
+  var status = (plays ? '<div class="cabinet-win">🎉 คุณได้รับ<div style="display:flex;justify-content:center;margin:7px">' + (prize ? randomBotImage(prize, 88) : '') + '</div><b>' + (prize ? prize.name : 'AI BOT พิเศษ') + '</b><br><span class="tiny">ตราสัญลักษณ์สะสมใช้สุ่มแล้ว ' + plays + ' ตัว · เก็บในความคืบหน้าเรียบร้อย</span></div>' : '') +
+    (remaining ? '<p class="cabinet-token">🏅 ตราสัญลักษณ์สะสม ' + badgeCount + ' ตรา · ใช้สุ่มได้อีก ' + remaining + ' ตัว</p>' : '<p class="cabinet-locked">🔒 ยังไม่มีสิทธิ์สุ่มเพิ่ม · รับตราสัญลักษณ์เพิ่มจากภารกิจหรือบทเรียน แล้วกลับมาสุ่มได้</p>');
+  if (!state.randomCabinetOpen) {
+    return '<section class="random-cabinet cabinet-launcher"><p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p><p class="cabinet-token">🏅 ใช้ตราสัญลักษณ์สะสมเป็นสิทธิ์สุ่มน้องชวนคิด</p><p class="cabinet-token">มี ' + badgeCount + ' ตรา · สุ่มแล้ว ' + plays + ' ตัว · เหลือ ' + remaining + ' สิทธิ์</p>' + (remaining ? '<button onclick="openRandomCabinet()" class="btn pinkb sm">🎁 เปิดตู้สุ่มเต็มหน้าจอ</button>' : '<p class="cabinet-locked">🔒 รับตราสัญลักษณ์เพิ่มแล้วกลับมาสุ่มได้</p>') + '</section>';
+  }
+  return '<section class="random-cabinet cabinet-fullscreen ' + (picking ? 'picking' : '') + '" role="dialog" aria-modal="true" aria-label="ตู้สุ่มหุ่น AI"><div class="cabinet-book-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="cabinet-full-panel"><button class="cabinet-close" onclick="closeRandomCabinet()" aria-label="ปิดตู้สุ่ม">×</button><p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p><div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">ใช้ตราสัญลักษณ์สะสมเพื่อสุ่มน้องชวนคิด</span></div><div class="cabinet-bots">' + toys + '</div></div>' + (picking ? '<p class="cabinet-win">🏅 กำลังสุ่มน้องชวนคิดจากตราสัญลักษณ์สะสม…</p>' : status) + (remaining && !picking ? '<div class="cabinet-controls"><span class="cabinet-token">🏅 ตราสัญลักษณ์ ' + badgeCount + ' ตรา · เหลือสิทธิ์ ' + remaining + ' ครั้ง</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="สุ่มน้องชวนคิดจากตราสัญลักษณ์สะสม">🎁 สุ่มน้องชวนคิด</button></div>' : '') + '</div></section>';
+}
+function openRandomCabinet() {
+  if (randomBotDrawRemaining() <= 0) return;
+  state.randomCabinetOpen = true;
+  render();
+}
+function closeRandomCabinet() {
+  if (state.clawPicking) return;
+  state.randomCabinetOpen = false;
+  render();
 }
 function spinRandomCabinet() {
-  var i = state.currentLesson;
-  var p = lessonProgress[i];
-  var plays = randomBotPlayCount(p);
-  if (!p || !p.quizDone || plays >= 2 || state.clawPicking) return;
+  var i = typeof state.currentLesson === 'number' && lessonProgress[state.currentLesson] && randomBotPlayCount(lessonProgress[state.currentLesson]) < 2 ? state.currentLesson : lessonProgress.findIndex(function(p){ return randomBotPlayCount(p) < 2; });
+  if (i < 0 || randomBotDrawRemaining() <= 0 || state.clawPicking) return;
   state.clawPicking = true;
   state.clawLesson = i;
   render();
   setTimeout(function(){
     var latest = lessonProgress[i];
     var latestPlays = randomBotPlayCount(latest);
-    if (!latest || latestPlays >= 2) { state.clawPicking = false; render(); return; }
+    if (!latest || latestPlays >= 2 || randomBotDrawRemaining() <= 0) { state.clawPicking = false; render(); return; }
     var pick = RANDOM_BOT_PRIZES[Math.floor(Math.random() * RANDOM_BOT_PRIZES.length)];
     var currentPrizes = Array.isArray(latest.clawPrizes) ? latest.clawPrizes.filter(Boolean).slice(0, latestPlays) : (latest.clawPrize ? [latest.clawPrize] : []);
     currentPrizes.push(pick.name);
@@ -5965,7 +5974,7 @@ function renderQuizResult() {
       '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
-      randomCabinetHtml(p) +
+      randomCabinetHtml() +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
         '<button onclick="openLessonBonus()" class="btn pinkb sm">🎁 ทำโบนัสภารกิจท้ายบท</button>' +
         nextStepButton +
