@@ -7,7 +7,7 @@
  <link rel="icon" type="image/png" href="./app-logo-transparent.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Mitr:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800;900&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#F6F3EA; --dot:#D9D2C2;
@@ -24,7 +24,7 @@ html,body{width:100%; height:100%}
 body{
   min-height:100vh; min-height:100dvh; display:flex; align-items:center; justify-content:center;
   padding:16px; color:var(--ink); font-size:17px; line-height:1.7;
-  font-family:'Sarabun','Leelawadee UI','Segoe UI',Tahoma,sans-serif;
+  font-family:'Noto Sans Thai','Leelawadee UI','Segoe UI',Tahoma,sans-serif;
   background-color:var(--cream);
   background-image:
     linear-gradient(135deg, rgba(47,111,149,.08) 0 1px, transparent 1px),
@@ -32,7 +32,7 @@ body{
   background-size:28px 28px;
   overflow-x:hidden;
 }
-h1,h2,h3,h4,.btn,.mbtn,.tab,.rs-me,.mtitle,.mnum,.rankno{font-family:'Sarabun','Leelawadee UI','Segoe UI',Tahoma,sans-serif; letter-spacing:0}
+h1,h2,h3,h4,.btn,.mbtn,.tab,.rs-me,.mtitle,.mnum,.rankno{font-family:'Kanit','Noto Sans Thai','Leelawadee UI',sans-serif; letter-spacing:.01em}
 b,strong{font-weight:700}
 #app{
   width:100%; max-width:1280px; height:calc(100vh - 32px); height:calc(100dvh - 32px); min-height:0; position:relative; z-index:5;
@@ -1284,7 +1284,7 @@ body::after{opacity:.18; filter:drop-shadow(0 6px 4px rgba(47,74,112,.16))}
 /* ชื่อโครงการหน้าเข้าสู่ระบบ: ตัวพาดหัวแบบนิตยสารไทย */
 body #app .login-view .app-name-login{max-width:1120px;padding:0 12px;text-wrap:balance;transform:translateY(clamp(6px,1.1vh,13px))}
 body #app .login-view .app-name-login .app-title-main{
-  font-family:'Chonburi','Sarabun','Leelawadee UI',sans-serif;
+  font-family:'Kanit','Noto Sans Thai','Leelawadee UI',sans-serif;
   font-size:clamp(28px,3.35vh,40px);
   font-weight:900;
   line-height:1.25;
@@ -1295,7 +1295,7 @@ body #app .login-view .app-name-login .app-title-main{
 body #app .login-view .app-name-login .app-title-sub{
   max-width:1080px;
   margin:clamp(5px,.9vh,10px) auto 0;
-  font-family:'Mitr','Sarabun','Leelawadee UI',sans-serif;
+  font-family:'Noto Sans Thai','Leelawadee UI',sans-serif;
   font-size:clamp(18px,2.28vh,25px);
   font-weight:600;
   line-height:1.42;
@@ -1310,12 +1310,13 @@ body #app .login-view .app-name-login .app-title-sub{
 /* หน้าล็อกอินแบบตัวละครโต้ตอบ: ดัดแปลงแนวคิดจากฟอร์มตัวละครให้เป็นผู้ช่วย AI */
 .login-view .login-card.ai-login-card{width:min(790px,calc(100% - 32px));max-width:790px;padding:clamp(18px,2.4vh,28px) clamp(22px,3vw,40px)}
 .claw-game{width:min(390px,100%);margin:22px auto 8px;padding:12px;border-radius:22px;background:linear-gradient(150deg,#1E3151,#17243B);border:4px solid #90D7ED;box-shadow:0 8px 0 #274A73,0 15px 26px rgba(22,41,69,.22);color:#fff;overflow:hidden}
-.claw-game-title{font-family:'Mitr','Sarabun',sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;text-align:center;color:#EFFFFF;text-shadow:0 2px 0 #245175;margin:2px 0 9px}.claw-game-title span{color:#FFD764}
+.claw-game-title{font-family:'Kanit','Noto Sans Thai',sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em;text-align:center;color:#EFFFFF;text-shadow:0 2px 0 #245175;margin:2px 0 9px}.claw-game-title span{color:#FFD764}
 .claw-window{position:relative;min-height:214px;border:4px solid #EDF9FF;border-radius:13px;background:linear-gradient(#90E8F3 0 45%,#58C3E5 46% 72%,#2175A6 73%);overflow:hidden;box-shadow:inset 0 0 0 3px rgba(28,92,139,.5)}
 .claw-rail{position:absolute;left:0;right:0;top:62px;height:8px;background:#703B23;box-shadow:0 3px 0 rgba(255,255,255,.4)}.claw-cable{position:absolute;left:50%;top:0;width:5px;height:76px;background:#F7F7EF;transform:translateX(-50%);box-shadow:0 0 2px #456}.claw-head{position:absolute;z-index:2;left:50%;top:67px;width:48px;height:26px;border:5px solid #F6F8F5;border-top:0;border-radius:0 0 25px 25px;transform:translateX(-50%)}.claw-head:before,.claw-head:after{content:'';position:absolute;top:19px;width:16px;height:30px;border:5px solid #F6F8F5;border-top:0;border-radius:0 0 18px 18px}.claw-head:before{left:-15px;transform:rotate(24deg)}.claw-head:after{right:-15px;transform:rotate(-24deg)}
 .claw-prizes{position:absolute;display:flex;justify-content:center;align-items:flex-end;gap:5px;left:10px;right:10px;bottom:10px;min-height:72px}.claw-toy{width:48px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:15px 15px 12px 12px;background:#FFF9E8;border:2px solid rgba(32,69,100,.4);font-size:31px;box-shadow:0 5px 0 rgba(20,83,126,.25)}.claw-toy:nth-child(2){transform:translateY(10px) rotate(-6deg);background:#FFE0ED}.claw-toy:nth-child(3){transform:translateY(4px) rotate(4deg);background:#E9F6D0}.claw-toy:nth-child(4){transform:translateY(11px) rotate(-3deg);background:#E6E1FF}.claw-toy:nth-child(5){transform:translateY(2px) rotate(5deg);background:#FFE8B7}
 .claw-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 2px 0}.claw-token{font-size:12px;color:#CDEEFF;font-weight:700}.claw-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#EAFBF2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}.claw-game.played .claw-cable{height:116px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-head{top:107px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-prizes{animation:toyShake .5s ease-in-out 2}@keyframes clawDrop{50%{transform:translateX(-50%) translateY(32px)}100%{transform:translateX(-50%) translateY(0)}}@keyframes toyShake{50%{transform:translateX(5px)}}
 .claw-game.mall-random{width:min(360px,100%);background:linear-gradient(145deg,#1f5c91,#123e6b);border-color:#8ee8f4}.mall-random .claw-window{min-height:230px;background:linear-gradient(145deg,#28cde2,#087daf);border:7px solid #e9ffff;box-shadow:inset 0 0 0 7px #0b6092,inset 0 0 35px #022b5177}.mall-random .claw-rail,.mall-random .claw-cable,.mall-random .claw-head{display:none}.mall-random .capsule-label{position:absolute;inset:18px 18px auto;padding:12px;border:3px solid #fff;border-radius:12px;background:#123e6b;color:#fff;text-align:center;font-weight:800;letter-spacing:.04em}.mall-random .claw-prizes{left:18px;right:18px;bottom:18px;min-height:125px;padding:14px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;border:5px solid #0b466f;border-radius:16px;background:linear-gradient(#0d5885,#07395e);overflow:hidden}.mall-random .claw-toy{width:48px;height:58px;margin:auto;background:#fff;border-color:#a8e9ee}.mall-random.picking .claw-prizes{animation:mallPrizeRoll .18s linear infinite}.mall-random.played:not(.picking) .claw-prizes{filter:saturate(.65);opacity:.72}@keyframes mallPrizeRoll{0%{transform:translateX(-5px)}50%{transform:translateX(5px) scale(1.03)}100%{transform:translateX(-5px)}}
+.random-toy-collection{margin-bottom:20px}.random-toy-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}.random-toy-slot{min-height:138px;padding:10px 6px;border:3px solid #80cddd;border-radius:16px;background:#effcff;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.random-toy-slot .toy-icon{font-size:46px;filter:grayscale(1) brightness(.25);opacity:.2}.random-toy-slot.got{background:linear-gradient(145deg,#fff,#d9fff5);border-color:#55cdb5;box-shadow:0 5px 0 #b7e9df}.random-toy-slot.got .toy-icon{filter:none;opacity:1;animation:toyCollected .6s ease}.random-toy-slot .toy-name{font-size:11px;line-height:1.45;margin-top:6px;color:#41687b}.random-toy-slot .toy-lesson{font-size:10px;font-weight:700;color:#1683a0;margin-top:4px}@keyframes toyCollected{50%{transform:scale(1.15) rotate(5deg)}}@media(max-width:650px){.random-toy-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:520px){.claw-game{max-width:320px;padding:9px}.claw-window{min-height:194px}.claw-toy{width:40px;height:46px;font-size:27px}.claw-game-title{font-size:17px}}
 .ai-login-stage{display:grid;grid-template-columns:minmax(190px,.78fr) minmax(290px,1.35fr);gap:clamp(18px,3vw,38px);align-items:center;text-align:left}
 .ai-login-side{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
@@ -4899,8 +4900,7 @@ function renderPromptWork() {
     }
     var goodHtml = (r.good || []).map(function(g){ return '<p class="small" style="line-height:1.9">💚 ' + g + '</p>'; }).join('');
     var impHtml = (r.improve || []).map(function(g){ return '<p class="small" style="line-height:1.9">🔧 ' + g + '</p>'; }).join('');
-    resultHtml = journeyBanner() +
-      '<div class="pcard ' + (r.stars >= 2 ? 'mint' : 'pink') + ' pop" style="margin-top:18px">' +
+    resultHtml = '<div class="pcard ' + (r.stars >= 2 ? 'mint' : 'pink') + ' pop" style="margin-top:18px">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">' +
           '<span class="ink" style="font-weight:700;font-size:19px">ผลการตรวจ: ' + r.score + '/10 คะแนน</span>' +
           '<span style="font-size:24px;letter-spacing:4px">' + starRow(r.stars) + '</span>' +
@@ -5183,11 +5183,6 @@ function quickFunctionButtons() {
       '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">' + (preDone ? '✓' : '01') + '</span><span><b>ก่อนเรียน</b><span>' + (preDone ? assessmentLabel(stu, 'pre') + ' · ทำแล้ว' : 'ต้องทำก่อนเริ่มบทที่ 1') + '</span></span></button>' +
       '<button class="funcbtn" onclick="startAssessment(\'post\')"' + (postReady ? '' : ' disabled') + '><span class="fi">' + (postReady ? '02' : '🔒') + '</span><span><b>หลังเรียน</b><span>' + (postReady ? (assessmentLabel(stu, 'post') === '-' ? 'พร้อมทำเมื่อมั่นใจ' : assessmentLabel(stu, 'post')) : 'ปลดล็อกเมื่อได้ดาวครบ ' + lessons.length + ' บท') + '</span></span></button>' +
     '</div>' +
-    '<button class="success-strip" onclick="changeView(\'journey\')" aria-label="ดูความสำเร็จและการเดินทาง">' +
-      '<span class="success-head"><b>ความสำเร็จในการเดินทาง</b><span>' + done + '/' + total + ' ภารกิจ · ' + pct + '%</span></span>' +
-      '<span class="success-track"><span class="success-fill" style="display:block;width:' + pct + '%"></span></span>' +
-      '<span class="success-caption">' + (done ? 'เดินทางถึง: ' + event.title : 'เริ่มภารกิจแรกเพื่อออกเดินทาง') + '</span>' +
-    '</button>' +
   '</div>';
 }
 
@@ -5742,6 +5737,20 @@ var CLAW_PRIZES = [
   { icon:'🛡️', name:'สติกเกอร์นักใช้ AI อย่างรับผิดชอบ' },
   { icon:'🎈', name:'สติกเกอร์กำลังใจ' }
 ];
+function randomToyCollectionHtml() {
+  var gotCount = lessonProgress.filter(function(p){ return p && p.clawPlayed; }).length;
+  var slots = lessons.map(function(ls, i){
+    var p = normalizeLessonProgress(lessonProgress[i]);
+    var prize = CLAW_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
+    return '<div class="random-toy-slot ' + (p.clawPlayed ? 'got' : '') + '">' +
+      '<div class="toy-icon">' + (p.clawPlayed && prize ? prize.icon : '🤖') + '</div>' +
+      '<div class="toy-name">' + (p.clawPlayed ? (prize ? prize.name : 'ตุ๊กตาสุ่มพิเศษ') : 'ยังไม่ได้สุ่ม') + '</div>' +
+      '<div class="toy-lesson">บทที่ ' + (i + 1) + (p.clawPlayed ? ' ✓' : ' • เงา') + '</div></div>';
+  }).join('');
+  return '<div class="pcard blue random-toy-collection"><div class="tape tape-blue"></div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 class="ink sec-label">🤖 คอลเลกชันตุ๊กตาสุ่ม</h3><p class="soft tiny">ตุ๊กตาที่ได้รับจากเหรียญท้ายบท</p></div><strong class="t-blue">' + gotCount + '/' + lessons.length + ' ตัว</strong></div>' +
+    '<div class="random-toy-grid">' + slots + '</div></div>';
+}
 function clawGameHtml(p) {
   var prize = CLAW_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
   var toys = CLAW_PRIZES.map(function(item){ return '<span class="claw-toy" aria-hidden="true">' + item.icon + '</span>'; }).join('');
@@ -5802,7 +5811,6 @@ function renderQuizResult() {
       '<h2 class="t-mint" style="font-size:24px;font-weight:700">ส่งแบบทดสอบระหว่างบทแล้ว!</h2>' +
     '</div>' +
     '<div class="center-view">' +
-      journeyBanner() +
       '<div class="pop" style="font-size:34px;margin-bottom:10px">🎯 ' + unitPoints + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ 1 ดาว · ' + unitMedal.icon + ' ' + unitMedal.name + '</div>' +
       '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
@@ -5860,7 +5868,6 @@ function renderDashboard() {
         '<div class="pbar"><div style="width:' + overallPercent() + '%;background:linear-gradient(90deg,#F29BB8,#8EC7F2,#9FD6A4,#F2D778)"></div></div>' +
       '</div>' +
       rewardCriteriaHtml('student') +
-      gemSystemHtml(journeySteps()) +
       '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:20px">' +
         '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700;margin-bottom:4px">📚 คะแนนและรางวัล 5 บท</p>' +
           '<p class="ink" style="font-size:26px;font-weight:700">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/' + maxLessonPoints() + ' คะแนน</span></p>' +
@@ -5875,6 +5882,7 @@ function renderDashboard() {
           '<p class="ink" style="font-size:24px;font-weight:700">' + assessmentLabel(currentStudent(), 'pre') + ' <span class="soft" style="font-size:16px">→</span> ' + assessmentLabel(currentStudent(), 'post') + '</p>' +
           '<p class="soft tiny">คะแนนแบบทดสอบเปรียบเทียบผลก่อนและหลังเรียน</p></div>' +
       '</div>' +
+      randomToyCollectionHtml() +
       '<div class="pcard orange badge-collection-panel" style="position:relative">' +
         '<div class="tape tape-yellow"></div>' +
         achievementCollectionHtml(currentStudent()) +
@@ -5888,7 +5896,6 @@ function renderDashboard() {
             '<button onclick="startAssessment(\'pre\')" class="btn whiteb sm" style="width:100%">🧭 ทำแบบทดสอบก่อนเรียน</button>' +
             '<button onclick="startAssessment(\'post\')" class="btn whiteb sm" style="width:100%"' + (postReady ? '' : ' disabled') + '>' + (postReady ? '🏁 ทำแบบทดสอบหลังเรียน' : '🔒 หลังเรียน · ผ่านให้ครบ ' + lessons.length + ' บทก่อน') + '</button>' +
             '<button onclick="changeView(\'leaderboard\')" class="btn sm" style="width:100%;background:var(--orange)">🏆 ดูอันดับห้อง (LIVE)</button>' +
-            '<button onclick="changeView(\'journey\')" class="btn blueb sm" style="width:100%">🗺️ เส้นทางสถานการณ์จริง</button>' +
             '<button onclick="changeView(\'lessons\')" class="btn pinkb sm" style="width:100%">🎯 ไปห้องเรียน</button>' +
             '<button onclick="resetAll()" class="btn whiteb sm" style="width:100%">🗑️ ล้างข้อมูลเริ่มใหม่</button>' +
             '<button onclick="logout()" class="btn pinkb sm" style="width:100%">🚪 ออกจากระบบ</button>' +
@@ -6175,7 +6182,6 @@ function renderFeedback() {
         '<span class="' + (awardedPoints > 0 ? 't-orange' : 'soft') + '" style="font-size:22px;font-weight:700">+' + awardedPoints + ' โบนัส</span>' +
       '</div>' +
       badgeHtml + unlockMessage +
-      '<div style="margin-top:18px">' + journeyBanner() + '</div>' +
       '<div class="pop" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;animation-delay:.35s">' +
         (!isGood ? '<button onclick="' + (fromLessonBonus ? 'returnToLessonBonus()' : "changeView('scenario')") + '" class="btn pinkb sm">🔄 ลองตอบใหม่</button>' : '') +
         '<button onclick="' + (fromLessonBonus ? 'returnToLessonBonus()' : "changeView('gamemap')") + '" class="btn blueb sm">' + (fromLessonBonus ? '📚 กลับบทเรียน' : '🗺️ กลับหน้าแผนที่') + '</button>' +
