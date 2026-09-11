@@ -6310,6 +6310,8 @@ function renderFeedback() {
         '<p class="ink" style="font-size:20px;font-weight:700">' + choice.badge.name + '</p></div>' +
       '</div>';
   }
+  /* เด้งตู้สุ่มทันทีเมื่อได้รับตราใหม่ แต่ไม่สุ่มแทนนักเรียน */
+  var cabinetHtml = choice.badge && choice.justEarnedBadge ? randomCabinetHtml() : '';
 
   var unlockMessage = '';
   if (fromLessonBonus && isGood) {
@@ -6340,7 +6342,7 @@ function renderFeedback() {
         '<span class="soft small" style="font-weight:600">🎁 โบนัสที่ได้รับ:</span>' +
         '<span class="' + (awardedPoints > 0 ? 't-orange' : 'soft') + '" style="font-size:22px;font-weight:700">+' + awardedPoints + ' โบนัส</span>' +
       '</div>' +
-      badgeHtml + unlockMessage +
+      badgeHtml + unlockMessage + cabinetHtml +
       '<div class="pop" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;animation-delay:.35s">' +
         (!isGood ? '<button onclick="' + (fromLessonBonus ? 'returnToLessonBonus()' : "changeView('scenario')") + '" class="btn pinkb sm">🔄 ลองตอบใหม่</button>' : '') +
         '<button onclick="' + (fromLessonBonus ? 'returnToLessonBonus()' : "changeView('gamemap')") + '" class="btn blueb sm">' + (fromLessonBonus ? '📚 กลับบทเรียน' : '🗺️ กลับหน้าแผนที่') + '</button>' +
@@ -6406,6 +6408,7 @@ function makeChoice(choiceIndex) {
   if (choice.badge && !alreadyEarned) {
     state.badges.push(choice.badge);
     choice.justEarnedBadge = true;
+    state.randomCabinetOpen = true;
     markJourneyStep(beforeJourney);
   }
 
