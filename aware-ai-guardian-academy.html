@@ -5899,15 +5899,16 @@ function randomCabinetHtml(p) {
   var plays = randomBotPlayCount(p);
   var remaining = Math.max(0, 2 - plays);
   var prize = prizes[prizes.length - 1];
+  var medal = unitMedalInfo(p);
   var toys = RANDOM_BOT_PRIZES.slice(0, 5).map(function(item){ return '<span class="cabinet-bot bot-' + item.tone + '" aria-hidden="true">' + randomBotImage(item, 48) + '</span>'; }).join('');
   var picking = !!state.clawPicking && state.currentLesson === state.clawLesson;
   return '<section class="random-cabinet ' + (picking ? 'picking' : '') + '">' +
     '<p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p>' +
-    '<div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">ใช้เหรียญตราบทนี้ สุ่มได้ 2 ตัว</span></div><div class="cabinet-bots">' + toys + '</div></div>' +
+    '<div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">เหรียญตราบทนี้ปลดล็อกหุ่นได้ 2 ตัว</span></div><div class="cabinet-bots">' + toys + '</div></div>' +
     (picking
-      ? '<p class="cabinet-win">🏅 กำลังใส่เหรียญตราและสุ่มหุ่น…</p>'
-      : (plays ? '<div class="cabinet-win">🎉 คุณได้รับ<div style="display:flex;justify-content:center;margin:7px">' + (prize ? randomBotImage(prize, 88) : '') + '</div><b>' + (prize ? prize.name : 'AI BOT พิเศษ') + '</b><br><span class="tiny">ใช้เหรียญตราแล้ว ' + plays + '/2 เหรียญ · เก็บในความคืบหน้าเรียบร้อย</span><br><button onclick="changeView(\'dashboard\')" class="btn blueb sm" style="margin-top:8px">🤖 ดูหุ่นของฉันในความคืบหน้า</button></div>' : '') +
-        (remaining ? '<p class="cabinet-token">🏅 เหรียญตราสุ่มของบทนี้คงเหลือ ' + remaining + '/2 เหรียญ</p><div class="cabinet-controls"><span class="cabinet-token">🏅 ใส่ครั้งละ 1 เหรียญ</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="ใช้เหรียญตราสุ่มหุ่นท้ายบท">🏅 ใส่เหรียญตรา · สุ่มหุ่น</button></div>' : '<p class="cabinet-locked">🔒 ใช้เหรียญตราครบ 2 เหรียญแล้ว · บทนี้ล็อกสิทธิ์แล้ว</p>')) +
+      ? '<p class="cabinet-win">🏅 กำลังปลดล็อกหุ่นจากเหรียญตราบทนี้…</p>'
+      : (plays ? '<div class="cabinet-win">🎉 คุณได้รับ<div style="display:flex;justify-content:center;margin:7px">' + (prize ? randomBotImage(prize, 88) : '') + '</div><b>' + (prize ? prize.name : 'AI BOT พิเศษ') + '</b><br><span class="tiny">เหรียญตราบทนี้ปลดล็อกแล้ว ' + plays + '/2 ตัว · เก็บในความคืบหน้าเรียบร้อย</span><br><button onclick="changeView(\'dashboard\')" class="btn blueb sm" style="margin-top:8px">🤖 ดูหุ่นของฉันในความคืบหน้า</button></div>' : '') +
+        (remaining ? '<p class="cabinet-token">' + medal.icon + ' เหรียญตรา ' + medal.name + ' ปลดล็อกหุ่นได้อีก ' + remaining + '/2 ตัว</p><div class="cabinet-controls"><span class="cabinet-token">🏅 เหรียญตรา 1 เหรียญ ปลดล็อกสิทธิ์สุ่ม 2 ตัว</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="สุ่มหุ่นที่เหรียญตราบทนี้ปลดล็อกแล้ว">🎁 สุ่มหุ่นที่ปลดล็อกแล้ว</button></div>' : '<p class="cabinet-locked">🔒 เหรียญตราบทนี้ปลดล็อกหุ่นครบ 2 ตัวแล้ว</p>')) +
   '</section>';
 }
 function spinRandomCabinet() {
