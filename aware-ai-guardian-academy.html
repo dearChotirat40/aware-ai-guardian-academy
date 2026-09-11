@@ -1318,6 +1318,7 @@ body #app .login-view .app-name-login .app-title-sub{
 .claw-game.mall-random{width:min(360px,100%);background:linear-gradient(145deg,#1f5c91,#123e6b);border-color:#8ee8f4}.mall-random .claw-window{min-height:230px;background:linear-gradient(145deg,#28cde2,#087daf);border:7px solid #e9ffff;box-shadow:inset 0 0 0 7px #0b6092,inset 0 0 35px #022b5177}.mall-random .claw-rail,.mall-random .claw-cable,.mall-random .claw-head{display:none}.mall-random .capsule-label{position:absolute;inset:18px 18px auto;padding:12px;border:3px solid #fff;border-radius:12px;background:#123e6b;color:#fff;text-align:center;font-weight:800;letter-spacing:.04em}.mall-random .claw-prizes{left:18px;right:18px;bottom:18px;min-height:125px;padding:14px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;border:5px solid #0b466f;border-radius:16px;background:linear-gradient(#0d5885,#07395e);overflow:hidden}.mall-random .claw-toy{width:48px;height:58px;margin:auto;background:#fff;border-color:#a8e9ee}.mall-random.picking .claw-prizes{animation:mallPrizeRoll .18s linear infinite}.mall-random.played:not(.picking) .claw-prizes{filter:saturate(.65);opacity:.72}@keyframes mallPrizeRoll{0%{transform:translateX(-5px)}50%{transform:translateX(5px) scale(1.03)}100%{transform:translateX(-5px)}}
 .random-toy-collection{margin-bottom:20px}.random-toy-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}.random-toy-slot{min-height:138px;padding:10px 6px;border:3px solid #80cddd;border-radius:16px;background:#effcff;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.random-toy-slot .toy-icon{font-size:46px;filter:grayscale(1) brightness(.25);opacity:.2}.random-toy-slot.got{background:linear-gradient(145deg,#fff,#d9fff5);border-color:#55cdb5;box-shadow:0 5px 0 #b7e9df}.random-toy-slot.got .toy-icon{filter:none;opacity:1;animation:toyCollected .6s ease}.random-toy-slot .toy-name{font-size:11px;line-height:1.45;margin-top:6px;color:#41687b}.random-toy-slot .toy-lesson{font-size:10px;font-weight:700;color:#1683a0;margin-top:4px}@keyframes toyCollected{50%{transform:scale(1.15) rotate(5deg)}}@media(max-width:650px){.random-toy-grid{grid-template-columns:repeat(3,1fr)}}
 .random-cabinet{width:min(390px,100%);margin:22px auto 8px;padding:12px;border:4px solid #2a5e97;border-radius:22px;background:linear-gradient(145deg,#1d4476,#102c53);box-shadow:0 8px 0 #163b68,0 15px 26px rgba(22,41,69,.22);color:#fff;overflow:hidden}.random-cabinet-title{font-family:'Kanit','Noto Sans Thai',sans-serif;font-size:20px;font-weight:800;letter-spacing:.02em;text-align:center;color:#fff;margin:2px 0 9px;text-shadow:0 2px 0 #17365d}.random-cabinet-title span{color:#ffd764}.cabinet-window{position:relative;min-height:220px;border:6px solid #eafcff;border-radius:15px;background:linear-gradient(180deg,#39c8e5 0 50%,#177caf 51%);overflow:hidden;box-shadow:inset 0 0 0 5px #0b5a87,inset 0 0 30px #063c6c99}.cabinet-sign{position:absolute;z-index:1;top:15px;left:18px;right:18px;padding:9px;border:3px solid #fff;border-radius:12px;background:#173d6e;color:#fff;text-align:center;font-weight:800;line-height:1.35}.cabinet-bots{position:absolute;left:15px;right:15px;bottom:16px;min-height:100px;padding:13px 8px;display:flex;align-items:end;justify-content:space-evenly;gap:5px;border:5px solid #0a416b;border-radius:15px;background:linear-gradient(#0c5b8b,#073559)}.cabinet-bot,.random-toy-slot.got .toy-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:56px;border:2px solid rgba(255,255,255,.85);border-radius:17px;font-size:32px;box-shadow:0 5px 0 rgba(0,39,76,.38)}.cabinet-bot:nth-child(2){transform:translateY(9px) rotate(-5deg)}.cabinet-bot:nth-child(3){transform:translateY(3px) rotate(3deg)}.cabinet-bot:nth-child(4){transform:translateY(10px) rotate(-3deg)}.cabinet-bot:nth-child(5){transform:translateY(4px) rotate(5deg)}.bot-blue{background:#bdeeff}.bot-pink{background:#ffc9df}.bot-mint{background:#c8f6df}.bot-yellow{background:#fff0a4}.bot-purple{background:#e2d1ff}.bot-locked{background:#dce7ed}.random-cabinet.picking .cabinet-bots{animation:cabinetRoll .18s linear infinite}.random-cabinet.picking .cabinet-bot{animation:cabinetBounce .22s ease-in-out infinite alternate}.cabinet-token{font-size:12px;color:#d9f8ff;font-weight:700;text-align:center;margin:10px 2px 0}.cabinet-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px 0}.cabinet-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#eafbf2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}@keyframes cabinetRoll{50%{transform:translateX(6px) scale(1.025)}}@keyframes cabinetBounce{to{transform:translateY(-8px) rotate(-3deg)}}@media(max-width:520px){.random-cabinet{max-width:320px;padding:9px}.cabinet-window{min-height:194px}.cabinet-bot{width:40px;height:46px;font-size:27px}.random-cabinet-title{font-size:17px}}
+.toy-pair{display:flex;align-items:center;justify-content:center;gap:7px;min-height:58px}.toy-mini{display:inline-flex;align-items:center;justify-content:center;width:42px;height:48px;border:2px solid rgba(59,101,139,.2);border-radius:15px;font-size:28px;filter:grayscale(1) brightness(.55);opacity:.32}.toy-mini.got{filter:none;opacity:1;box-shadow:0 4px 0 rgba(0,63,105,.2);animation:toyCollected .6s ease}.cabinet-locked{margin:10px 2px 0;padding:10px;border-radius:12px;background:#f8e1e5;color:#924159;font-size:13px;font-weight:800;text-align:center}
 @media(max-width:520px){.claw-game{max-width:320px;padding:9px}.claw-window{min-height:194px}.claw-toy{width:40px;height:46px;font-size:27px}.claw-game-title{font-size:17px}}
 .ai-login-stage{display:grid;grid-template-columns:minmax(190px,.78fr) minmax(290px,1.35fr);gap:clamp(18px,3vw,38px);align-items:center;text-align:left}
 .ai-login-side{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
@@ -2161,7 +2162,7 @@ var state = {
 };
 
 function newLessonProgress() {
-  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, scenarioDone:false, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0, clawPlayed:false, clawPrize:'' }; });
+  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, scenarioDone:false, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0, clawPlayed:false, clawPrize:'', clawPlays:0, clawPrizes:[] }; });
 }
 var lessonProgress = newLessonProgress();
 
@@ -2171,6 +2172,10 @@ function normalizeLessonProgress(p) {
   var attempted = !!p.quizAttempted || !!p.quizDone || postScore > 0;
   var scenarioChoice = Number(p.scenarioChoice);
   if (!isFinite(scenarioChoice) || scenarioChoice < 0) scenarioChoice = -1;
+  var storedPrizes = Array.isArray(p.clawPrizes) ? p.clawPrizes.map(String).filter(Boolean).slice(0, 2) : [];
+  if (!storedPrizes.length && p.clawPrize) storedPrizes = [String(p.clawPrize)];
+  var rawClawPlays = Number(p.clawPlays);
+  var clawPlays = isFinite(rawClawPlays) ? Math.min(2, Math.max(0, rawClawPlays)) : Math.min(2, storedPrizes.length || (p.clawPlayed ? 1 : 0));
   return {
     preDone: !!p.preDone,
     preScore: p.preScore || 0,
@@ -2186,8 +2191,10 @@ function normalizeLessonProgress(p) {
     postScore: postScore,
     postTotal: Math.max(0, Number(p.postTotal || 0)),
     stars: attempted ? 1 : 0,
-    clawPlayed: !!p.clawPlayed,
-    clawPrize: String(p.clawPrize || '')
+    clawPlayed: clawPlays >= 2,
+    clawPrize: String(p.clawPrize || storedPrizes[storedPrizes.length - 1] || ''),
+    clawPlays: clawPlays,
+    clawPrizes: storedPrizes
   };
 }
 
@@ -5738,47 +5745,70 @@ var RANDOM_BOT_PRIZES = [
   { icon:'🤖', tone:'yellow', name:'น้องชวนคิด สีเหลือง' },
   { icon:'🤖', tone:'purple', name:'น้องชวนคิด สีม่วง' }
 ];
+function randomBotPlayCount(p) {
+  var saved = Array.isArray(p && p.clawPrizes) ? p.clawPrizes.filter(Boolean).length : 0;
+  var parsed = Number(p && p.clawPlays);
+  return Math.min(2, Math.max(0, isFinite(parsed) ? parsed : (saved || (p && p.clawPrize ? 1 : (p && p.clawPlayed ? 1 : 0)))));
+}
+function randomBotPrizesForProgress(p) {
+  var names = Array.isArray(p && p.clawPrizes) ? p.clawPrizes.filter(Boolean).slice(0, 2) : [];
+  if (!names.length && p && p.clawPrize) names = [p.clawPrize];
+  return names.map(function(name){ return RANDOM_BOT_PRIZES.filter(function(item){ return item.name === name; })[0]; }).filter(Boolean);
+}
 function randomBotCollectionHtml() {
-  var gotCount = lessonProgress.filter(function(p){ return p && p.clawPlayed; }).length;
+  var gotCount = lessonProgress.reduce(function(total, p){ return total + randomBotPlayCount(p); }, 0);
   var slots = lessons.map(function(ls, i){
     var p = normalizeLessonProgress(lessonProgress[i]);
-    var prize = RANDOM_BOT_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
-    return '<div class="random-toy-slot ' + (p.clawPlayed ? 'got' : '') + '">' +
-      '<div class="toy-icon bot-' + (prize ? prize.tone : 'locked') + '">' + (p.clawPlayed && prize ? prize.icon : '🤖') + '</div>' +
-      '<div class="toy-name">' + (p.clawPlayed ? (prize ? prize.name : 'น้องชวนคิดพิเศษ') : 'ยังไม่ได้รับน้องชวนคิด') + '</div>' +
-      '<div class="toy-lesson">บทที่ ' + (i + 1) + (p.clawPlayed ? ' ✓' : ' • เงา') + '</div></div>';
+    var prizes = randomBotPrizesForProgress(p);
+    var plays = randomBotPlayCount(p);
+    var bots = [0, 1].map(function(slot){
+      var prize = prizes[slot];
+      return '<span class="toy-mini bot-' + (prize ? prize.tone : 'locked') + (prize ? ' got' : '') + '">' + (prize ? prize.icon : '🤖') + '</span>';
+    }).join('');
+    return '<div class="random-toy-slot ' + (plays ? 'got' : '') + '">' +
+      '<div class="toy-pair">' + bots + '</div>' +
+      '<div class="toy-name">' + (plays ? 'ได้รับน้องชวนคิด ' + plays + '/2 ตัว' : 'ยังไม่ได้รับน้องชวนคิด') + '</div>' +
+      '<div class="toy-lesson">บทที่ ' + (i + 1) + (plays >= 2 ? ' ✓ ครบแล้ว' : ' • ' + plays + '/2 ตัว') + '</div></div>';
   }).join('');
   return '<div class="pcard blue random-toy-collection"><div class="tape tape-blue"></div>' +
-    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 class="ink sec-label">🤖 คอลเลกชันน้องชวนคิด</h3><p class="soft tiny">หุ่นที่ได้รับจากตู้สุ่มท้ายบท</p></div><strong class="t-blue">' + gotCount + '/' + lessons.length + ' ตัว</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 class="ink sec-label">🤖 คอลเลกชันน้องชวนคิด</h3><p class="soft tiny">สุ่มได้บทละ 2 ตัว แล้วล็อกสิทธิ์ของบทนั้น</p></div><strong class="t-blue">' + gotCount + '/' + (lessons.length * 2) + ' ตัว</strong></div>' +
     '<div class="random-toy-grid">' + slots + '</div></div>';
 }
 function randomCabinetHtml(p) {
-  var prize = RANDOM_BOT_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
+  var prizes = randomBotPrizesForProgress(p);
+  var plays = randomBotPlayCount(p);
+  var remaining = Math.max(0, 2 - plays);
+  var prize = prizes[prizes.length - 1];
   var toys = RANDOM_BOT_PRIZES.map(function(item){ return '<span class="cabinet-bot bot-' + item.tone + '" aria-hidden="true">' + item.icon + '</span>'; }).join('');
   var picking = !!state.clawPicking && state.currentLesson === state.clawLesson;
   return '<section class="random-cabinet ' + (picking ? 'picking' : '') + '">' +
     '<p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p>' +
-    '<div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">1 เหรียญบทเรียน = 1 หุ่น</span></div><div class="cabinet-bots">' + toys + '</div></div>' +
-    (p.clawPlayed
-      ? '<div class="cabinet-win">🎉 คุณได้รับ ' + (prize ? prize.icon + ' ' + prize.name : 'น้องชวนคิดพิเศษ') + '<br><span class="tiny">เก็บหุ่นไว้ในหน้าความคืบหน้าเรียบร้อย</span><br><button onclick="changeView(\'dashboard\')" class="btn blueb sm" style="margin-top:8px">🤖 ดูหุ่นของฉันในความคืบหน้า</button></div>'
-      : picking
-        ? '<p class="cabinet-win">🪙 กำลังหมุนตู้สุ่มหุ่น…</p>'
-        : '<p class="cabinet-token">🪙 ได้เหรียญจากการจบบทแล้ว ใช้สุ่มหุ่นได้ 1 ครั้ง</p><div class="cabinet-controls"><span class="cabinet-token">เหรียญบทเรียน 1 เหรียญ</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="ใช้เหรียญสุ่มหุ่นท้ายบท">🪙 หยิบสุ่มหุ่น</button></div>') +
+    '<div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">จบบทนี้ สุ่มหุ่นได้ 2 ตัว</span></div><div class="cabinet-bots">' + toys + '</div></div>' +
+    (picking
+      ? '<p class="cabinet-win">🪙 กำลังหมุนตู้สุ่มหุ่น…</p>'
+      : (plays ? '<div class="cabinet-win">🎉 คุณได้รับ ' + (prize ? prize.icon + ' ' + prize.name : 'น้องชวนคิดพิเศษ') + '<br><span class="tiny">สุ่มแล้ว ' + plays + '/2 ตัว · เก็บในความคืบหน้าเรียบร้อย</span><br><button onclick="changeView(\'dashboard\')" class="btn blueb sm" style="margin-top:8px">🤖 ดูหุ่นของฉันในความคืบหน้า</button></div>' : '') +
+        (remaining ? '<p class="cabinet-token">🪙 สิทธิ์สุ่มหุ่นของบทนี้คงเหลือ ' + remaining + '/2 ครั้ง</p><div class="cabinet-controls"><span class="cabinet-token">เหรียญบทเรียน ' + remaining + ' เหรียญ</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="ใช้เหรียญสุ่มหุ่นท้ายบท">🪙 หยิบสุ่มหุ่น</button></div>' : '<p class="cabinet-locked">🔒 สุ่มหุ่นครบ 2 ตัวแล้ว · บทนี้ล็อกสิทธิ์แล้ว</p>')) +
   '</section>';
 }
 function spinRandomCabinet() {
   var i = state.currentLesson;
   var p = lessonProgress[i];
-  if (!p || !p.quizDone || p.clawPlayed || state.clawPicking) return;
+  var plays = randomBotPlayCount(p);
+  if (!p || !p.quizDone || plays >= 2 || state.clawPicking) return;
   state.clawPicking = true;
   state.clawLesson = i;
   render();
   setTimeout(function(){
     var latest = lessonProgress[i];
-    if (!latest || latest.clawPlayed) { state.clawPicking = false; render(); return; }
+    var latestPlays = randomBotPlayCount(latest);
+    if (!latest || latestPlays >= 2) { state.clawPicking = false; render(); return; }
     var pick = RANDOM_BOT_PRIZES[Math.floor(Math.random() * RANDOM_BOT_PRIZES.length)];
-    latest.clawPlayed = true;
+    var currentPrizes = Array.isArray(latest.clawPrizes) ? latest.clawPrizes.filter(Boolean).slice(0, latestPlays) : (latest.clawPrize ? [latest.clawPrize] : []);
+    currentPrizes.push(pick.name);
+    latest.clawPlays = latestPlays + 1;
+    latest.clawPlayed = latest.clawPlays >= 2;
     latest.clawPrize = pick.name;
+    latest.clawPrizes = currentPrizes.slice(0, 2);
     state.clawPicking = false;
     state.clawLesson = -1;
     saveProgress();
