@@ -1315,6 +1315,7 @@ body #app .login-view .app-name-login .app-title-sub{
 .claw-rail{position:absolute;left:0;right:0;top:62px;height:8px;background:#703B23;box-shadow:0 3px 0 rgba(255,255,255,.4)}.claw-cable{position:absolute;left:50%;top:0;width:5px;height:76px;background:#F7F7EF;transform:translateX(-50%);box-shadow:0 0 2px #456}.claw-head{position:absolute;z-index:2;left:50%;top:67px;width:48px;height:26px;border:5px solid #F6F8F5;border-top:0;border-radius:0 0 25px 25px;transform:translateX(-50%)}.claw-head:before,.claw-head:after{content:'';position:absolute;top:19px;width:16px;height:30px;border:5px solid #F6F8F5;border-top:0;border-radius:0 0 18px 18px}.claw-head:before{left:-15px;transform:rotate(24deg)}.claw-head:after{right:-15px;transform:rotate(-24deg)}
 .claw-prizes{position:absolute;display:flex;justify-content:center;align-items:flex-end;gap:5px;left:10px;right:10px;bottom:10px;min-height:72px}.claw-toy{width:48px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:15px 15px 12px 12px;background:#FFF9E8;border:2px solid rgba(32,69,100,.4);font-size:31px;box-shadow:0 5px 0 rgba(20,83,126,.25)}.claw-toy:nth-child(2){transform:translateY(10px) rotate(-6deg);background:#FFE0ED}.claw-toy:nth-child(3){transform:translateY(4px) rotate(4deg);background:#E9F6D0}.claw-toy:nth-child(4){transform:translateY(11px) rotate(-3deg);background:#E6E1FF}.claw-toy:nth-child(5){transform:translateY(2px) rotate(5deg);background:#FFE8B7}
 .claw-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 2px 0}.claw-token{font-size:12px;color:#CDEEFF;font-weight:700}.claw-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#EAFBF2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}.claw-game.played .claw-cable{height:116px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-head{top:107px;animation:clawDrop .8s ease-in-out}.claw-game.played .claw-prizes{animation:toyShake .5s ease-in-out 2}@keyframes clawDrop{50%{transform:translateX(-50%) translateY(32px)}100%{transform:translateX(-50%) translateY(0)}}@keyframes toyShake{50%{transform:translateX(5px)}}
+.random-cabinet{width:min(390px,100%);margin:22px auto 8px;padding:12px;border:4px solid #2a5e97;border-radius:22px;background:linear-gradient(145deg,#1d4476,#102c53);box-shadow:0 8px 0 #163b68,0 15px 26px rgba(22,41,69,.22);color:#fff;overflow:hidden}.random-cabinet-title{font-family:'Kanit','Noto Sans Thai',sans-serif;font-size:20px;font-weight:800;letter-spacing:.02em;text-align:center;color:#fff;margin:2px 0 9px;text-shadow:0 2px 0 #17365d}.random-cabinet-title span{color:#ffd764}.cabinet-window{position:relative;min-height:220px;border:6px solid #eafcff;border-radius:15px;background:linear-gradient(180deg,#39c8e5 0 50%,#177caf 51%);overflow:hidden;box-shadow:inset 0 0 0 5px #0b5a87,inset 0 0 30px #063c6c99}.cabinet-sign{position:absolute;z-index:1;top:15px;left:18px;right:18px;padding:9px;border:3px solid #fff;border-radius:12px;background:#173d6e;color:#fff;text-align:center;font-weight:800;line-height:1.35}.cabinet-bots{position:absolute;left:15px;right:15px;bottom:16px;min-height:100px;padding:13px 8px;display:flex;align-items:end;justify-content:space-evenly;gap:5px;border:5px solid #0a416b;border-radius:15px;background:linear-gradient(#0c5b8b,#073559)}.cabinet-bot,.random-toy-slot.got .toy-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:56px;border:2px solid rgba(255,255,255,.85);border-radius:17px;font-size:32px;box-shadow:0 5px 0 rgba(0,39,76,.38)}.cabinet-bot:nth-child(2){transform:translateY(9px) rotate(-5deg)}.cabinet-bot:nth-child(3){transform:translateY(3px) rotate(3deg)}.cabinet-bot:nth-child(4){transform:translateY(10px) rotate(-3deg)}.cabinet-bot:nth-child(5){transform:translateY(4px) rotate(5deg)}.bot-blue{background:#bdeeff}.bot-pink{background:#ffc9df}.bot-mint{background:#c8f6df}.bot-yellow{background:#fff0a4}.bot-purple{background:#e2d1ff}.bot-locked{background:#dce7ed}.random-cabinet.picking .cabinet-bots{animation:cabinetRoll .18s linear infinite}.random-cabinet.picking .cabinet-bot{animation:cabinetBounce .22s ease-in-out infinite alternate}.cabinet-token{font-size:12px;color:#d9f8ff;font-weight:700;text-align:center;margin:10px 2px 0}.cabinet-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px 0}.cabinet-win{margin:10px 2px 0;padding:9px 11px;border-radius:12px;background:#eafbf2;color:#246845;font-size:14px;font-weight:700;line-height:1.6;text-align:center}.random-toy-collection{margin-bottom:20px}.random-toy-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}.random-toy-slot{min-height:138px;padding:10px 6px;border:3px solid #80cddd;border-radius:16px;background:#effcff;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.random-toy-slot .toy-icon{font-size:46px;filter:grayscale(1) brightness(.25);opacity:.2}.random-toy-slot.got{background:linear-gradient(145deg,#fff,#d9fff5);border-color:#55cdb5;box-shadow:0 5px 0 #b7e9df}.random-toy-slot.got .toy-icon{filter:none;opacity:1;animation:toyCollected .6s ease}.random-toy-slot .toy-name{font-size:11px;line-height:1.45;margin-top:6px;color:#41687b}.random-toy-slot .toy-lesson{font-size:10px;font-weight:700;color:#1683a0;margin-top:4px}@keyframes cabinetRoll{50%{transform:translateX(6px) scale(1.025)}}@keyframes cabinetBounce{to{transform:translateY(-8px) rotate(-3deg)}}@keyframes toyCollected{50%{transform:scale(1.15) rotate(5deg)}}@media(max-width:650px){.random-toy-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:520px){.claw-game{max-width:320px;padding:9px}.claw-window{min-height:194px}.claw-toy{width:40px;height:46px;font-size:27px}.claw-game-title{font-size:17px}}
 .ai-login-stage{display:grid;grid-template-columns:minmax(190px,.78fr) minmax(290px,1.35fr);gap:clamp(18px,3vw,38px);align-items:center;text-align:left}
 .ai-login-side{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
@@ -2158,7 +2159,7 @@ var state = {
 };
 
 function newLessonProgress() {
-  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, scenarioDone:false, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0, clawPlayed:false, clawPrize:'' }; });
+  return lessons.map(function(){ return { preDone:false, preScore:0, scenarioAnswered:false, scenarioChoice:-1, scenarioDone:false, videoDone:false, slideSeen:0, slidesDone:false, quizAttempted:false, quizDone:false, postScore:0, postTotal:0, stars:0, clawPlayed:false, clawPrize:'', clawPlays:0, clawPrizes:[] }; });
 }
 var lessonProgress = newLessonProgress();
 
@@ -2184,7 +2185,9 @@ function normalizeLessonProgress(p) {
     postTotal: Math.max(0, Number(p.postTotal || 0)),
     stars: attempted ? 1 : 0,
     clawPlayed: !!p.clawPlayed,
-    clawPrize: String(p.clawPrize || '')
+    clawPrize: String(p.clawPrize || ''),
+    clawPlays: Math.min(2, Math.max(0, Number(p.clawPlays != null ? p.clawPlays : (p.clawPlayed ? 1 : 0)) || 0)),
+    clawPrizes: Array.isArray(p.clawPrizes) ? p.clawPrizes.slice(0, 2) : (p.clawPrize ? [String(p.clawPrize)] : [])
   };
 }
 
@@ -5728,28 +5731,42 @@ function nextQuestion() {
   }
 }
 
-var CLAW_PRIZES = [
-  { icon:'🤖', name:'สติกเกอร์น้องชวนคิด' },
-  { icon:'⭐', name:'สติกเกอร์ดาวนักคิด' },
-  { icon:'🧠', name:'สติกเกอร์สมองไว' },
-  { icon:'🛡️', name:'สติกเกอร์นักใช้ AI อย่างรับผิดชอบ' },
-  { icon:'🎈', name:'สติกเกอร์กำลังใจ' }
+var RANDOM_BOT_PRIZES = [
+  { icon:'🤖', tone:'blue', name:'น้องชวนคิด สีฟ้า' },
+  { icon:'🤖', tone:'pink', name:'น้องชวนคิด สีชมพู' },
+  { icon:'🤖', tone:'mint', name:'น้องชวนคิด สีเขียว' },
+  { icon:'🤖', tone:'yellow', name:'น้องชวนคิด สีเหลือง' },
+  { icon:'🤖', tone:'purple', name:'น้องชวนคิด สีม่วง' }
 ];
-function clawGameHtml(p) {
-  var prize = CLAW_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
-  var toys = CLAW_PRIZES.map(function(item){ return '<span class="claw-toy" aria-hidden="true">' + item.icon + '</span>'; }).join('');
+function randomBotCollectionHtml() {
+  var gotCount = lessonProgress.filter(function(p){ return p && p.clawPlayed; }).length;
+  var slots = lessons.map(function(ls, i){
+    var p = normalizeLessonProgress(lessonProgress[i]);
+    var prize = RANDOM_BOT_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
+    return '<div class="random-toy-slot ' + (p.clawPlayed ? 'got' : '') + '">' +
+      '<div class="toy-icon bot-' + (prize ? prize.tone : 'locked') + '">' + (p.clawPlayed && prize ? prize.icon : '🤖') + '</div>' +
+      '<div class="toy-name">' + (p.clawPlayed ? (prize ? prize.name : 'น้องชวนคิดพิเศษ') : 'ยังไม่ได้รับน้องชวนคิด') + '</div>' +
+      '<div class="toy-lesson">บทที่ ' + (i + 1) + (p.clawPlayed ? ' ✓' : ' • เงา') + '</div></div>';
+  }).join('');
+  return '<div class="pcard blue random-toy-collection"><div class="tape tape-blue"></div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h3 class="ink sec-label">🤖 คอลเลกชันน้องชวนคิด</h3><p class="soft tiny">หุ่นที่ได้รับจากตู้สุ่มท้ายบท</p></div><strong class="t-blue">' + gotCount + '/' + lessons.length + ' ตัว</strong></div>' +
+    '<div class="random-toy-grid">' + slots + '</div></div>';
+}
+function randomCabinetHtml(p) {
+  var prize = RANDOM_BOT_PRIZES.filter(function(item){ return item.name === p.clawPrize; })[0];
+  var toys = RANDOM_BOT_PRIZES.map(function(item){ return '<span class="cabinet-bot bot-' + item.tone + '" aria-hidden="true">' + item.icon + '</span>'; }).join('');
   var picking = !!state.clawPicking && state.currentLesson === state.clawLesson;
-  return '<section class="claw-game ' + ((p.clawPlayed || picking) ? 'played' : '') + '">' +
-    '<p class="claw-game-title">AI <span>Claw</span> โบนัสท้ายบท</p>' +
-    '<div class="claw-window"><div class="claw-cable"></div><div class="claw-head"></div><div class="claw-rail"></div><div class="claw-prizes">' + toys + '</div></div>' +
+  return '<section class="random-cabinet ' + (picking ? 'picking' : '') + '">' +
+    '<p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p>' +
+    '<div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">1 เหรียญบทเรียน = 1 หุ่น</span></div><div class="cabinet-bots">' + toys + '</div></div>' +
     (p.clawPlayed
-      ? '<p class="claw-win">🎉 คุณคีบได้ ' + (prize ? prize.icon + ' ' + prize.name : 'ของรางวัลพิเศษ') + '<br><span class="tiny">เก็บเป็นที่ระลึกของบทนี้แล้ว</span></p>'
+      ? '<div class="cabinet-win">🎉 คุณได้รับ ' + (prize ? prize.icon + ' ' + prize.name : 'น้องชวนคิดพิเศษ') + '<br><span class="tiny">เก็บหุ่นไว้ในหน้าความคืบหน้าเรียบร้อย</span><br><button onclick="changeView(\'dashboard\')" class="btn blueb sm" style="margin-top:8px">🤖 ดูหุ่นของฉันในความคืบหน้า</button></div>'
       : picking
-        ? '<p class="claw-win">🕹️ กำลังคีบและสุ่มรางวัล…</p>'
-        : '<p class="claw-token" style="text-align:center;margin:10px 2px 0">🎁 ปลดล็อกแล้ว! ใช้สิทธิ์คีบรางวัลของบทนี้ได้ทันที 1 ครั้ง</p><div class="claw-controls"><span class="claw-token">สิทธิ์คีบรางวัล 1 ครั้ง</span><button onclick="playClawPrize()" class="btn pinkb sm" aria-label="คีบรางวัลโบนัสท้ายบท">🕹️ คลิกคีบรางวัลสุ่ม</button></div>') +
+        ? '<p class="cabinet-win">🪙 กำลังหมุนตู้สุ่มหุ่น…</p>'
+        : '<p class="cabinet-token">🪙 ได้เหรียญจากการจบบทแล้ว ใช้สุ่มหุ่นได้ 1 ครั้ง</p><div class="cabinet-controls"><span class="cabinet-token">เหรียญบทเรียน 1 เหรียญ</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="ใช้เหรียญสุ่มหุ่นท้ายบท">🪙 หยิบสุ่มหุ่น</button></div>') +
   '</section>';
 }
-function playClawPrize() {
+function spinRandomCabinet() {
   var i = state.currentLesson;
   var p = lessonProgress[i];
   if (!p || !p.quizDone || p.clawPlayed || state.clawPicking) return;
@@ -5759,9 +5776,11 @@ function playClawPrize() {
   setTimeout(function(){
     var latest = lessonProgress[i];
     if (!latest || latest.clawPlayed) { state.clawPicking = false; render(); return; }
-    var pick = CLAW_PRIZES[Math.floor(Math.random() * CLAW_PRIZES.length)];
+    var pick = RANDOM_BOT_PRIZES[Math.floor(Math.random() * RANDOM_BOT_PRIZES.length)];
+    latest.clawPlays = 1;
     latest.clawPlayed = true;
     latest.clawPrize = pick.name;
+    latest.clawPrizes = [pick.name];
     state.clawPicking = false;
     state.clawLesson = -1;
     saveProgress();
@@ -5799,7 +5818,7 @@ function renderQuizResult() {
       '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
-      clawGameHtml(p) +
+      randomCabinetHtml(p) +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
         '<button onclick="openLessonBonus()" class="btn pinkb sm">🎁 ทำโบนัสภารกิจท้ายบท</button>' +
         nextStepButton +
@@ -5866,6 +5885,7 @@ function renderDashboard() {
           '<p class="ink" style="font-size:24px;font-weight:700">' + assessmentLabel(currentStudent(), 'pre') + ' <span class="soft" style="font-size:16px">→</span> ' + assessmentLabel(currentStudent(), 'post') + '</p>' +
           '<p class="soft tiny">คะแนนแบบทดสอบเปรียบเทียบผลก่อนและหลังเรียน</p></div>' +
       '</div>' +
+      randomBotCollectionHtml() +
       '<div class="pcard orange badge-collection-panel" style="position:relative">' +
         '<div class="tape tape-yellow"></div>' +
         achievementCollectionHtml(currentStudent()) +
