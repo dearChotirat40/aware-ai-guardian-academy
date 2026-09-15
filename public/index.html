@@ -5854,6 +5854,7 @@ function nextQuestion() {
     qz.completed = true;
     markJourneyStep(beforeJourney);
     saveProgress();
+    state.randomCabinetOpen = randomBotDrawRemaining() > 0;
     changeView('quizresult');
   }
 }
@@ -6074,7 +6075,7 @@ function renderQuizResult() {
         '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>' +
       '</div>' +
       mascotHtml(pct >= 80 ? 'เก่งมากเลย!' : 'บันทึกคะแนนแล้ว ไปเรียนบทถัดไปหรือทบทวนเพิ่มได้เลย!') +
-    '</div>';
+    '</div>' + (state.randomCabinetOpen ? randomCabinetHtml() : '');
 }
 
 /* ==================== แดชบอร์ด ==================== */
