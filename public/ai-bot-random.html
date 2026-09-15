@@ -27,4 +27,4 @@ document.body.style.setProperty('background','radial-gradient(circle at 50% 8%,#
 el('draw').addEventListener('click',drawBot);el('book').addEventListener('click',()=>el('drawer').classList.add('open'));el('close').addEventListener('click',()=>el('drawer').classList.remove('open'));
 window.addEventListener('message',event=>{const data=event&&event.data;if(!data)return;if(embedded&&event.source!==window.parent)return;if(data.type==='ai-bot-config'){applyConfig(data)}else if(data.type==='ai-bot-draw-result'){coins=Math.max(0,Number(data.tickets)||0);(data.owned||[]).map(botIndex).filter(i=>i>=0).forEach(i=>owned.add(i));showPrize(data.prize)}});
 render();if(embedded)window.parent.postMessage({type:'ai-bot-ready'},'*');
-</script></body></html>
+</script><script>document.body.style.setProperty('background-image','linear-gradient(180deg,rgba(4,10,43,.34),rgba(7,6,48,.56)),url("./random-cabinet-neon-bg.png")','important');document.body.style.setProperty('background-size','cover','important');document.body.style.setProperty('background-position','center','important');document.body.style.setProperty('background-attachment','fixed','important');</script></body></html>
