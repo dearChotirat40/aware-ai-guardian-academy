@@ -1325,6 +1325,7 @@ body #app .login-view .app-name-login .app-title-sub{
 .toy-pair{display:flex;align-items:center;justify-content:center;gap:7px;min-height:58px}.toy-mini{display:inline-flex;align-items:center;justify-content:center;width:42px;height:48px;border:2px solid rgba(59,101,139,.2);border-radius:15px;font-size:28px;filter:grayscale(1) brightness(.55);opacity:.32}.toy-mini.got{filter:none;opacity:1;box-shadow:0 4px 0 rgba(0,63,105,.2);animation:toyCollected .6s ease}.toy-mini.silhouette{filter:none;opacity:1;background:#e8f0f4;border-color:#b9cbd5}.toy-mini.silhouette img{filter:brightness(0) saturate(0) contrast(1.18) opacity(.55)!important}.random-toy-slot.got .toy-mini img{filter:drop-shadow(0 4px 3px rgba(0,35,65,.25))!important}.cabinet-locked{margin:10px 2px 0;padding:10px;border-radius:12px;background:#f8e1e5;color:#924159;font-size:13px;font-weight:800;text-align:center}
 /* สมุดสะสม BOT COLLECTION ในหน้าความคืบหน้า */
 .bot-collection-paper{position:relative;overflow:hidden;padding:clamp(18px,3vw,30px);border:3px solid #714422;border-radius:0;background:repeating-linear-gradient(to bottom,#fffdf0 0 30px,#d1e5e6 31px 32px);box-shadow:8px 9px 0 rgba(99,59,30,.18)}.bot-collection-paper:before{content:'';position:absolute;left:0;right:0;top:96px;border-top:2px solid rgba(129,73,38,.2);pointer-events:none}.bot-collection-head{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}.bot-collection-head h3{margin:0;color:#073e64;font-family:'Kanit','Noto Sans Thai',sans-serif;font-size:clamp(25px,4vw,38px);font-weight:900;letter-spacing:.02em;line-height:1}.bot-collection-head p{margin-top:8px;color:#704928;font-size:12px;font-weight:700;line-height:1.55}.bot-collection-count{display:inline-grid;place-items:center;min-width:58px;min-height:38px;padding:5px 9px;border:3px solid #9c642e;border-radius:999px;background:#fff6c8;color:#6e421e;font-size:13px;font-weight:900}.bot-collection-paper .random-toy-grid{position:relative;z-index:1;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:0}.bot-collection-paper .random-toy-slot{min-height:178px;padding:13px 8px 10px;border:3px dashed #aa7042;border-radius:19px;background:rgba(255,255,255,.82);box-shadow:none}.bot-collection-paper .random-toy-slot.got{border-color:#aa7042;background:rgba(255,255,255,.92);box-shadow:0 4px 0 rgba(123,73,37,.1)}.bot-collection-paper .toy-pair{min-height:112px}.bot-collection-paper .toy-mini,.bot-collection-paper .toy-mini.got,.bot-collection-paper .toy-mini.silhouette{width:104px;height:112px;border:0;border-radius:0;background:transparent;box-shadow:none;filter:none;opacity:1}.bot-collection-paper .toy-mini img{width:104px!important;height:112px!important;max-width:none;max-height:none;object-fit:contain}.bot-collection-paper .toy-mini.silhouette img{filter:brightness(0) saturate(0) contrast(1.08) opacity(.28)!important}.bot-collection-paper .random-toy-slot.got .toy-mini img{filter:drop-shadow(0 7px 5px rgba(74,47,29,.2))!important}.bot-collection-paper .toy-name{margin-top:7px!important;color:#704522!important;font-size:clamp(12px,1.8vw,16px)!important;font-weight:900!important;line-height:1.3!important}.bot-collection-paper .toy-lesson{color:#9c6a41!important;font-size:10px!important}.bot-collection-draw{position:relative;z-index:1;display:block;width:min(260px,100%);margin:18px auto 0;padding:10px 14px;border:2px solid #8e572c;border-radius:999px;background:#fff2bb;color:#704522;font-family:inherit;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(112,69,34,.2)}@media(max-width:480px){.bot-collection-paper{padding:18px 13px}.bot-collection-paper .random-toy-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.bot-collection-paper .random-toy-slot{min-height:160px}.bot-collection-paper .toy-mini,.bot-collection-paper .toy-mini.got,.bot-collection-paper .toy-mini.silhouette,.bot-collection-paper .toy-mini img{width:84px!important;height:92px!important}.bot-collection-head h3{font-size:27px}}
+.bot-collection-paper button.random-toy-slot{width:100%;font-family:inherit;color:inherit;cursor:pointer;appearance:none}.bot-collection-paper button.random-toy-slot.got:hover{transform:translateY(-2px);box-shadow:0 7px 0 rgba(123,73,37,.15)}.bot-collection-paper button.random-toy-slot:disabled{cursor:default}.bot-collection-paper .random-toy-slot.selected{border-style:solid;border-color:#d05283;background:linear-gradient(145deg,#fffdf8,#ffe4f0);box-shadow:0 0 0 3px rgba(208,82,131,.18),0 5px 0 rgba(158,66,99,.16)}.bot-collection-paper .random-toy-slot.selected .toy-lesson{color:#b52e64!important}
 /* ตู้สุ่มเต็มหน้าพร้อมเอฟเฟกต์สมุดโน้ต */
 .cabinet-launcher{max-width:470px;text-align:center}.cabinet-launcher .cabinet-token{margin:4px auto 12px}.random-cabinet.cabinet-fullscreen{position:fixed;z-index:9999;inset:0;width:100%;min-height:100dvh;margin:0;padding:clamp(14px,3vw,34px);border:0;border-radius:0;background:radial-gradient(circle at 50% 7%,#fdf9d7 0 3%,#e8f7fa 24%,#b9e2e8 70%,#75b5c8 100%);box-shadow:none;display:grid;place-items:center;overflow:auto}.cabinet-fullscreen::before{content:'';position:absolute;inset:clamp(10px,2vw,28px);border-radius:25px;background:repeating-linear-gradient(to bottom,transparent 0 29px,rgba(75,145,183,.18) 30px 31px),linear-gradient(90deg,rgba(255,255,255,.94) 0 49.5%,rgba(249,247,231,.98) 50.5% 100%);box-shadow:0 12px 30px rgba(29,77,112,.28),inset 0 0 0 2px rgba(78,142,177,.32);transform:rotate(-.35deg)}.cabinet-fullscreen::after{content:'';position:absolute;top:clamp(16px,3vw,42px);bottom:clamp(16px,3vw,42px);left:50%;width:9px;border-radius:99px;background:linear-gradient(90deg,#d2b08f,#fff3dc 46%,#a87c57);box-shadow:0 0 0 1px rgba(91,62,41,.22),0 0 18px rgba(88,61,39,.2);transform:translateX(-50%)}.cabinet-book-rings{position:absolute;z-index:2;top:clamp(16px,3vw,42px);bottom:clamp(16px,3vw,42px);left:50%;display:flex;flex-direction:column;justify-content:space-around;transform:translateX(-50%);pointer-events:none}.cabinet-book-rings i{display:block;width:26px;height:13px;border:4px solid #486b83;border-radius:50%;background:transparent;box-shadow:0 1px 0 #fff}.cabinet-full-panel{position:relative;z-index:3;width:min(620px,calc(100vw - 38px));padding:clamp(15px,2.8vw,28px);border:5px solid #0a6895;border-radius:28px;background:linear-gradient(145deg,#087fac,#075076);box-shadow:0 12px 0 #063f62,0 24px 42px rgba(25,76,106,.35);color:#fff;text-align:center}.cabinet-close{position:absolute;right:13px;top:12px;width:38px;height:38px;border:0;border-radius:50%;background:#fff;color:#1e4d76;font-size:22px;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 3px 0 rgba(6,63,98,.4)}.cabinet-fullscreen .random-cabinet-title{font-size:clamp(23px,5vw,34px);margin:0 42px 14px}.cabinet-fullscreen .cabinet-window{min-height:clamp(300px,48vh,400px);border-width:8px}.cabinet-fullscreen .cabinet-sign{top:clamp(18px,4vh,35px);left:clamp(24px,7vw,70px);right:clamp(24px,7vw,70px);font-size:clamp(16px,3vw,21px);padding:12px}.cabinet-fullscreen .cabinet-bots{left:clamp(16px,4vw,42px);right:clamp(16px,4vw,42px);bottom:clamp(16px,4vh,38px);min-height:clamp(140px,25vh,190px);padding:15px}.cabinet-fullscreen .cabinet-bot{width:clamp(50px,11vw,82px);height:clamp(60px,13vw,96px);border-width:3px}.cabinet-fullscreen .cabinet-token{font-size:clamp(14px,2.5vw,17px);margin-top:15px}.cabinet-fullscreen .cabinet-controls{justify-content:center;gap:14px;padding-top:12px}.cabinet-fullscreen .cabinet-controls .btn{font-size:clamp(15px,2.7vw,18px);padding:12px 18px}.cabinet-fullscreen .cabinet-win{font-size:clamp(15px,2.7vw,18px);margin-top:14px}.cabinet-fullscreen .cabinet-win img{width:clamp(88px,20vw,140px)!important;height:clamp(88px,20vw,140px)!important}@media(max-width:520px){.cabinet-full-panel{width:calc(100vw - 24px);padding:13px}.cabinet-fullscreen .cabinet-full-panel{border-width:4px}.cabinet-fullscreen .cabinet-controls{flex-direction:column}.cabinet-fullscreen .cabinet-controls .btn{width:100%}.cabinet-fullscreen .cabinet-bot{width:44px;height:54px}.cabinet-book-rings{display:none}.cabinet-fullscreen::after{width:5px}}
 @media(max-width:520px){.claw-game{max-width:320px;padding:9px}.claw-window{min-height:194px}.claw-toy{width:40px;height:46px;font-size:27px}.claw-game-title{font-size:17px}}
@@ -2366,6 +2367,9 @@ function sanitizeStudentRecord(s) {
     var askedAt = Number(item.askedAt) || 0;
     return question ? { question:question, askedAt:askedAt } : null;
   }).filter(Boolean).slice(-80);
+  var buddyAvatar = String(s.buddyAvatar || '').trim();
+  if (buddyAvatar && typeof randomBotByName === 'function' && randomBotByName(buddyAvatar)) s.buddyAvatar = buddyAvatar;
+  else delete s.buddyAvatar;
   return s;
 }
 window.sanitizeStudentRecord = sanitizeStudentRecord;
@@ -2569,6 +2573,8 @@ function saveProgress() {
   s.badgeIds = state.badges.map(function(b){ return b.id; });
   s.pStars = sessionPStars.slice();
   s.assessments = liveAssessments || s.assessments || newAssessments();
+  if (live && live.buddyAvatar) s.buddyAvatar = live.buddyAvatar;
+  else delete s.buddyAvatar;
   s._updatedAt = Date.now();
   s.last = new Date().toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
   saveDB();
@@ -3619,7 +3625,7 @@ function render() {
     try { appEl.insertAdjacentHTML('afterbegin', rankStripHtml()); } catch(e) {}
     if (state.view !== 'chat') {
       try { appEl.insertAdjacentHTML('beforeend',
-        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + BUDDY_IMG + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
+        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
     }
   }
 }
@@ -4005,17 +4011,17 @@ function renderChat() {
     if (m.role === 'me') {
       return '<div class="msgrow me"><div class="chat-avatar student" aria-label="รูปโปรไฟล์นักเรียน">' + chatStudentInitial() + '</div><div class="msgwrap"><p class="msg-meta">คุณ</p><div class="msg">' + escChat(m.text) + '</div></div></div>';
     }
-    return '<div class="msgrow"><img class="chat-avatar" src="' + BUDDY_IMG + '" alt="รูปโปรไฟล์น้องชวนคิด"><div class="msgwrap"><p class="msg-meta">น้องชวนคิด</p><div class="msg">' + m.text +
+    return '<div class="msgrow"><img class="chat-avatar" src="' + buddyAvatarSrc() + '" alt="' + buddyAvatarAlt() + '"><div class="msgwrap"><p class="msg-meta">น้องชวนคิด</p><div class="msg">' + m.text +
       (m.offline ? '<span class="src">📐 โหมดตอบอัตโนมัติ (ยังเชื่อมต่อ AI ไม่ได้)</span>' : '') + '</div></div></div>';
   }).join('');
   if (state.chatBusy) {
-    msgs += '<div class="msgrow"><img class="chat-avatar" src="' + BUDDY_IMG + '" alt="รูปโปรไฟล์น้องชวนคิด"><div class="msgwrap"><p class="msg-meta">น้องชวนคิดกำลังพิมพ์</p><div class="msg typing"><span></span><span></span><span></span></div></div></div>';
+    msgs += '<div class="msgrow"><img class="chat-avatar" src="' + buddyAvatarSrc() + '" alt="' + buddyAvatarAlt() + '"><div class="msgwrap"><p class="msg-meta">น้องชวนคิดกำลังพิมพ์</p><div class="msg typing"><span></span><span></span><span></span></div></div></div>';
   }
 
   appEl.innerHTML =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
-        '<img class="buddyimg wiggle" style="width:66px;height:66px" src="' + BUDDY_IMG + '" alt="">' +
+        '<img class="buddyimg wiggle" style="width:66px;height:66px" src="' + buddyAvatarSrc() + '" alt="' + buddyAvatarAlt() + '">' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">น้องชวนคิด</h2>' +
         '<p class="soft tiny">ถามได้เฉพาะเนื้อหาและภารกิจในบทเรียน AI</p></div>' +
       '</div>' +
@@ -5910,6 +5916,27 @@ function randomBotUniquePrizes() {
     return true;
   });
 }
+function currentBuddyAvatar() {
+  var s = currentStudent();
+  return s && s.buddyAvatar ? randomBotByName(s.buddyAvatar) : null;
+}
+function buddyAvatarSrc() {
+  var avatar = currentBuddyAvatar();
+  return avatar ? RANDOM_BOT_ASSET_PATH + avatar.file : BUDDY_IMG;
+}
+function buddyAvatarAlt() {
+  var avatar = currentBuddyAvatar();
+  return avatar ? 'อวตารน้องชวนคิด ' + avatar.name : 'รูปโปรไฟล์น้องชวนคิด';
+}
+function chooseBuddyAvatar(name) {
+  var s = currentStudent();
+  var avatar = randomBotByName(name);
+  var unlocked = randomBotUniquePrizes().some(function(item){ return avatar && item.name === avatar.name; });
+  if (!s || !avatar || !unlocked) return;
+  s.buddyAvatar = avatar.name;
+  saveProgress();
+  render();
+}
 function randomBotNextPrize() {
   var owned = {};
   randomBotCollectedPrizes().forEach(function(item){ if (item) owned[item.name] = true; });
@@ -5933,15 +5960,18 @@ function randomBotCollectionHtml() {
   uniquePrizes.forEach(function(item){ owned[item.name] = item; });
   var badgeCount = randomBotBadgeCount();
   var remaining = randomBotDrawRemaining();
+  var selectedAvatar = currentBuddyAvatar();
   var slots = RANDOM_BOT_PRIZES.map(function(item, i){
     var prize = owned[item.name];
-    return '<div class="random-toy-slot ' + (prize ? 'got' : '') + '">' +
+    var selected = prize && selectedAvatar && selectedAvatar.name === prize.name;
+    return '<button type="button" class="random-toy-slot ' + (prize ? 'got' : '') + (selected ? ' selected' : '') + '"' +
+      (prize ? ' onclick="chooseBuddyAvatar(\'' + item.name + '\')" aria-pressed="' + (selected ? 'true' : 'false') + '"' : ' disabled aria-label="ตุ๊กตาลึกลับ ยังไม่ปลดล็อก"') + '>' +
       '<div class="toy-pair"><span class="toy-mini bot-' + item.tone + ' ' + (prize ? 'got' : 'silhouette') + '">' + randomBotImage(item, 54) + '</span></div>' +
       '<div class="toy-name">' + (prize ? item.name : 'ตุ๊กตาลึกลับ') + '</div>' +
-      '<div class="toy-lesson">' + (prize ? 'ปลดล็อกแล้ว' : 'เงาตุ๊กตา · รอสุ่ม') + '</div></div>';
+      '<div class="toy-lesson">' + (prize ? (selected ? '✓ กำลังเป็นอวตารน้องชวนคิด' : 'แตะเพื่อใช้เป็นอวตาร') : 'เงาตุ๊กตา · รอสุ่ม') + '</div></button>';
   }).join('');
   return '<section class="random-toy-collection bot-collection-paper">' +
-    '<div class="bot-collection-head"><div><h3>BOT COLLECTION</h3><p>น้องชวนคิด · ตราสะสม ' + badgeCount + ' ตรา · สุ่มแล้ว ' + prizes.length + ' ครั้ง · เหลือสิทธิ์ ' + remaining + ' ครั้ง</p></div><strong class="bot-collection-count">' + uniquePrizes.length + '/' + RANDOM_BOT_PRIZES.length + '</strong></div>' +
+    '<div class="bot-collection-head"><div><h3>BOT COLLECTION</h3><p>น้องชวนคิด · ตราสะสม ' + badgeCount + ' ตรา · สุ่มแล้ว ' + prizes.length + ' ครั้ง · เหลือสิทธิ์ ' + remaining + ' ครั้ง<br>แตะตุ๊กตาที่ปลดล็อกแล้วเพื่อใช้เป็นอวตารน้องชวนคิด</p></div><strong class="bot-collection-count">' + uniquePrizes.length + '/' + RANDOM_BOT_PRIZES.length + '</strong></div>' +
     '<div class="random-toy-grid">' + slots + '</div>' +
     '<button onclick="openRandomCabinet()" class="bot-collection-draw">🧸 ไปตู้สุ่มน้องชวนคิด</button></section>';
 }
