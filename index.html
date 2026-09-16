@@ -2601,6 +2601,7 @@ function applyStudent(id) {
   scenarios.forEach(function(sc){ sc.choices.forEach(function(c){
     if (c.badge && ids.indexOf(c.badge.id) !== -1) state.badges.push(c.badge);
   }); });
+  if (importRandomBotHandoff()) saveProgress();
   startStripTimer();
   refreshSecureLeaderboard({strip:true});
   scheduleSheetSync();
@@ -5864,7 +5865,7 @@ function nextQuestion() {
     qz.completed = true;
     markJourneyStep(beforeJourney);
     saveProgress();
-    state.randomCabinetOpen = randomBotDrawRemaining() > 0;
+    state.randomCabinetOpen = false;
     changeView('quizresult');
   }
 }
@@ -5978,6 +5979,34 @@ function randomBotCollectionHtml() {
 function randomBotPagePath() {
   return location.pathname.indexOf('/public/') !== -1 ? './ai-bot-random.html' : './public/ai-bot-random.html';
 }
+var RANDOM_BOT_HANDOFF_KEY = 'awareai_random_bot_handoff_v1';
+function randomBotHandoffPayload() {
+  return {
+    studentId: currentId,
+    tickets: randomBotDrawRemaining(),
+    owned: randomBotCollectedPrizes().map(function(item){ return item.name; }),
+    prizes: [],
+    returnTo: location.href,
+    issuedAt: Date.now()
+  };
+}
+function importRandomBotHandoff() {
+  if (!currentId) return false;
+  var handoff;
+  try { handoff = JSON.parse(sessionStorage.getItem(RANDOM_BOT_HANDOFF_KEY) || 'null'); } catch(e) { return false; }
+  if (!handoff || handoff.studentId !== currentId || !Array.isArray(handoff.prizes)) return false;
+  var imported = false;
+  handoff.prizes.forEach(function(name){
+    if (randomBotDrawRemaining() <= 0) return;
+    if (takeRandomBotDraw(name)) imported = true;
+  });
+  try { sessionStorage.removeItem(RANDOM_BOT_HANDOFF_KEY); } catch(e) {}
+  if (imported) state.randomCabinetOpen = false;
+  return imported;
+}
+window.addEventListener('pageshow', function(){
+  if (currentId && importRandomBotHandoff()) render();
+});
 function randomBotFrame() {
   return document.getElementById('ai-bot-random-frame');
 }
@@ -5998,13 +6027,14 @@ function sendRandomBotPrize(prize) {
   var frame = randomBotFrame();
   if (frame && frame.contentWindow) frame.contentWindow.postMessage(randomBotFrameData('ai-bot-draw-result', prize), '*');
 }
-function takeRandomBotDraw() {
+function takeRandomBotDraw(forcedPrizeName) {
   var i = typeof state.currentLesson === 'number' && lessonProgress[state.currentLesson] && randomBotPlayCount(lessonProgress[state.currentLesson]) < 2
     ? state.currentLesson : lessonProgress.findIndex(function(p){ return randomBotPlayCount(p) < 2; });
   if (i < 0 || randomBotDrawRemaining() <= 0) return null;
   var latest = lessonProgress[i];
   var latestPlays = randomBotPlayCount(latest);
-  var pick = randomBotNextPrize();
+  var pick = forcedPrizeName ? randomBotByName(forcedPrizeName) : randomBotNextPrize();
+  if (!pick) return null;
   var currentPrizes = Array.isArray(latest.clawPrizes) ? latest.clawPrizes.filter(Boolean).slice(0, latestPlays) : (latest.clawPrize ? [latest.clawPrize] : []);
   currentPrizes.push(pick.name);
   latest.clawPlays = latestPlays + 1;
@@ -6052,8 +6082,8 @@ function randomDollLinkHtml() {
   return '<section class="random-doll-link"><div class="random-doll-preview-row">' + dolls + '</div><div class="random-doll-copy"><h3>🧸 ตู้สุ่มตุ๊กตาน้องชวนคิด</h3><p>' + status + '</p></div><button onclick="openRandomCabinet()" class="btn pinkb sm">🧸 ไปตู้สุ่มตุ๊กตา</button></section>';
 }
 function openRandomCabinet() {
-  state.randomCabinetOpen = true;
-  render();
+  try { sessionStorage.setItem(RANDOM_BOT_HANDOFF_KEY, JSON.stringify(randomBotHandoffPayload())); } catch(e) {}
+  location.href = randomBotPagePath() + '?academy=1';
 }
 function closeRandomCabinet() {
   if (state.clawPicking) return;
