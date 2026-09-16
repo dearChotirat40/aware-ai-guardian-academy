@@ -6655,7 +6655,13 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       isTeacher: isTeacher,
       isGoogle: !!(user && !user.is_anonymous && ((user.app_metadata || {}).providers || []).indexOf("google") !== -1),
       signInGoogle: function() {
-        return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin + window.location.pathname,queryParams:{prompt:"select_account"}}}).then(check);
+        return fetch(window.SUPABASE_CONFIG.url + "/auth/v1/settings", {headers:{apikey:window.SUPABASE_CONFIG.publishableKey}}).then(function(response) {
+          if (!response.ok) throw new Error("Cannot check Google login availability");
+          return response.json();
+        }).then(function(settings) {
+          if (!settings.external || !settings.external.google) throw new Error("Google provider not enabled");
+          return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin + window.location.pathname,queryParams:{prompt:"select_account"}}}).then(check);
+        });
       },
       teacherManage: function(action, payload) {
         if (!teacherPin) return Promise.reject(new Error('กรุณาเข้าสู่ระบบครู'));
