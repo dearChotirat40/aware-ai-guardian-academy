@@ -6273,6 +6273,7 @@ function renderDashboard() {
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png?v=20260916-newhome" alt="หน้าหลัก"></button>' +
     '</div>' +
     '<div class="body-area scroll progress-dashboard">' +
+      '<details class="progress-rules"><summary>📏 เกณฑ์คะแนนและรางวัล</summary><img src="./reward-guide.png?v=20260916" alt="เกณฑ์คะแนนและรางวัล: บทเรียน 20 คะแนน พรอมต์ 0–3 ดาวต่อโจทย์ ภารกิจด่านละ 2 คะแนนและ 1 เหรียญ ระดับเส้นทาง Silver Gold Platinum Diamond และเกณฑ์เหรียญรายบท" style="display:block;width:100%;height:auto"><details style="padding:12px"><summary>รายละเอียดเกณฑ์ปัจจุบัน</summary>' + rewardCriteriaHtml('student') + '</details></details>' +
       '<section class="progress-stats-grid">' +
         '<article class="progress-stat pink"><div class="progress-stat-icon">📚</div><p class="progress-stat-label">คะแนนบทเรียน</p><p class="progress-stat-value">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/' + maxLessonPoints() + '</span></p><p class="progress-stat-note">⭐ ' + totalStars() + '/' + lessons.length + ' ดาว · ' + lessonMedalSummary() + '</p></article>' +
         '<article class="progress-stat blue"><div class="progress-stat-icon">🎮</div><p class="progress-stat-label">โบนัสภารกิจ</p><p class="progress-stat-value">' + state.score + '<span class="soft" style="font-size:14px">/' + maxScenarioScore() + '</span></p><p class="progress-stat-note">ผ่าน ' + scenariosDone + '/' + scenarios.length + ' ด่าน · ตราสถานการณ์ ' + state.badges.length + '</p></article>' +
@@ -6296,7 +6297,6 @@ function renderDashboard() {
           '<button onclick="logout()" class="btn whiteb sm">🚪 ออกจากระบบ</button>' +
         '</div></aside>' +
       '</section>' +
-      '<details class="progress-rules"><summary>📏 ดูเกณฑ์คะแนน ดาว เหรียญ และรางวัล</summary>' + rewardCriteriaHtml('student') + '</details>' +
     '</div>';
 }
 
