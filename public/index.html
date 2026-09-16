@@ -1455,6 +1455,7 @@ body{font-size:18px;line-height:1.78}
   .lesson-submenu-heading p,.lesson-submenu-status{font-size:13px}
 }
 .progress-stat.success{--stat-color:#9a83c6;border-color:#cdbde7;text-align:center}.success-ring{width:94px;height:94px;margin:10px auto;display:grid;place-items:center;border-radius:50%;background:conic-gradient(#9270c6 0 var(--done),#eee8f5 var(--done) 100%)}.success-ring strong{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:white;font-size:24px;color:#644793}@media(max-width:960px){.progress-stat.success{grid-column:1/-1}}
+.lesson-badge-collection .bot-collection-head h3{font-size:clamp(20px,3vw,27px);line-height:1.3}.lesson-badge-collection .badge-medal{flex-shrink:0}.lesson-badge-collection .badge-unearned .badge-medal{filter:grayscale(1);opacity:.28}.lesson-badge-collection .random-toy-grid{grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
 </style>
 </head>
 <body>
@@ -6170,10 +6171,10 @@ function lessonBadgesHtml(index, student) {
       (b.type === 'scenario' && missionIds.indexOf(b.badgeId) !== -1) ||
       (b.type === 'prompt' && index === 1) || (b.type === 'pre' && index === 0);
   });
-  return '<details style="margin-top:12px"><summary style="cursor:pointer;font-weight:700">🏅 เหรียญตราของบทนี้ · ได้แล้ว ' + badges.filter(function(b){return hasAchievement(b,student);}).length + '/' + badges.length + '</summary><div class="badgegrid achievement-grid" style="margin-top:10px">' + badges.map(function(b){
+  return '<details style="margin-top:12px"><summary style="cursor:pointer;font-weight:700">🏅 เหรียญตราของบทนี้ · ได้แล้ว ' + badges.filter(function(b){return hasAchievement(b,student);}).length + '/' + badges.length + '</summary><section class="bot-collection-paper lesson-badge-collection" style="margin:12px 0"><div class="bot-collection-head"><div><h3>ตราสัญลักษณ์สะสม</h3><p>สะสมตราจากกิจกรรมของบทนี้</p></div></div><div class="random-toy-grid">' + badges.map(function(b){
     var earned=hasAchievement(b,student);
-    return '<div class="badgeitem' + (earned ? '' : ' locked') + '">' + badgeMedalHtml(b) + '<p>' + escChat(b.name) + '</p><span class="badge-criterion">' + (earned ? '✓ ได้รับแล้ว · ' : '') + escChat(b.criterion) + '</span></div>';
-  }).join('') + '</div></details>';
+    return '<div class="random-toy-slot' + (earned ? ' got' : ' badge-unearned') + '">' + badgeMedalHtml(b) + '<p class="toy-name">' + escChat(b.name) + '</p><span class="toy-lesson">' + (earned ? '✓ ได้รับแล้ว · ' : '') + escChat(b.criterion) + '</span></div>';
+  }).join('') + '</div></section></details>';
 }
 function renderDashboard() {
   var student = currentStudent() || {};
