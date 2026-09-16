@@ -3638,7 +3638,7 @@ function render() {
     try { appEl.insertAdjacentHTML('afterbegin', rankStripHtml()); } catch(e) {}
     if (state.view !== 'chat') {
       try { appEl.insertAdjacentHTML('beforeend',
-        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
+        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button><button class="btn whiteb sm" onclick="openBuddyPicker()" aria-label="เลือกหุ่นที่สะสมเป็นตัวละครแชทบอท">🤖 เปลี่ยนตัวละคร</button></div>'); } catch(e) {}
     }
   }
 }
@@ -4036,7 +4036,7 @@ function renderChat() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<img class="buddyimg wiggle" style="width:66px;height:66px" src="' + buddyAvatarSrc() + '" alt="' + buddyAvatarAlt() + '">' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">น้องชวนคิด</h2>' +
-        '<p class="soft tiny">ถามได้เฉพาะเนื้อหาและภารกิจในบทเรียน AI</p></div>' +
+        '<p class="soft tiny">' + (currentBuddyAvatar() ? escChat(currentBuddyAvatar().name) + ' · ' : '') + 'ถามได้เฉพาะเนื้อหาและภารกิจในบทเรียน AI</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:10px">' +
         '<button onclick="openBuddyPicker()" class="btn whiteb sm">🤖 เปลี่ยนตัวละคร</button>' +

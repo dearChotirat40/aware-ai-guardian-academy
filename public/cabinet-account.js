@@ -51,7 +51,14 @@
       panel.setAttribute('aria-modal', 'true');
       panel.setAttribute('aria-label', 'เลือกตัวละครน้องชวนคิด');
       panel.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(20,40,60,.65);overflow:auto;padding:24px';
-      panel.innerHTML = '<div style="max-width:760px;margin:auto;background:#fffdf5;padding:20px;border-radius:20px"><button class="btn whiteb sm" onclick="closeBuddyPicker()">ปิด ×</button><h2>เลือกตัวละครน้องชวนคิด</h2><p>เลือกได้จากหุ่นที่บัญชีนี้สะสมไว้ ตัวละครจะเปลี่ยนในแชทโดยยังคุยเรื่องเดิมต่อได้</p><p id="buddy-save-status" role="status"></p>' + randomBotCollectionHtml() + '</div>';
+      var owned = randomBotUniquePrizes();
+      var chosen = currentBuddyAvatar();
+      var choices = owned.map(function(item) {
+        var selected = chosen && chosen.name === item.name;
+        return '<button type="button" class="random-toy-slot got' + (selected ? ' selected' : '') + '" onclick="chooseBuddyAvatar(\'' + item.name + '\')" aria-pressed="' + !!selected + '">' + randomBotImage(item, 90) + '<div class="toy-name">' + item.name + '</div><div class="toy-lesson">' + (selected ? '✓ กำลังใช้คุยกับเรา' : 'เลือกเป็นน้องชวนคิด') + '</div></button>';
+      }).join('');
+      var chooser = owned.length ? '<div class="random-toy-grid" style="margin:16px 0">' + choices + '</div>' : '<p style="padding:20px 0">ยังไม่มีหุ่นที่สุ่มได้ สะสมเหรียญตราแล้วไปสุ่มตัวละครก่อนนะ ตอนนี้ยังคุยกับน้องชวนคิดตัวเดิมได้</p>';
+      panel.innerHTML = '<div style="max-width:760px;margin:auto;background:#fffdf5;padding:20px;border-radius:20px"><button class="btn whiteb sm" onclick="closeBuddyPicker()">ปิด ×</button><h2>เลือกตัวละครน้องชวนคิด</h2><p>เลือกได้จากหุ่นที่บัญชีนี้สะสมไว้ ตัวละครจะเปลี่ยนในแชทโดยยังคุยเรื่องเดิมต่อได้</p><p id="buddy-save-status" role="status"></p>' + chooser + '<button class="btn pinkb sm" onclick="openRandomCabinet()">🧸 ไปสุ่มตัวละครเพิ่ม</button></div>';
       document.body.appendChild(panel);
     }).catch(function () { alert('โหลดตัวละครจากบัญชีไม่สำเร็จ กรุณาลองใหม่'); });
   };
