@@ -34,7 +34,7 @@
       if (currentId !== id || active !== id) return;
       if (retry.length) pending = null;
       state.chat = display(rows);
-      if (!rows.length) state.chat = [{role:'bot',text:'สวัสดี เราคือน้องชวนคิด 😊 ถามเรื่องบทเรียน AI ได้เลย ประวัติจะเก็บไว้กับบัญชีของเรา'}];
+      if (!rows.length) state.chat = [{role:'bot',text:'สวัสดี เราคือน้องชวนคิด 😊 เราจะช่วยอธิบาย ยกตัวอย่าง และค่อย ๆ คิดไปด้วยกัน ไม่ต้องกลัวตอบผิดนะ วันนี้มีเรื่องไหนเกี่ยวกับ AI ที่สงสัยหรืออยากลองคิดด้วยกันบ้าง?'}];
     } catch (error) {
       if (currentId === id) state.chat = [{role:'bot',text:'โหลดประวัติไม่สำเร็จ กดปุ่มประวัติเพื่อลองใหม่ ข้อความเดิมยังอยู่ในฐานข้อมูล'}];
     } finally {
