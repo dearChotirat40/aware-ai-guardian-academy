@@ -42,5 +42,5 @@
  var oldLogout=logout; logout=function(){closeReportArchive();return oldLogout();};
  var oldApply=applyStudent; applyStudent=function(id){if(id!==currentId)closeReportArchive();return oldApply(id);};
  var teacherRender=renderTeacher;
- renderTeacher=function(){teacherRender();var h=document.querySelector('.body-area');if(h)h.insertAdjacentHTML('afterbegin','<section class="pcard blue" style="margin-bottom:16px"><h3>📁 คลังรายงานรายบุคคล</h3><p>ข้อมูลล่าสุดของทุกคนและรายงานย้อนหลัง รวมประวัติสนทนา</p><button class="btn blueb" onclick="openReportArchive(true)">เปิดรายงานนักเรียนทุกคน</button></section>');};
+ renderTeacher=function(){teacherRender();var h=document.querySelector('.body-area');if(h)h.insertAdjacentHTML('afterbegin','<section id="teacher-report-panel" class="pcard blue" style="margin-bottom:16px"><h3>📁 คลังรายงานรายบุคคล</h3><p>ข้อมูลล่าสุดของทุกคนและรายงานย้อนหลัง รวมประวัติสนทนา</p><button class="btn blueb" onclick="openReportArchive(true)">เปิดรายงานนักเรียนทุกคน</button></section>');};
 }());

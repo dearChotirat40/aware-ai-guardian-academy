@@ -4548,7 +4548,7 @@ function renderTeacher() {
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:32px" class="noprint">🧑‍🏫</div>' +
-        '<div><h2 class="ink" style="font-size:21px;font-weight:700">รายงานความคืบหน้าสำหรับคุณครู</h2>' +
+        '<div><h2 class="ink" style="font-size:21px;font-weight:700">ศูนย์จัดการห้องเรียนสำหรับคุณครู</h2>' +
         '<p class="soft tiny">เว็บแอปพลิเคชันตามแนวคิดเกมมิฟิเคชันและการเรียนรู้โดยใช้สถานการณ์ เพื่อส่งเสริมความรู้เท่าทันการใช้ปัญญาประดิษฐ์อย่างรับผิดชอบของนักเรียนชั้นมัธยมศึกษาปีที่ 4 · พิมพ์เมื่อ ' + new Date().toLocaleString('th-TH', { dateStyle:'long' }) + '</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:10px" class="noprint">' +
@@ -4560,15 +4560,15 @@ function renderTeacher() {
     '</div>' +
     '<div class="body-area scroll">' +
       teacherSupabaseDashboardHtml() +
-      teacherChatQuestionsHtml() +
-      teacherSystemStatusHtml() +
-      teacherStudentDetailHtml() +
-      teacherRosterHtml() +
+      '<section data-teacher-pane="chat">' + teacherChatQuestionsHtml() + '</section>' +
+      '<section data-teacher-pane="settings">' + teacherSystemStatusHtml() + '</section>' +
+      '<section data-teacher-pane="overview">' + teacherStudentDetailHtml() + '</section>' +
+      '<section data-teacher-pane="students">' + teacherRosterHtml() + '</section>' +
       teacherContentEditorHtml() +
-      teacherContentBlueprintHtml() +
+      '<section data-teacher-pane="content">' + teacherContentBlueprintHtml() + '</section>' +
       rewardCriteriaHtml('teacher') +
-      teacherMissionPlanHtml() +
-      teacherLessonMissionGuideHtml() +
+      '<section data-teacher-pane="content">' + teacherMissionPlanHtml() + '</section>' +
+      '<section data-teacher-pane="content">' + teacherLessonMissionGuideHtml() + '</section>' +
       '<div class="pcard mint noprint" style="margin-bottom:20px">' +
         '<div class="tape tape-mint"></div>' +
         '<h3 class="t-mint" style="font-weight:700;margin-bottom:8px">📊 รายงานผ่าน Google Sheet / Excel</h3>' +
@@ -6631,10 +6631,11 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./teacher-admin.js"></script>
+<script src="./teacher-admin.js?v=20260916-teacher2"></script>
 <script src="./google-login.js"></script>
 <script src="./chat-history.js"></script>
-<script src="./student-reports.js"></script>
+<script src="./student-reports.js?v=20260916-teacher2"></script>
+<script src="./teacher-workspace.js?v=20260916-teacher2"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
 try {
@@ -6698,6 +6699,10 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       teacherManage: function(action, payload) {
         if (!teacherPin) return Promise.reject(new Error('กรุณาเข้าสู่ระบบครู'));
         return supabase.rpc('teacher_manage', {p_pin:teacherPin,p_action:action,p_payload:clean(payload || {})}).then(check);
+      },
+      teacherChat: function(id, action, messageId, content, role, expected) {
+        if (!teacherPin) return Promise.reject(new Error("Teacher login required"));
+        return supabase.rpc("teacher_chat_manage", {p_pin:teacherPin,p_student_id:id,p_action:action,p_message_id:messageId || null,p_content:content || "",p_role:role || "assistant",p_expected:expected == null ? null : expected}).then(check);
       },
       reportArchive: function(id, save, reportId, offset) {
         return supabase.rpc("student_report_archive", {p_student_id:id || null,p_save:!!save,p_report_id:reportId || null,p_pin:teacherPin,p_offset:offset || 0}).then(check);

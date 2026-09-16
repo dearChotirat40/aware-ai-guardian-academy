@@ -13,7 +13,7 @@
   };
   var version = 0, wallets = {}, busy = false, notice = '', edit = null, paths = [];
   var moduleNames = {lessons:'บทเรียน สไลด์ สถานการณ์ในบท ข้อสอบ และสื่อ',prompts:'ฝึกเขียนพรอมต์',scenarios:'เกมภารกิจและเหรียญตรา',assessment:'แบบทดสอบก่อน–หลังเรียน',badges:'ตราสัญลักษณ์สะสม',gems:'ระดับอัญมณีและโบนัสอันดับ',unitPoints:'คะแนนเต็มต่อบทเรียน',journey:'แผนที่เส้นทางและข้อความรางวัล',sheet:'การเชื่อม Google Sheet'};
-  var labels = {title:'ชื่อ / หัวข้อ',short:'ชื่อย่อ',mission:'ภารกิจ',simulation:'สถานการณ์จำลอง',videoDesc:'คำอธิบายวิดีโอ',slides:'สไลด์',quiz:'ข้อสอบ',situations:'สถานการณ์',media:'สื่อเพิ่มเติม',emoji:'อีโมจิ',text:'ข้อความ',q:'คำถาม',choices:'ตัวเลือก',answer:'เฉลย (เริ่มนับจาก 0)',hint:'คำใบ้',explain:'คำอธิบายเฉลย',url:'ลิงก์',type:'ประเภท',context:'บริบท',task:'งานที่ให้ทำ',thought:'คำถามชวนคิด',best:'ตัวเลือกที่เหมาะสม (เริ่มนับจาก 0)',category:'หมวด',character:'ตัวละคร',dialogue:'บทสนทนา',points:'คะแนน',feedback:'ข้อความตอบกลับ',badge:'เหรียญตรา',id:'รหัสรายการ',name:'ชื่อ',icon:'ไอคอน',color:'สี',isCorrect:'คำตอบถูก',mode:'รูปแบบกิจกรรม',level:'ระดับ',keywords:'คำสำคัญ',pieces:'ชิ้นส่วนพรอมต์',templateParts:'ส่วนของแม่แบบ',missingLabels:'หัวข้อช่องว่าง',missingPlaceholders:'ข้อความตัวอย่างในช่องว่าง',better:'ตัวอย่างคำตอบที่ดี',criterion:'เกณฑ์รับตรา',index:'ลำดับกิจกรรม (เริ่มนับจาก 0)',badgeId:'รหัสเหรียญภารกิจ',x:'ตำแหน่งรูปแนวนอน (0–3)',y:'ตำแหน่งรูปแนวตั้ง (0–2)',th:'ชื่อภาษาไทย',cls:'รูปแบบสี',min:'ดาวขั้นต่ำ',next:'ดาวระดับถัดไป',bonus:'โบนัสอันดับ',nodes:'จุดบนแผนที่',pointsMap:'พิกัด',events:'เหตุการณ์บนเส้นทาง',ic:'ไอคอน',lb:'ป้ายชื่อ',obstacle:'สิ่งที่ต้องทำ',reward:'ข้อความรางวัล',webAppUrl:'URL Apps Script ที่ลงท้าย /exec',sheetUrl:'URL Google Sheet',nickname:'ชื่อเล่น',lp:'ความคืบหน้ารายบท',pStars:'ดาวพรอมต์ (0–3)',assessments:'แบบทดสอบรวม',pre:'ก่อนเรียน',post:'หลังเรียน',done:'ทำแล้ว',score:'คะแนน',total:'คะแนนเต็ม',answers:'คำตอบ',chatQuestions:'คำถามที่ถามผู้ช่วย AI',question:'คำถาม',askedAt:'เวลาที่ถาม (มิลลิวินาที)',buddyAvatar:'บอตประจำตัว',preDone:'ทำก่อนเรียนแล้ว',preScore:'คะแนนก่อนเรียน',scenarioAnswered:'ตอบสถานการณ์แล้ว',scenarioChoice:'ตัวเลือกสถานการณ์ (-1 คือยังไม่ตอบ)',scenarioDone:'ผ่านสถานการณ์แล้ว',videoDone:'ดูวิดีโอแล้ว',slideSeen:'สไลด์ที่ดูแล้ว',slidesDone:'ดูสไลด์ครบ',quizAttempted:'ทำข้อสอบแล้ว',quizDone:'ผ่านข้อสอบแล้ว',postScore:'คะแนนหลังเรียน',postTotal:'คะแนนเต็มหลังเรียน',stars:'ดาว',date:'วันที่',at:'เวลา'};
+  var labels = {code:'รหัสเข้าสู่ระบบนักเรียน',num:'เลขที่',title:'ชื่อ / หัวข้อ',short:'ชื่อย่อ',mission:'ภารกิจ',simulation:'สถานการณ์จำลอง',videoDesc:'คำอธิบายวิดีโอ',slides:'สไลด์',quiz:'ข้อสอบ',situations:'สถานการณ์',media:'สื่อเพิ่มเติม',emoji:'อีโมจิ',text:'ข้อความ',q:'คำถาม',choices:'ตัวเลือก',answer:'เฉลย (เริ่มนับจาก 0)',hint:'คำใบ้',explain:'คำอธิบายเฉลย',url:'ลิงก์',type:'ประเภท',context:'บริบท',task:'งานที่ให้ทำ',thought:'คำถามชวนคิด',best:'ตัวเลือกที่เหมาะสม (เริ่มนับจาก 0)',category:'หมวด',character:'ตัวละคร',dialogue:'บทสนทนา',points:'คะแนน',feedback:'ข้อความตอบกลับ',badge:'เหรียญตรา',id:'รหัสรายการ',name:'ชื่อ',icon:'ไอคอน',color:'สี',isCorrect:'คำตอบถูก',mode:'รูปแบบกิจกรรม',level:'ระดับ',keywords:'คำสำคัญ',pieces:'ชิ้นส่วนพรอมต์',templateParts:'ส่วนของแม่แบบ',missingLabels:'หัวข้อช่องว่าง',missingPlaceholders:'ข้อความตัวอย่างในช่องว่าง',better:'ตัวอย่างคำตอบที่ดี',criterion:'เกณฑ์รับตรา',index:'ลำดับกิจกรรม (เริ่มนับจาก 0)',badgeId:'รหัสเหรียญภารกิจ',x:'ตำแหน่งรูปแนวนอน (0–3)',y:'ตำแหน่งรูปแนวตั้ง (0–2)',th:'ชื่อภาษาไทย',cls:'รูปแบบสี',min:'ดาวขั้นต่ำ',next:'ดาวระดับถัดไป',bonus:'โบนัสอันดับ',nodes:'จุดบนแผนที่',pointsMap:'พิกัด',events:'เหตุการณ์บนเส้นทาง',ic:'ไอคอน',lb:'ป้ายชื่อ',obstacle:'สิ่งที่ต้องทำ',reward:'ข้อความรางวัล',webAppUrl:'URL Apps Script ที่ลงท้าย /exec',sheetUrl:'URL Google Sheet',nickname:'ชื่อเล่น',lp:'ความคืบหน้ารายบท',pStars:'ดาวพรอมต์ (0–3)',assessments:'แบบทดสอบรวม',pre:'ก่อนเรียน',post:'หลังเรียน',done:'ทำแล้ว',score:'คะแนน',total:'คะแนนเต็ม',answers:'คำตอบ',chatQuestions:'คำถามที่ถามผู้ช่วย AI',question:'คำถาม',askedAt:'เวลาที่ถาม (มิลลิวินาที)',buddyAvatar:'บอตประจำตัว',preDone:'ทำก่อนเรียนแล้ว',preScore:'คะแนนก่อนเรียน',scenarioAnswered:'ตอบสถานการณ์แล้ว',scenarioChoice:'ตัวเลือกสถานการณ์ (-1 คือยังไม่ตอบ)',scenarioDone:'ผ่านสถานการณ์แล้ว',videoDone:'ดูวิดีโอแล้ว',slideSeen:'สไลด์ที่ดูแล้ว',slidesDone:'ดูสไลด์ครบ',quizAttempted:'ทำข้อสอบแล้ว',quizDone:'ผ่านข้อสอบแล้ว',postScore:'คะแนนหลังเรียน',postTotal:'คะแนนเต็มหลังเรียน',stars:'ดาว',date:'วันที่',at:'เวลา'};
   function snapshot() {
     return {version:CURRICULUM_VERSION,lessons:keyed(lessons,'lesson'),videos:VIDEO_LINKS.slice(),updatedAt:version,
       modules:{prompts:keyed(PROMPT_CHALLENGES,'prompt'),scenarios:keyed(scenarios,'scenario'),assessment:copy(ASSESSMENT_QUESTIONS),badges:copy(ACHIEVEMENT_BADGES),gems:copy(GEM_LEVELS),unitPoints:UNIT_POINTS,journey:{nodes:copy(JOURNEY_NODES),points:copy(JOURNEY_PTS),events:copy(JOURNEY_EVENTS)},sheet:copy(GOOGLE_SHEET)}};
@@ -100,7 +100,7 @@
     var ops=ids.map(function(id){return operation(id,resetData(db.students[id],scope),'reset',Object.assign({scope:scope},scope==='all'||scope==='cabinet'?{wallet:{prizes:[],bonus_tickets:0}}:{}));});
     return batch(ops,'รีเซ็ต '+scopeLabel(scope)+' จำนวน '+ids.length+' บัญชีแล้ว');
   };
-  var scopes={all:'ความคืบหน้าทั้งหมดและตู้สุ่ม',lessons:'บทเรียน คะแนน และดาว',prompts:'ผลฝึกพรอมต์',assessments:'แบบทดสอบก่อน–หลังเรียน',badges:'เหรียญภารกิจและคะแนนภารกิจ',cabinet:'ของสะสมและสิทธิ์พิเศษตู้สุ่ม',chat:'ประวัติคำถาม AI'};
+  var scopes={all:'ความคืบหน้าทั้งหมดและตู้สุ่ม',lessons:'บทเรียน คะแนน และดาว',prompts:'ผลฝึกพรอมต์',assessments:'แบบทดสอบก่อน–หลังเรียน',badges:'เหรียญภารกิจและคะแนนภารกิจ',cabinet:'ของสะสมและสิทธิ์พิเศษตู้สุ่ม',chat:'รายการคำถามเก่า (ก่อนระบบประวัติแชท)'};
   function scopeLabel(s){return scopes[s] || s;}
   window.teacherResetAllProgress=function(){return teacherAdminReset('all',true);};
   window.teacherResetRoster=function(){
@@ -138,7 +138,7 @@
   var originalRender=window.renderTeacher;
   window.renderTeacher=function(){ originalRender();var host=document.querySelector('.body-area');if(host)host.insertAdjacentHTML('afterbegin',panel());if(edit)drawEditor();status();};
   window.teacherContentEditorHtml=function(){
-    return '<section class="pcard blue noprint" style="margin-bottom:20px"><h3>จัดการเนื้อหาทุกเมนู</h3><p class="soft tiny">แก้ข้อความ เพิ่ม ลบ หรือคืนค่าเดิม แล้วกดบันทึกเพื่อส่งให้นักเรียนทุกเครื่อง</p><div style="display:flex;gap:8px;flex-wrap:wrap">'+Object.keys(moduleNames).map(function(k){return button(moduleNames[k],"teacherAdminContent('"+k+"')");}).join('')+'</div></section>';
+    return '<section class="pcard blue noprint" id="teacher-content-menu" style="margin-bottom:20px"><h3>จัดการเนื้อหาทุกเมนู</h3><p class="soft tiny">แก้ข้อความ เพิ่ม ลบ หรือคืนค่าเดิม แล้วกดบันทึกเพื่อส่งให้นักเรียนทุกเครื่อง</p><div style="display:flex;gap:8px;flex-wrap:wrap">'+Object.keys(moduleNames).map(function(k){return button(moduleNames[k],"teacherAdminContent('"+k+"')");}).join('')+'</div></section>';
   };
   function selectDraft(next){if(edit && !confirm('ยกเลิกฉบับที่ยังไม่บันทึก แล้วเปิดหมวดใหม่?'))return;edit=next;drawEditor();var el=document.getElementById('teacher-admin-editor');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
   window.teacherAdminContent=function(key){
@@ -150,7 +150,7 @@
     var id=document.getElementById('admin-student-select').value;if(!id)return;
     await run(async function(){
       accept(await firebaseBackend.teacherManage('load',{}));var s=db.students[id];if(!s)throw new Error('ไม่พบบัญชีนี้แล้ว');
-      selectDraft({type:'student',id:id,base:copy(s),value:{nickname:s.nickname || '',lp:lessons.map(function(_,i){return normalizeLessonProgress((s.lp || [])[i]);}),pStars:PROMPT_CHALLENGES.map(function(_,i){return (s.pStars || [])[i] || 0;}),assessments:s.assessments || newAssessments(),chatQuestions:s.chatQuestions || [],buddyAvatar:s.buddyAvatar || ''},badges:(s.badgeIds || []).slice(),wallet:copy(wallets[id] || legacyWallet(s)),baseWallet:copy(wallets[id] || null)});
+      selectDraft({type:'student',id:id,base:copy(s),value:{code:s.code || id.replace(/^roster_/,''),num:s.num || '',nickname:s.nickname || '',lp:lessons.map(function(_,i){return normalizeLessonProgress((s.lp || [])[i]);}),pStars:PROMPT_CHALLENGES.map(function(_,i){return (s.pStars || [])[i] || 0;}),assessments:s.assessments || newAssessments(),chatQuestions:s.chatQuestions || [],buddyAvatar:s.buddyAvatar || ''},badges:(s.badgeIds || []).slice(),wallet:copy(wallets[id] || legacyWallet(s)),baseWallet:copy(wallets[id] || null)});
     },'โหลดข้อมูลบัญชีล่าสุดแล้ว');
   };
   function legacyWallet(s){
@@ -178,6 +178,7 @@
     }
     if(value===null)return '';
     var change='teacherAdminValue('+id+',this)';
+    if(edit.type==='student' && key==='buddyAvatar')return '<label style="display:block;margin:12px 0">ตัวละครน้องชวนคิด<select class="inp" onchange="'+change+'"><option value="">น้องชวนคิดตัวเดิม</option>'+Array.from(new Set(edit.wallet.prizes)).map(function(n){return '<option value="'+esc(n)+'" '+(value===n?'selected':'')+'>'+esc(n)+'</option>';}).join('')+'</select></label>';
     if(typeof value==='boolean')return '<label style="display:block;margin:9px"><input type="checkbox" '+(value?'checked':'')+' onchange="'+change+'"> '+esc(label)+'</label>';
     html='<label style="display:block;margin:9px 0">'+esc(label);
     if(typeof value==='number')html+='<input class="inp" type="number" value="'+esc(value)+'" oninput="'+change+'">';
@@ -191,7 +192,9 @@
       h+='<details open class="innerbox"><summary>เหรียญภารกิจ (มีผลต่อสิทธิ์สุ่ม)</summary>'+scenarios.map(function(sc,i){var b=sc.choices.find(function(c){return c.badge;}).badge;return '<label style="display:block;margin:8px"><input type="checkbox" '+(edit.badges.indexOf(b.id)>=0?'checked':'')+' onchange="teacherAdminBadge('+i+',this.checked)"> '+esc(b.name)+'</label>';}).join('')+'</details>';
       h+='<details open class="innerbox"><summary>ตู้สุ่มและของสะสม</summary><label>สิทธิ์พิเศษเพิ่มเติม <input class="inp" min="0" max="1000" type="number" value="'+edit.wallet.bonus_tickets+'" oninput="teacherAdminBonus(this.value)"></label><ul>'+edit.wallet.prizes.map(function(p,i){return '<li>'+esc(p)+' '+button('ลบ',"teacherAdminPrize('remove',"+i+")",'pinkb')+'</li>';}).join('')+'</ul><select class="inp" id="admin-prize">'+botNames.map(function(n){return '<option>'+esc(n)+'</option>';}).join('')+'</select>'+button('เพิ่มของสะสม',"teacherAdminPrize('add')",'mintb')+'</details>';
     }
-    h+=field(edit.value,[],edit.type==='student'?'ผลเรียนและประวัติ':moduleNames[edit.key]);
+    if(edit.type==='student') {
+      h+='<div class="teacher-field-groups">'+Object.keys(edit.value).map(function(k){return '<section class="teacher-field-group">'+field(edit.value[k],[k],labels[k] || k)+'</section>';}).join('')+'</div>';
+    } else h+=field(edit.value,[],moduleNames[edit.key]);
     h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0">'+button('บันทึกลงฐานข้อมูล','teacherAdminSave()','mintb')+button('ยกเลิก','teacherAdminCancel()')+(edit.type==='content'?button('คืนค่าเดิมของหมวดนี้',"teacherAdminDefault()",'pinkb'):'')+'</div>';
     host.innerHTML=h;status();
   }
@@ -261,7 +264,7 @@
     if(!edit||busy)return;
     if(edit.type==='student'){
       try{
-        checkNumbers(edit.value);assert(!edit.value.nickname||cleanNickname(edit.value.nickname),'ชื่อเล่นต้องมี 2–20 ตัวอักษร');
+        checkNumbers(edit.value);assert(/^[0-9A-Za-zก-๙_-]{3,20}$/.test(edit.value.code),'รหัสต้องมี 3–20 ตัว: ไทย อังกฤษ ตัวเลข _ หรือ -');assert(!edit.value.nickname||cleanNickname(edit.value.nickname),'ชื่อเล่นต้องมี 2–20 ตัวอักษร');
         assert(edit.value.pStars.every(function(n){return Number.isInteger(n)&&n>=0&&n<=3;}),'ดาวพรอมต์ต้องเป็นจำนวนเต็ม 0–3');
         edit.value.lp.forEach(function(p){assert(p.postScore>=0&&p.postTotal>=0&&p.postScore<=p.postTotal,'คะแนนหลังเรียนต้องไม่เกินคะแนนเต็ม');});
         assert(Number.isInteger(edit.wallet.bonus_tickets)&&edit.wallet.bonus_tickets>=0&&edit.wallet.bonus_tickets<=1000,'สิทธิ์พิเศษต้องเป็นจำนวนเต็ม 0–1000');
