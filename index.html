@@ -4040,7 +4040,7 @@ function renderChat() {
       '</div>' +
       '<div style="display:flex;align-items:center;gap:10px">' +
         '<button onclick="openBuddyPicker()" class="btn whiteb sm">🤖 เปลี่ยนตัวละคร</button>' +
-        '<button onclick="state.chat=null;openChat()" class="iconbtn" title="เริ่มคุยใหม่">🧹</button>' +
+        '<button onclick="openChat()" class="btn whiteb sm" title="โหลดประวัติสนทนาจากบัญชี">🕘 ประวัติ</button>' +
         '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
       '</div>' +
     '</div>' +
@@ -6642,6 +6642,7 @@ function makeChoice(choiceIndex) {
 </script>
 <script src="./public/teacher-admin.js"></script>
 <script src="./public/google-login.js"></script>
+<script src="./public/chat-history.js"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
 try {
@@ -6705,6 +6706,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       teacherManage: function(action, payload) {
         if (!teacherPin) return Promise.reject(new Error('กรุณาเข้าสู่ระบบครู'));
         return supabase.rpc('teacher_manage', {p_pin:teacherPin,p_action:action,p_payload:clean(payload || {})}).then(check);
+      },
+      chatHistory: function(id, messages) {
+        return supabase.rpc("student_chat", {p_student_id:id,p_messages:messages || []}).then(check);
       },
       cabinetAccount: function(id, requestId) {
         return supabase.rpc('cabinet_account', {p_student_id:id, p_request_id:requestId || null}).then(check);
