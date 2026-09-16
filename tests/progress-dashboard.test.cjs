@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict');
+const c=require('./teacher-test-runtime.cjs')();
+c.appEl={innerHTML:''};
+c.currentStudent=()=>({assessments:{pre:{done:true},post:{done:true}}});
+c.lessonsCompleted=()=>c.lessons.length;c.posttestUnlocked=()=>true;
+c.lessonProgress=c.lessons.map(()=>({quizDone:true}));
+c.sessionPStars=c.PROMPT_CHALLENGES.map(()=>0);
+c.renderDashboard();
+assert.match(c.appEl.innerHTML,/ยังมีโจทย์เขียนพรอมต์/);
+assert.doesNotMatch(c.appEl.innerHTML,/เก่งมาก! เก็บความสำเร็จครบแล้ว/);
+assert.match(c.appEl.innerHTML,/ความคืบหน้าพรอมต์/);
+assert.match(c.appEl.innerHTML,/ภารกิจและเหรียญตรา/);
+c.sessionPStars=c.PROMPT_CHALLENGES.map(()=>1);
+c.completedScenarioCount=()=>c.scenarios.length;c.scenarioCompleted=()=>true;
+c.renderDashboard();assert.match(c.appEl.innerHTML,/100%/);assert.match(c.appEl.innerHTML,/เก่งมาก! เก็บความสำเร็จครบแล้ว/);
+let restarted=false;c.startAssessment=()=>{restarted=true};c.changeView=v=>{c.state.view=v};c.dashboardAssessment('pre');assert.equal(restarted,false);assert.equal(c.state.view,'assessmentresult');
+console.log('PASS: unfinished prompts, complete task percentage, activity sections, saved assessment does not restart');
