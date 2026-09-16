@@ -17,7 +17,7 @@ const tick = () => new Promise(r=>setImmediate(r));
     randomBotCollectedPrizes:()=>[], applyStudent:id=>{context.currentId=id},
     randomBotByName:name=>name?{name,file:'test.png'}:null,
     randomBotFrame:()=>({contentWindow:{postMessage:(data,origin)=>messages.push({data,origin})}}),
-    randomBotFrameData:type=>({type}), render(){}, setInterval(){}, addEventListener(){}, document:{hidden:false},
+    randomBotFrameData:type=>({type}), render(){}, setInterval(){}, addEventListener(){}, document:{hidden:false,getElementById(){return null}},
     firebaseBackend:{cabinetAccount:async(id,request)=>{
       if(request){requests.push(request);return performDraw()}
       return {studentId:id,tickets:1,badgeCount:1,owned:[]};
@@ -39,5 +39,18 @@ const tick = () => new Promise(r=>setImmediate(r));
   assert.equal(context.randomBotCollectedPrizes().length,0);
   context.navigator.onLine=false;const before=requests.length;await context.requestRandomBotDraw();assert.equal(requests.length,before);
   assert.equal(context.takeRandomBotDraw('Sky Blue'),null);assert.equal(context.importRandomBotHandoff(),false);
+  let owned = ['Sky Blue'], failSave = false, saves = 0;
+  const student = {};
+  context.currentStudent = () => student;
+  context.saveDB = () => {};
+  context.alert = () => {};
+  context.firebaseBackend.cabinetAccount = async id => ({studentId:id,tickets:0,badgeCount:1,owned});
+  context.firebaseBackend.saveStudent = async () => { saves++; if(failSave) throw Error('offline'); };
+  await context.chooseBuddyAvatar('Lavender');assert.equal(saves,0);assert.equal(student.buddyAvatar,undefined);
+  failSave=true;await context.chooseBuddyAvatar('Sky Blue');assert.equal(student.buddyAvatar,undefined);
+  failSave=false;await context.chooseBuddyAvatar('Sky Blue');assert.equal(student.buddyAvatar,'Sky Blue');
+  assert.equal(context.currentBuddyAvatar().name,'Sky Blue');
+  owned=[];context.applyStudent('bob');await tick();assert.equal(context.currentBuddyAvatar(),null);
+  console.log('PASS: owned-only buddy selection, failed save preserves avatar, saved selection and removed ownership fallback');
   console.log('PASS: script syntax, pending request retry, duplicate clicks, confirmed rewards, account switch, offline lock, origin restriction, legacy local draw disabled');
 })().catch(e=>{console.error(e);process.exitCode=1});

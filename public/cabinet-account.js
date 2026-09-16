@@ -33,6 +33,62 @@
       return data;
     });
   }
+  var choosingBuddy = false;
+  window.currentBuddyAvatar = function () {
+    var active = forAccount();
+    var student = currentStudent();
+    return active && student && active.owned.indexOf(student.buddyAvatar) !== -1
+      ? randomBotByName(student.buddyAvatar) : null;
+  };
+  window.openBuddyPicker = function () {
+    if (!currentId || document.getElementById('buddy-picker')) return;
+    var id = currentId;
+    refresh().then(function () {
+      if (currentId !== id) return;
+      var panel = document.createElement('section');
+      panel.id = 'buddy-picker';
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-modal', 'true');
+      panel.setAttribute('aria-label', 'เลือกตัวละครน้องชวนคิด');
+      panel.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(20,40,60,.65);overflow:auto;padding:24px';
+      panel.innerHTML = '<div style="max-width:760px;margin:auto;background:#fffdf5;padding:20px;border-radius:20px"><button class="btn whiteb sm" onclick="closeBuddyPicker()">ปิด ×</button><h2>เลือกตัวละครน้องชวนคิด</h2><p>เลือกได้จากหุ่นที่บัญชีนี้สะสมไว้ ตัวละครจะเปลี่ยนในแชทโดยยังคุยเรื่องเดิมต่อได้</p><p id="buddy-save-status" role="status"></p>' + randomBotCollectionHtml() + '</div>';
+      document.body.appendChild(panel);
+    }).catch(function () { alert('โหลดตัวละครจากบัญชีไม่สำเร็จ กรุณาลองใหม่'); });
+  };
+  window.closeBuddyPicker = function () {
+    var panel = document.getElementById('buddy-picker');
+    if (panel) panel.remove();
+  };
+  window.chooseBuddyAvatar = async function (name) {
+    if (choosingBuddy || !currentId || !firebaseBackend) return;
+    var id = currentId;
+    choosingBuddy = true;
+    var status = document.getElementById('buddy-save-status');
+    if (status) status.textContent = 'กำลังบันทึกตัวละคร…';
+    try {
+      await refresh();
+      if (currentId !== id) return;
+      var active = forAccount();
+      var avatar = randomBotByName(name);
+      if (!active || !avatar || active.owned.indexOf(avatar.name) === -1) throw new Error('Not owned');
+      var student = currentStudent();
+      var payload = JSON.parse(JSON.stringify(student));
+      payload.buddyAvatar = avatar.name;
+      payload._updatedAt = Date.now();
+      await firebaseBackend.saveStudent(id, payload);
+      if (currentId !== id) return;
+      student.buddyAvatar = avatar.name;
+      student._updatedAt = payload._updatedAt;
+      saveDB();
+      closeBuddyPicker();
+      render();
+    } catch (error) {
+      if (currentId !== id) return;
+      var message = error.message === 'Not owned' ? 'เลือกได้เฉพาะตัวละครที่บัญชีนี้มีเท่านั้น' : 'ยังบันทึกตัวละครไม่สำเร็จ กรุณาลองใหม่';
+      if (status) status.textContent = message;
+      else alert(message);
+    } finally { choosingBuddy = false; }
+  };
   window.importRandomBotHandoff = function () { return false; };
   window.takeRandomBotDraw = function () { return null; };
   window.randomCabinetHtml = function () {
@@ -46,6 +102,7 @@
   window.randomBotBadgeCount = function () { var active = forAccount(); return active ? active.badgeCount : state.badges.length; };
   window.applyStudent = function (id) {
     wallet = null;
+    closeBuddyPicker();
     originalApplyStudent(id);
     refresh().then(function() { if (currentId === id) render(); }).catch(function() {});
   };
@@ -88,6 +145,7 @@
   window.openRandomCabinet = function () {
     if (!currentId) { alert('กรุณาเข้าสู่ระบบนักเรียนก่อนเปิดตู้สุ่ม'); return; }
     if (document.getElementById('account-cabinet-overlay')) return;
+    closeBuddyPicker();
     state.randomCabinetOpen = false;
     var existing = randomBotFrame();
     if (existing) existing.closest('section').remove();
