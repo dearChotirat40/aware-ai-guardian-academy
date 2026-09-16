@@ -6247,22 +6247,13 @@ function renderDashboard() {
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
     '</div>' +
     '<div class="body-area scroll progress-dashboard">' +
-      '<section class="progress-hero">' +
-        '<div class="progress-hero-copy"><span class="progress-eyebrow">✨ ความคืบหน้าของฉัน</span><button type="button" class="btn whiteb sm" style="display:block;margin-top:10px" onclick="openReportArchive(false)">📄 ดูข้อมูลที่บันทึกไว้</button>' +
-          '<h2 class="ink">เรียนไปได้ดีแค่ไหนแล้ว?</h2>' +
-          '<p class="soft">ดูภาพรวมของบทเรียน คะแนน ตรา และน้องชวนคิดได้ในหน้าเดียว</p>' +
-          '<div class="progress-mini-stats"><span class="progress-mini-stat">📚 เรียนจบ ' + lessonsDone + '/' + lessons.length + ' บท</span><span class="progress-mini-stat">⭐ ดาวเดินทาง ' + journey + '/' + journeyTotal() + '</span><span class="progress-mini-stat">🏅 ตรา ' + earnedAchievements.length + '/' + ACHIEVEMENT_BADGES.length + '</span></div>' +
-        '</div>' +
-        '<div class="progress-ring" style="--progress:' + overall + '%"><b>' + overall + '%</b><span>กิจกรรมที่ทำครบ</span></div>' +
-      '</section>' +
-      '<p class="soft small" style="margin:12px 0">ทำครบ ' + taskDone + '/' + taskTotal + ' กิจกรรม · รวมก่อน–หลังเรียน บทเรียน พรอมต์ และภารกิจ ไม่ใช่เปอร์เซ็นต์คะแนนสอบ</p>' +
-      '<section class="progress-next"><div class="progress-next-copy"><b>🎯 ' + nextTitle + '</b><span>' + nextNote + '</span></div>' + nextAction + '</section>' +
       '<section class="progress-stats-grid">' +
         '<article class="progress-stat pink"><div class="progress-stat-icon">📚</div><p class="progress-stat-label">คะแนนบทเรียน</p><p class="progress-stat-value">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/' + maxLessonPoints() + '</span></p><p class="progress-stat-note">⭐ ' + totalStars() + '/' + lessons.length + ' ดาว · ' + lessonMedalSummary() + '</p></article>' +
         '<article class="progress-stat blue"><div class="progress-stat-icon">🎮</div><p class="progress-stat-label">โบนัสภารกิจ</p><p class="progress-stat-value">' + state.score + '<span class="soft" style="font-size:14px">/' + maxScenarioScore() + '</span></p><p class="progress-stat-note">ผ่าน ' + scenariosDone + '/' + scenarios.length + ' ด่าน · ตราสถานการณ์ ' + state.badges.length + '</p></article>' +
         '<article class="progress-stat yellow"><div class="progress-stat-icon">✍️</div><p class="progress-stat-label">ดาวเขียนพรอมต์</p><p class="progress-stat-value">' + totalPromptStars() + '<span class="soft" style="font-size:14px">/' + maxPromptStars() + '</span></p><p class="progress-stat-note">ทำแล้ว ' + sessionPStars.filter(function(n){ return n > 0; }).length + '/' + PROMPT_CHALLENGES.length + ' โจทย์</p></article>' +
         '<article class="progress-stat mint"><div class="progress-stat-icon">🧭</div><p class="progress-stat-label">ก่อนเรียน → หลังเรียน</p><p class="progress-stat-value" style="font-size:20px">' + assessmentLabel(student, 'pre') + ' → ' + assessmentLabel(student, 'post') + '</p><p class="progress-stat-note">ดูพัฒนาการของตัวเองจากผลทดสอบ</p></article>' +
       '</section>' +
+      '<section class="progress-next"><div class="progress-next-copy"><b>🎯 ' + nextTitle + '</b><span>' + nextNote + '</span></div>' + nextAction + '</section>' +
       '<section class="progress-content-grid">' +
         '<div class="progress-panel"><div class="progress-panel-head"><div><h3 class="ink">🎯 ความคืบหน้ารายบท</h3><p>แต่ละบทมีสถานการณ์ · แบบทดสอบ · โบนัสท้ายบท</p></div><span class="progress-mini-stat">ทำแล้ว ' + lessonsDone + '/' + lessons.length + '</span></div><div class="progress-lesson-list">' + lessonRows + '</div></div>' +
         '<aside class="progress-panel"><div class="progress-panel-head"><div><h3 class="ink">⚡ ไปต่อเลย</h3><p>เลือกสิ่งที่ต้องการทำ</p></div></div><div class="progress-actions">' +
