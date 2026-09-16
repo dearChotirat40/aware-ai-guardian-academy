@@ -3337,19 +3337,26 @@ function sheetPayload() {
   };
 }
 function sendToSheet() {
-  if (!sheetConfigured() || !currentId) return;
+  if (!sheetConfigured()) return Promise.resolve({ status: 'not-configured' });
+  if (!currentId) return Promise.resolve({ status: 'no-student' });
   var p = sheetPayload();
-  if (!p) return;
+  if (!p) return Promise.resolve({ status: 'no-student' });
+  if (navigator.onLine === false) return Promise.resolve({ status: 'offline' });
   try {
-    fetch(GOOGLE_SHEET.webAppUrl, {
+    return fetch(GOOGLE_SHEET.webAppUrl, {
       method: 'POST',
       mode: 'no-cors',
       keepalive: true,
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(p)
-    }).then(function(){ sheetLastSent = new Date().toLocaleTimeString('th-TH'); })
-      .catch(function(){});
-  } catch(e) {}
+    }).then(function(){
+      // An opaque no-cors response cannot confirm that Apps Script saved the row.
+      sheetLastSent = new Date().toLocaleTimeString('th-TH');
+      return { status: 'unconfirmed' };
+    }).catch(function(){ return { status: 'failed' }; });
+  } catch(e) {
+    return Promise.resolve({ status: 'failed' });
+  }
 }
 function scheduleSheetSync() {
   if (!sheetConfigured() || !currentId) return;
@@ -3366,11 +3373,21 @@ try {
     if (document.visibilityState === 'hidden' && currentId && sheetConfigured()) sendToSheet();
   });
 } catch(e) {}
+var sheetManualSending = false;
 function sendToSheetNow() {
-  sendToSheet();
-  alert(sheetConfigured()
-    ? 'ส่งคะแนนขึ้น Google Sheet ของครูแล้ว! 📊✅'
-    : 'คุณครูยังไม่ได้เชื่อมต่อ Google Sheet (ตั้งค่าที่ตัวแปร GOOGLE_SHEET ในไฟล์)');
+  if (sheetManualSending) return Promise.resolve();
+  sheetManualSending = true;
+  if (sheetTimer) { clearTimeout(sheetTimer); sheetTimer = null; }
+  return sendToSheet().then(function(result){
+    var messages = {
+      'not-configured': 'คุณครูยังไม่ได้เชื่อมต่อ Google Sheet',
+      'no-student': 'กรุณาเข้าสู่ระบบนักเรียนก่อนส่งคะแนน',
+      'offline': 'ยังส่งคะแนนไม่ได้ เนื่องจากไม่มีอินเทอร์เน็ต ระบบจะลองส่งอีกครั้งเมื่อกลับมาออนไลน์',
+      'failed': 'ส่งคำขอไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง',
+      'unconfirmed': 'ส่งคำขอแล้ว แต่ยังยืนยันการบันทึกไม่ได้ กรุณาตรวจสอบคะแนนใน Google Sheet ของครู'
+    };
+    alert(messages[result.status] || messages.failed);
+  }).finally(function(){ sheetManualSending = false; });
 }
 
 function importFiles(input) {
@@ -6060,7 +6077,7 @@ window.addEventListener('message', function(event) {
   var data = event && event.data;
   if (!data || (data.type !== 'ai-bot-ready' && data.type !== 'ai-bot-draw-request')) return;
   var frame = randomBotFrame();
-  if (!frame || event.source !== frame.contentWindow) return;
+  if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin) return;
   if (data.type === 'ai-bot-ready') syncRandomBotFrame();
   if (data.type === 'ai-bot-draw-request') requestRandomBotDraw();
 });
@@ -6600,6 +6617,7 @@ loadDB();
 autoFit();
 render();
 </script>
+<script src="./public/cabinet-account.js"></script>
 <script type="module">
 if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONFIG.publishableKey) {
   import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm").then(function(supabaseSdk) {
@@ -6634,6 +6652,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       var teacherPin = null;
       return {
       isTeacher: isTeacher,
+      cabinetAccount: function(id, requestId) {
+        return supabase.rpc('cabinet_account', {p_student_id:id, p_request_id:requestId || null}).then(check);
+      },
       verifyTeacherPin: function(pin) {
         return supabase.rpc('verify_teacher_pin', {p_pin:String(pin || '')}).then(function(result){
           var ok = !!check(result);
