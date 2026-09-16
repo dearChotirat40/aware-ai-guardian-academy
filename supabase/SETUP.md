@@ -81,3 +81,24 @@ NODE_PATH=/path/to/node_modules node tests/teacher-admin-db.test.cjs
 ```
 
 การทดสอบฐานข้อมูลใช้ `@electric-sql/pglite` ในหน่วยความจำ ครอบคลุม PIN ผิด/ว่าง, CRUD, การย้ายบัญชี, ข้อมูลชนกัน, rollback, reset, สิทธิ์แยกบัญชี, เวอร์ชันเก่า, และการย้ายผลเรียนตามหลักสูตร
+
+## Google Login — ทางเลือกเพิ่มเติมจากรหัสนักเรียน
+
+แอปใช้ Supabase OAuth (PKCE) โดยไม่เก็บ Google Client Secret ในหน้าเว็บ
+Google user ที่ยังไม่ผูกบัญชีต้องกรอกรหัสนักเรียนเดิมหนึ่งครั้งผ่าน `claim_student`.
+`student_sessions.user_id` จะเชื่อมกับนักเรียนเดิม คะแนน/เหรียญ/ตู้สุ่มใช้แถวเดิมทั้งหมด.
+ครั้งถัดไปโหลดเฉพาะนักเรียนที่ RLS `owns_student` อนุญาต ไม่ใช้การเทียบอีเมลหรือ ID จาก localStorage.
+ไม่มี migration เพิ่มเติมสำหรับฟีเจอร์นี้.
+
+### สิ่งที่เจ้าของ Google Cloud ต้องตั้งค่า
+
+1. สร้าง OAuth Client แบบ Web application ใน Google Cloud / Google Auth Platform.
+2. Authorized JavaScript origin: `https://dearchotirat40.github.io`.
+3. Authorized redirect URI: `https://vpgndzdiwcnmnmipnith.supabase.co/auth/v1/callback`.
+4. ตั้งค่า audience/consent ให้บัญชีนักเรียนเข้าใช้ได้จริง หากยังเป็น Testing ต้องเพิ่ม test users; ตรวจข้อจำกัด Google Workspace ของโรงเรียนด้วย.
+5. ใน Supabase → Authentication → Sign In / Providers → Google ให้เจ้าของกรอก Client IDs และ Client Secret โดยตรง เปิด Enable Sign in with Google แล้ว Save. ไม่ส่ง secret ในแชตหรือ commit ลง Git.
+6. Supabase → Authentication → URL Configuration เพิ่ม Redirect URL `https://dearchotirat40.github.io/aware-ai-guardian-academy/` และ `http://127.0.0.1:8765/` สำหรับทดสอบในเครื่อง (คงค่าเดิมที่ยังใช้งานไว้).
+7. ทดสอบด้วยบัญชีนักเรียน: Google → กรอกรหัสเดิม → ตรวจคะแนน/ตู้สุ่ม → ออกจากระบบ → Google อีกครั้งต้องเข้าบัญชีเดิมได้.
+
+สถานะตอนเพิ่มโค้ด: Google provider ยัง Disabled และยังไม่มี Client ID/Secret จึงยังยืนยัน OAuth แบบครบวงจรไม่ได้. ปุ่มจะแจ้งตามจริงเมื่อ provider ยังไม่พร้อม และรหัสนักเรียนยังใช้ได้.
+อ้างอิง: https://supabase.com/docs/guides/auth/social-login/auth-google

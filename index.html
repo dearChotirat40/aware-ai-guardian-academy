@@ -6602,6 +6602,7 @@ function makeChoice(choiceIndex) {
 
 </script>
 <script src="./public/teacher-admin.js"></script>
+<script src="./public/google-login.js"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
 try {
@@ -6617,11 +6618,13 @@ render();
 </script>
 <script src="./public/cabinet-account.js"></script>
 <script type="module">
+window.googleOAuthError = /(?:[?#&])error(?:_description)?=/.test(window.location.href);
 if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONFIG.publishableKey) {
   import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm").then(function(supabaseSdk) {
     var supabase = supabaseSdk.createClient(
       window.SUPABASE_CONFIG.url,
-      window.SUPABASE_CONFIG.publishableKey
+      window.SUPABASE_CONFIG.publishableKey,
+      { auth: { flowType: "pkce", detectSessionInUrl: true, persistSession: true } }
     );
 
     function clean(value) {
@@ -6650,6 +6653,10 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       var teacherPin = null;
       return {
       isTeacher: isTeacher,
+      isGoogle: !!(user && !user.is_anonymous && ((user.app_metadata || {}).providers || []).indexOf("google") !== -1),
+      signInGoogle: function() {
+        return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin + window.location.pathname,queryParams:{prompt:"select_account"}}}).then(check);
+      },
       teacherManage: function(action, payload) {
         if (!teacherPin) return Promise.reject(new Error('กรุณาเข้าสู่ระบบครู'));
         return supabase.rpc('teacher_manage', {p_pin:teacherPin,p_action:action,p_payload:clean(payload || {})}).then(check);
