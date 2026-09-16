@@ -1461,7 +1461,7 @@ body{font-size:18px;line-height:1.78}
 .progress-lesson-list{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.progress-lesson-card{min-width:0}.progress-lesson-list .lesson-badge-collection .random-toy-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,110px),1fr))}@media(max-width:700px){.progress-lesson-list{grid-template-columns:1fr}}
 [data-progress-lesson][hidden]{display:none!important}.progress-lesson-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.progress-lesson-tabs [aria-pressed="true"]{background:#315e80;color:white}.progress-dashboard .progress-lesson-list{grid-template-columns:1fr}
 .progress-dashboard .progress-content-grid:has(.progress-lesson-list){grid-template-columns:1fr}.progress-dashboard .progress-lesson-list{grid-template-columns:repeat(6,minmax(0,1fr))}.progress-lesson-list > .progress-lesson-card{grid-column:span 2}.progress-lesson-list > .progress-lesson-card:nth-child(n+4){grid-column:span 3}@media(max-width:900px){.progress-dashboard .progress-lesson-list{grid-template-columns:repeat(2,minmax(0,1fr))}.progress-lesson-list > .progress-lesson-card,.progress-lesson-list > .progress-lesson-card:nth-child(n+4){grid-column:auto}}@media(max-width:600px){.progress-dashboard .progress-lesson-list{grid-template-columns:1fr}}
-.progress-menu-collection{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.15fr);gap:20px;align-items:start}.progress-menu-collection > *{min-width:0}.progress-menu-collection .random-toy-collection{margin-bottom:0}@media(max-width:760px){.progress-menu-collection{grid-template-columns:1fr}}
+.progress-menu-collection{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,3fr);gap:20px;align-items:start}.progress-menu-collection > *{min-width:0}.progress-menu-collection .random-toy-collection{margin-bottom:0}@media(max-width:760px){.progress-menu-collection{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -6278,6 +6278,7 @@ function renderDashboard() {
         '<div class="progress-panel"><div class="progress-panel-head"><div><h3 class="ink">🎯 ความคืบหน้ารายบท</h3><p>แต่ละบทมีสถานการณ์ · แบบทดสอบ · โบนัสท้ายบท</p></div><span class="progress-mini-stat">ทำแล้ว ' + lessonsDone + '/' + lessons.length + '</span></div><div class="progress-lesson-list">' + lessonRows + '</div></div>' +
       '</section>' +
       '<section class="progress-menu-collection">' +
+        randomBotCollectionHtml() +
         '<aside class="progress-panel"><div class="progress-panel-head"><div><h3 class="ink">⚡ ไปต่อเลย</h3><p>เลือกสิ่งที่ต้องการทำ</p></div></div><div class="progress-actions">' +
           '<button onclick="dashboardAssessment(\'pre\')" class="btn whiteb sm">🧭 ' + (preDone ? 'ดูผลแบบทดสอบก่อนเรียน' : 'ทำแบบทดสอบก่อนเรียน') + '</button>' +
           '<button onclick="dashboardAssessment(\'post\')" class="btn whiteb sm"' + (postReady ? '' : ' disabled') + '>🏁 ' + (postDone ? 'ดูผลแบบทดสอบหลังเรียน' : (postReady ? 'ทำแบบทดสอบหลังเรียน' : 'หลังเรียน · ทำก่อนเรียนและเรียนครบ ' + lessons.length + ' บท')) + '</button>' +
@@ -6287,7 +6288,6 @@ function renderDashboard() {
           '<button onclick="changeView(\'sendreport\')" class="btn blueb sm">📄 รายงานของฉัน / ส่งครู</button>' +
           '<button onclick="logout()" class="btn whiteb sm">🚪 ออกจากระบบ</button>' +
         '</div></aside>' +
-        randomBotCollectionHtml() +
       '</section>' +
       '<details class="progress-rules"><summary>📏 ดูเกณฑ์คะแนน ดาว เหรียญ และรางวัล</summary>' + rewardCriteriaHtml('student') + '</details>' +
     '</div>';
