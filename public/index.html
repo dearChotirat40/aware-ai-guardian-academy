@@ -3636,7 +3636,7 @@ function render() {
     try { appEl.insertAdjacentHTML('afterbegin', rankStripHtml()); } catch(e) {}
     if (state.view !== 'chat') {
       try { appEl.insertAdjacentHTML('beforeend',
-        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button><button class="btn whiteb sm" onclick="openBuddyPicker()" aria-label="เลือกหุ่นที่สะสมเป็นตัวละครแชทบอท">🤖 เปลี่ยนตัวละคร</button></div>'); } catch(e) {}
+        '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
     }
   }
 }
@@ -4037,7 +4037,7 @@ function renderChat() {
         '<p class="soft tiny">' + (currentBuddyAvatar() ? escChat(currentBuddyAvatar().name) + ' · ' : '') + 'เพื่อนฝึกคิดเรื่อง AI · ถามได้ ลองคิดได้ ค่อย ๆ เรียนรู้ไปด้วยกัน</p></div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:10px">' +
-        '<button onclick="openBuddyPicker()" class="btn whiteb sm">🤖 เปลี่ยนตัวละคร</button>' +
+        '<details class="chat-settings" style="position:relative"><summary class="btn whiteb sm" style="cursor:pointer;list-style:none" aria-label="ตั้งค่าแชทบอท">⚙️ ตั้งค่า</summary><div style="position:absolute;right:0;top:calc(100% + 8px);z-index:20;width:240px;max-width:80vw;background:#fffdf5;padding:16px;border:1px solid #dbe4ef;border-radius:16px;box-shadow:0 8px 24px #20304026"><strong>ตั้งค่าน้องชวนคิด</strong><p class="soft tiny" style="margin:8px 0">เลือกรูปจากตัวละครที่สะสมได้</p><button onclick="this.closest(\'details\').open=false;openBuddyPicker()" class="btn whiteb sm" style="width:100%">🤖 เปลี่ยนรูปน้องชวนคิด</button></div></details>' +
         '<button onclick="openChat()" class="btn whiteb sm" title="โหลดประวัติสนทนาจากบัญชี">🕘 ประวัติ</button>' +
         '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png" alt="หน้าหลัก"></button>' +
       '</div>' +
