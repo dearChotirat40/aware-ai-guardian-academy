@@ -6164,6 +6164,19 @@ function dashboardPracticeHtml() {
   }).join('');
   return '<section class="progress-content-grid" style="margin-top:18px"><div class="progress-panel"><h3>✍️ ความคืบหน้าพรอมต์</h3><p class="soft small">ได้อย่างน้อย 1 ดาวถือว่าผ่าน · ฝึกเพิ่มได้สูงสุด 3 ดาว</p>' + (promptRows || '<p>ยังไม่มีโจทย์พรอมต์</p>') + '</div><div class="progress-panel"><h3>🎮 ภารกิจและเหรียญตรา</h3><p class="soft small">ทำแบบทดสอบก่อนเรียนเพื่อเริ่มภารกิจ</p>' + (scenarioRows || '<p>ยังไม่มีภารกิจ</p>') + '</div></section>';
 }
+function lessonBadgesHtml(index, student) {
+  var mission = scenarios[index];
+  var missionIds = mission ? (mission.choices || []).filter(function(c){return c.badge;}).map(function(c){return c.badge.id;}) : [];
+  var badges = ACHIEVEMENT_BADGES.filter(function(b){
+    return (b.type === 'lesson' && b.index === index) ||
+      (b.type === 'scenario' && missionIds.indexOf(b.badgeId) !== -1) ||
+      (b.type === 'prompt' && index === 1) || (b.type === 'pre' && index === 0);
+  });
+  return '<details style="margin-top:12px"><summary style="cursor:pointer;font-weight:700">🏅 เหรียญตราของบทนี้ · ได้แล้ว ' + badges.filter(function(b){return hasAchievement(b,student);}).length + '/' + badges.length + '</summary><div class="badgegrid achievement-grid" style="margin-top:10px">' + badges.map(function(b){
+    var earned=hasAchievement(b,student);
+    return '<div class="badgeitem' + (earned ? '' : ' locked') + '">' + badgeMedalHtml(b) + '<p>' + escChat(b.name) + '</p><span class="badge-criterion">' + (earned ? '✓ ได้รับแล้ว · ' : '') + escChat(b.criterion) + '</span></div>';
+  }).join('') + '</div></details>';
+}
 function renderDashboard() {
   var student = currentStudent() || {};
   var overall = 0;
@@ -6228,7 +6241,7 @@ function renderDashboard() {
         '<span class="progress-step ' + (mediaDone ? 'done' : 'ready') + '">📖 สถานการณ์ ' + (mediaDone ? 'ครบแล้ว' : 'กำลังเรียน') + '</span>' +
         '<span class="progress-step ' + (p.quizDone ? 'done' : (mediaDone ? 'ready' : 'locked')) + '">📝 ข้อสอบ ' + (p.quizDone ? lessonAssessmentLabel(p, 'post') : (mediaDone ? 'พร้อมทำ' : 'ล็อก')) + '</span>' +
         '<span class="progress-step ' + (bonusDone ? 'done' : (p.quizDone ? 'ready' : 'locked')) + '">🎁 โบนัส ' + (bonusDone ? 'ได้ตราแล้ว' : (p.quizDone ? 'พร้อมทำ' : 'ล็อก')) + '</span>' +
-      '</div><button class="btn whiteb sm" style="margin-top:10px" onclick="openLesson(' + i + ')">📖 ' + (p.quizDone ? 'ทบทวนบทเรียน' : 'เรียนต่อ') + '</button></article>';
+      '</div>' + lessonBadgesHtml(i, student) + '<button class="btn whiteb sm" style="margin-top:10px" onclick="openLesson(' + i + ')">📖 ' + (p.quizDone ? 'ทบทวนบทเรียน' : 'เรียนต่อ') + '</button></article>';
   }).join('');
 
   appEl.innerHTML =
@@ -6261,9 +6274,8 @@ function renderDashboard() {
           '<button onclick="logout()" class="btn whiteb sm">🚪 ออกจากระบบ</button>' +
         '</div></aside>' +
       '</section>' +
-      '<section class="progress-collections">' +
+      '<section class="progress-collections" style="grid-template-columns:1fr">' +
         randomBotCollectionHtml() +
-        '<div class="pcard orange badge-collection-panel" style="position:relative"><div class="tape tape-yellow"></div>' + achievementCollectionHtml(student) + '</div>' +
       '</section>' +
       '<details class="progress-rules"><summary>📏 ดูเกณฑ์คะแนน ดาว เหรียญ และรางวัล</summary>' + rewardCriteriaHtml('student') + '</details>' +
     '</div>';
