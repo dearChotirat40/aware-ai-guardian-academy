@@ -6263,6 +6263,7 @@ function renderDashboard() {
           '<button onclick="changeView(\'leaderboard\')" class="btn whiteb sm">🏆 ดูอันดับห้อง</button>' +
           '<button onclick="openRandomCabinet()" class="btn whiteb sm">🧸 ไปตู้สุ่มตุ๊กตาน้องชวนคิด</button>' +
           '<button onclick="changeView(\'lessons\')" class="btn pinkb sm">📚 ไปห้องเรียน</button>' +
+          '<button onclick="changeView(\'sendreport\')" class="btn blueb sm">📄 รายงานของฉัน / ส่งครู</button>' +
           '<button onclick="logout()" class="btn whiteb sm">🚪 ออกจากระบบ</button>' +
         '</div></aside>' +
       '</section>' +
@@ -6633,6 +6634,7 @@ function makeChoice(choiceIndex) {
 <script src="./teacher-admin.js"></script>
 <script src="./google-login.js"></script>
 <script src="./chat-history.js"></script>
+<script src="./student-reports.js"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
 try {
@@ -6696,6 +6698,9 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       teacherManage: function(action, payload) {
         if (!teacherPin) return Promise.reject(new Error('กรุณาเข้าสู่ระบบครู'));
         return supabase.rpc('teacher_manage', {p_pin:teacherPin,p_action:action,p_payload:clean(payload || {})}).then(check);
+      },
+      reportArchive: function(id, save, reportId, offset) {
+        return supabase.rpc("student_report_archive", {p_student_id:id || null,p_save:!!save,p_report_id:reportId || null,p_pin:teacherPin,p_offset:offset || 0}).then(check);
       },
       chatHistory: function(id, messages) {
         return supabase.rpc("student_chat", {p_student_id:id,p_messages:messages || []}).then(check);
