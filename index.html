@@ -2352,13 +2352,8 @@ function sanitizeStudentRecord(s) {
   });
   var storedScenarioBadges = Array.from(new Set(Array.isArray(s.badgeIds) ? s.badgeIds : []))
     .filter(function(id){ return validScenarioBadges.indexOf(id) !== -1; });
-  var completedScenarioCount = Math.min(scenarios.length, Math.max(
-    storedScenarioBadges.length,
-    Math.floor((Number(s.score) || 0) / 20),
-    Math.min(Number(s.unlockedLevel) || 0, scenarios.length)
-  ));
-  /* ข้อมูลจากระบบ 4 ด่านเดิมอาจมีรหัสตราสลับกัน จัดใหม่ตามลำดับบทโดยไม่ลบจำนวนด่านที่เคยผ่าน */
-  s.badgeIds = validScenarioBadges.slice(0, completedScenarioCount);
+  var completedScenarioCount = storedScenarioBadges.length;
+  s.badgeIds = storedScenarioBadges;
   s.score = completedScenarioCount * 2;
   s.unlockedLevel = completedScenarioCount;
   s.chatQuestions = (Array.isArray(s.chatQuestions) ? s.chatQuestions : []).map(function(item){
@@ -4579,7 +4574,7 @@ function renderTeacher() {
         '<div class="tape tape-mint"></div>' +
         '<h3 class="t-mint" style="font-weight:700;margin-bottom:8px">📊 รายงานผ่าน Google Sheet / Excel</h3>' +
         (sheetConfigured()
-          ? '<p class="small" style="margin-bottom:10px">🟢 <b>เชื่อมต่อแล้ว!</b> คะแนนของนักเรียนทุกคน (ที่มีเน็ต) จะวิ่งขึ้นชีตให้อัตโนมัติแบบเรียลไทม์ อัปเดตทับแถวเดิมตามรหัสนักเรียน ไม่มีแถวซ้ำ</p>' +
+          ? '<p class="small" style="margin-bottom:10px">🟢 <b>ตั้งค่าลิงก์ชีตแล้ว</b> แอปส่งรายงานผ่าน Apps Script แต่ยังยืนยันผลบันทึกในชีตอัตโนมัติไม่ได้ กรุณาเปิดชีตเพื่อตรวจสอบ · ฐานข้อมูลหลักคือ Supabase</p>' +
             '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
               (GOOGLE_SHEET.sheetUrl ? '<a href="' + GOOGLE_SHEET.sheetUrl + '" target="_blank" rel="noopener" class="btn mintb sm" style="text-decoration:none">📊 เปิด Google Sheet</a>' : '<span class="soft tiny">หากต้องการปุ่มเปิดตาราง ให้เพิ่มลิงก์ไฟล์ Google Sheet</span>') +
             '</div>'
@@ -4595,7 +4590,7 @@ function renderTeacher() {
       '</div>' +
       '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:20px">' +
         '<div class="pcard blue center"><p class="t-blue tiny" style="font-weight:700">👨‍👩‍👧‍👦 นักเรียนทั้งหมด</p><p class="ink" style="font-size:30px;font-weight:700">' + totalStudents + ' คน</p></div>' +
-        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700">📚 คะแนน E1 เฉลี่ย</p><p class="ink" style="font-size:25px;font-weight:700">' + avgLessonPoints + '/' + maxLessonPoints() + '</p><p class="soft tiny">ดาวบทเรียนเฉลี่ย ⭐ ' + avgStars + '/5</p></div>' +
+        '<div class="pcard pink center"><p class="t-pink tiny" style="font-weight:700">📚 คะแนน E1 เฉลี่ย</p><p class="ink" style="font-size:25px;font-weight:700">' + avgLessonPoints + '/' + maxLessonPoints() + '</p><p class="soft tiny">ดาวบทเรียนเฉลี่ย ⭐ ' + avgStars + '/' + lessons.length + '</p></div>' +
         '<div class="pcard mint center"><p class="t-mint tiny" style="font-weight:700">🎓 เรียนจบครบทุกบท</p><p class="ink" style="font-size:30px;font-weight:700">' + finishedAll + ' คน</p></div>' +
         '<div class="pcard yellow center"><p class="t-orange tiny" style="font-weight:700">🚀 คืบหน้าเฉลี่ย</p><p class="ink" style="font-size:30px;font-weight:700">' + avgPct + '%</p></div>' +
       '</div>' +
@@ -6605,6 +6600,9 @@ function makeChoice(choiceIndex) {
   changeView('feedback');
 }
 
+</script>
+<script src="./public/teacher-admin.js"></script>
+<script>
 /* ==================== เริ่มต้นแอป ==================== */
 try {
   if (new URLSearchParams(window.location.search).get('resetTeacherPin') === '1') {
@@ -6652,6 +6650,10 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       var teacherPin = null;
       return {
       isTeacher: isTeacher,
+      teacherManage: function(action, payload) {
+        if (!teacherPin) return Promise.reject(new Error('กรุณาเข้าสู่ระบบครู'));
+        return supabase.rpc('teacher_manage', {p_pin:teacherPin,p_action:action,p_payload:clean(payload || {})}).then(check);
+      },
       cabinetAccount: function(id, requestId) {
         return supabase.rpc('cabinet_account', {p_student_id:id, p_request_id:requestId || null}).then(check);
       },
@@ -6711,7 +6713,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
           data: payload,
           updated_at: payload._updatedAt,
           rank_points: window.rankPoints ? window.rankPoints(payload) : 0
-        }).eq('id', id).then(check);
+        }).eq('id', id).select('id').single().then(check);
       },
       deleteStudent: function(id) {
         if (teacherPin) return supabase.rpc('teacher_delete_student', {p_pin:teacherPin,p_id:id}).then(check);
@@ -6760,7 +6762,8 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       watchStudents: function(callback) {
         return supabase.channel('students-changes')
           .on('postgres_changes', { event:'*', schema:'public', table:'students' }, function() {
-            fetchStudents().then(callback).catch(window.onFirebaseError);
+            if (teacherPin) supabase.rpc('teacher_load_all', {p_pin:teacherPin}).then(function(r){ callback((check(r) || {}).students || {}); }).catch(window.onFirebaseError);
+            else fetchStudents().then(callback).catch(window.onFirebaseError);
           })
           .subscribe(function(status) {
             if (status === 'CHANNEL_ERROR') window.onFirebaseError(new Error('Supabase Realtime channel error'));
