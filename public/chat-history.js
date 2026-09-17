@@ -14,7 +14,7 @@
   renderChat = function () {
     oldRenderChat();
     var bar = document.querySelector('.chatbar');
-    if (bar) {
+    if (bar && !document.getElementById('chat-save-status')) {
       var note = document.createElement('p');
       note.id = 'chat-save-status'; note.setAttribute('role','status');
       note.className = 'soft tiny'; note.style.padding = '8px 16px';
@@ -26,7 +26,8 @@
     var id = currentId;
     if (!id || !firebaseBackend || !firebaseBackend.chatHistory) { alert('กรุณาเข้าสู่ระบบและรอการเชื่อมต่อ'); return; }
     if (active === id && busy) { changeView('chat'); return; }
-    active = id; busy = true; state.chatBusy = true; state.chat = [];
+    if (active !== id) state.chat = [];
+    active = id; busy = true; state.chatBusy = true;
     changeView('chat'); status('กำลังโหลดประวัติสนทนา…');
     try {
       var retry = pending && pending.account === id ? [pending.message] : [];
@@ -50,6 +51,7 @@
     busy = true; active = id; state.chatBusy = true;
     var userMessage = {id:crypto.randomUUID(),role:'user',content:text};
     var userSaved = false;
+    if(input)input.value='';
     state.chat.push({role:'me',text:text}); render();status('กำลังบันทึกคำถามและรอคำตอบ…');
     try {
       var rows = await firebaseBackend.chatHistory(id,[userMessage]); userSaved = true;

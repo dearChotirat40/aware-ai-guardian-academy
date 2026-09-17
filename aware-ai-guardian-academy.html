@@ -3622,6 +3622,7 @@ function stripTick() {
 
 var dashboardMarkup = null;
 function render() {
+  if (state.view === 'chat' && document.getElementById('chatlog')) { renderChat(); updateRankStrip(); return; }
   stopSpeak();
   appEl.classList.toggle('learning-flow', ['assessment','assessmentresult','lesson','quiz','quizresult'].indexOf(state.view) !== -1);
   var dashboard = state.view === 'dashboard' && appEl.querySelector('.progress-dashboard');
@@ -4061,6 +4062,17 @@ function renderChat() {
     msgs += '<div class="msgrow"><img class="chat-avatar" src="' + buddyAvatarSrc() + '" alt="' + buddyAvatarAlt() + '"><div class="msgwrap"><p class="msg-meta">น้องชวนคิดกำลังพิมพ์</p><div class="msg typing"><span></span><span></span><span></span></div></div></div>';
   }
 
+  var existingLog = document.getElementById('chatlog');
+  if (existingLog) {
+    var follow = existingLog.scrollHeight - existingLog.scrollTop - existingLog.clientHeight < 80;
+    var position = existingLog.scrollTop;
+    if (existingLog.innerHTML !== msgs) existingLog.innerHTML = msgs;
+    existingLog.scrollTop = follow ? existingLog.scrollHeight : position;
+    var sendButton = document.querySelector('.chatbar button');
+    if (sendButton) sendButton.disabled = !!state.chatBusy;
+    return;
+  }
+
   appEl.innerHTML =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
@@ -4076,7 +4088,7 @@ function renderChat() {
     '<div class="body-area">' +
       '<div id="chatlog" class="chatlog scroll">' + msgs + '</div>' +
       '<div class="chatbar">' +
-        '<input id="chat-inp" class="inp" type="text" maxlength="300" placeholder="พิมพ์เรื่องที่อยากถามได้เลย…" onkeydown="if(event.key===\'Enter\')sendChat()"' + (state.chatBusy ? ' disabled' : '') + '>' +
+        '<input id="chat-inp" class="inp" type="text" maxlength="300" placeholder="พิมพ์เรื่องที่อยากถามได้เลย…" onkeydown="if(event.key===\'Enter\')sendChat()"' + '>' +
         '<button onclick="sendChat()" class="btn pinkb" style="padding:11px 20px" ' + (state.chatBusy ? 'disabled' : '') + '>ส่ง 💬</button>' +
       '</div>' +
     '</div>';
@@ -6683,7 +6695,7 @@ function makeChoice(choiceIndex) {
 </script>
 <script src="./public/teacher-admin.js?v=20260917-stablelesson"></script>
 <script src="./public/google-login.js"></script>
-<script src="./public/chat-history.js?v=20260916-friendly"></script>
+<script src="./public/chat-history.js?v=stable-20260916-friendly"></script>
 <script src="./public/student-reports.js?v=20260917-flow"></script>
 <script src="./public/teacher-workspace.js?v=20260916-teacher2"></script>
 <script>
