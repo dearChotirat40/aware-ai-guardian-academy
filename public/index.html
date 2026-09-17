@@ -2527,6 +2527,7 @@ function onFirebaseReady(backend) {
   firebaseBackend = backend;
   firebaseStatus = 'ready';
   if (backend.loadCurriculum) backend.loadCurriculum().then(function(curriculum){
+    if (['lesson','quiz','assessment','promptwork','scenario','chat'].indexOf(state.view) !== -1) return;
     if (applyCurriculum(curriculum)) { saveCurriculumLocal(); render(); }
   }).catch(function(){ /* ใช้เนื้อหาในเครื่องได้เสมอ หากยังไม่ได้ติดตั้งตารางเนื้อหา */ });
   backend.loadAll().then(function(cloud){
@@ -6680,7 +6681,7 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./teacher-admin.js?v=20260917-flow"></script>
+<script src="./teacher-admin.js?v=20260917-stablelesson"></script>
 <script src="./google-login.js"></script>
 <script src="./chat-history.js?v=20260916-friendly"></script>
 <script src="./student-reports.js?v=20260917-flow"></script>

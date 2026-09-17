@@ -296,6 +296,9 @@
     if(reset){clearTimeout(firebaseStudentTimer);db.students[active]=copy(remote[active]);saveDB();applyStudent(active);state.view='dashboard';notice='ข้อมูลได้รับการแก้ไขโดยครู';}
     return originalMerge(remote)||!!reset;
   };
+  var studentSyncTimer=null;
+  var studentSyncBusy=false;
+  function learningInProgress(){return ['lesson','quiz','quizresult','assessment','assessmentresult','promptwork','chat','scenario','feedback'].indexOf(state.view)!==-1;}
   var previousReady=window.onFirebaseReady;
   window.onFirebaseReady=function(backend){
     var save=backend.saveStudent;
@@ -303,12 +306,16 @@
       if(/ADMIN_CHANGED|40001/.test(String(e.message || e))){var latest=await backend.loadAll();mergeFirebaseStudents(latest.students || {});render();alert('คุณครูแก้ไขข้อมูลบัญชีนี้แล้ว โหลดข้อมูลล่าสุดให้แล้ว กรุณาทำรายการใหม่');}throw e;
     });};
     previousReady(backend);
-    setInterval(async function(){
-      if(document.hidden || busy || state.view==='teacher' || !currentId)return;
+    if(studentSyncTimer)clearInterval(studentSyncTimer);
+    studentSyncTimer=setInterval(async function(){
+      if(studentSyncBusy || learningInProgress() || document.hidden || busy || state.view==='teacher' || !currentId)return;
+      studentSyncBusy=true;
+      var syncAccount=currentId;
       try{
-        var c=await backend.loadCurriculum();if(c && Number(c.updatedAt)>version){clearTimeout(firebaseStudentTimer);applyCurriculum(c);saveCurriculumLocal();var all=await backend.loadAll();mergeFirebaseStudents(all.students || {});if(all.students[currentId])applyStudent(currentId);state.view='dashboard';render();}
-        else {var cloud=await backend.loadAll();if(!cloud.students[currentId]){clearTimeout(firebaseStudentTimer);currentId=null;state.view='login';db.students={};saveDB();render();}else if(mergeFirebaseStudents(cloud.students)){if(['lesson','quiz','assessment','promptwork','chat','scenario'].indexOf(state.view)===-1)render();else updateRankStrip();}}
-      }catch(e){/* Retry on the next interval; never send cached data as recovery. */}
+        var c=await backend.loadCurriculum();
+        if(currentId!==syncAccount || learningInProgress())return;if(c && Number(c.updatedAt)>version){clearTimeout(firebaseStudentTimer);applyCurriculum(c);saveCurriculumLocal();var all=await backend.loadAll();if(currentId!==syncAccount || learningInProgress())return;mergeFirebaseStudents(all.students || {});if(all.students[currentId])applyStudent(currentId);render();}
+        else {var cloud=await backend.loadAll();if(currentId!==syncAccount || learningInProgress())return;if(!cloud.students[currentId]){clearTimeout(firebaseStudentTimer);currentId=null;state.view='login';db.students={};saveDB();render();}else if(mergeFirebaseStudents(cloud.students)){if(['lesson','quiz','assessment','promptwork','chat','scenario'].indexOf(state.view)===-1)render();else updateRankStrip();}}
+      }catch(e){/* Retry on the next interval; never send cached data as recovery. */}finally{studentSyncBusy=false;}
     },15000);
   };
   window.teacherAdminTest={validate:validate,align:align,defaults:copy(defaults),resetData:resetData};
