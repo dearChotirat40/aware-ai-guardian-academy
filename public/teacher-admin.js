@@ -307,7 +307,7 @@
       if(document.hidden || busy || state.view==='teacher' || !currentId)return;
       try{
         var c=await backend.loadCurriculum();if(c && Number(c.updatedAt)>version){clearTimeout(firebaseStudentTimer);applyCurriculum(c);saveCurriculumLocal();var all=await backend.loadAll();mergeFirebaseStudents(all.students || {});if(all.students[currentId])applyStudent(currentId);state.view='dashboard';render();}
-        else {var cloud=await backend.loadAll();if(!cloud.students[currentId]){clearTimeout(firebaseStudentTimer);currentId=null;state.view='login';db.students={};saveDB();render();}else if(mergeFirebaseStudents(cloud.students))render();}
+        else {var cloud=await backend.loadAll();if(!cloud.students[currentId]){clearTimeout(firebaseStudentTimer);currentId=null;state.view='login';db.students={};saveDB();render();}else if(mergeFirebaseStudents(cloud.students)){if(['lesson','quiz','assessment','promptwork','chat','scenario'].indexOf(state.view)===-1)render();else updateRankStrip();}}
       }catch(e){/* Retry on the next interval; never send cached data as recovery. */}
     },15000);
   };

@@ -326,6 +326,8 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .pop{animation:popIn .45s cubic-bezier(.175,.885,.32,1.275) both}
 @keyframes popIn{0%{transform:scale(.6); opacity:0} 100%{transform:scale(1); opacity:1}}
 .fadein{animation:fadeIn .4s ease-in}
+.learning-flow .pop{animation:none}
+.dashboard-refresh .pop,.dashboard-refresh .toy-mini.got,.dashboard-refresh .random-toy-slot.got .toy-icon{animation:none}
 @keyframes fadeIn{from{opacity:0} to{opacity:1}}
 .float{animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
@@ -3617,11 +3619,19 @@ function stripTick() {
   refreshSecureLeaderboard({strip:true});
 }
 
+var dashboardMarkup = null;
 function render() {
   stopSpeak();
-  appEl.innerHTML = '';
-  appEl.classList.add('fadein');
-  setTimeout(function(){ appEl.classList.remove('fadein'); }, 450);
+  appEl.classList.toggle('learning-flow', ['assessment','assessmentresult','lesson','quiz','quizresult'].indexOf(state.view) !== -1);
+  var dashboard = state.view === 'dashboard' && appEl.querySelector('.progress-dashboard');
+  var dashboardScroll = dashboard ? dashboard.scrollTop : 0;
+  appEl.classList.toggle('dashboard-refresh', !!dashboard);
+  if (!dashboard) {
+    dashboardMarkup = null;
+    appEl.classList.remove('fadein');
+  } else {
+    appEl.classList.remove('fadein');
+  }
   switch (state.view) {
     case 'login': renderLogin(); break;
     case 'nickname': renderNicknameSetup(); break;
@@ -3633,7 +3643,9 @@ function render() {
     case 'quizresult': renderQuizResult(); break;
     case 'assessment': renderAssessment(); break;
     case 'assessmentresult': renderAssessmentResult(); break;
-    case 'dashboard': renderDashboard(); break;
+    case 'dashboard':
+      if (renderDashboard() === false) { updateRankStrip(); return; }
+      break;
     case 'sendreport': renderSendReport(); break;
     case 'prompt': renderPromptMenu(); break;
     case 'promptwork': renderPromptWork(); break;
@@ -3653,6 +3665,10 @@ function render() {
       try { appEl.insertAdjacentHTML('beforeend',
         '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
     }
+  }
+  if (dashboard) {
+    var updatedDashboard = appEl.querySelector('.progress-dashboard');
+    if (updatedDashboard) updatedDashboard.scrollTop = dashboardScroll;
   }
 }
 function changeView(v) {
@@ -5198,6 +5214,9 @@ function startAssessment(mode) {
     alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาทำแบบทดสอบระหว่างบทให้ครบทั้ง ' + lessons.length + ' บทก่อน');
     return;
   }
+  var saved = currentStudent();
+  if (saved && saved.assessments && saved.assessments[mode] && saved.assessments[mode].done) { state.currentAssessment = mode; changeView('assessmentresult'); return; }
+  if (state.currentAssessment === mode && state.assessmentQuiz) { changeView('assessment'); return; }
   state.currentAssessment = mode;
   state.assessmentQuiz = { qIndex:0, correct:0, answered:false, picked:null };
   changeView('assessment');
@@ -5208,7 +5227,7 @@ function renderAssessment() {
   var q = ASSESSMENT_QUESTIONS[qz.qIndex];
   var optsHtml = q.choices.map(function(c, oi) {
     var cls = '';
-    if (qz.answered) {
+    if (qz.answered && mode !== 'pre') {
       if (oi === q.answer) cls = ' right';
       else if (oi === qz.picked) cls = ' wrong';
     }
@@ -5221,7 +5240,7 @@ function renderAssessment() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:30px">' + assessmentIcon(mode) + '</div>' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">' + assessmentTitle(mode) + '</h2>' +
-        '<p class="soft tiny">ข้อที่ ' + (qz.qIndex + 1) + ' / ' + ASSESSMENT_QUESTIONS.length + ' · คะแนน ' + qz.correct + '</p></div>' +
+        '<p class="soft tiny">ข้อที่ ' + (qz.qIndex + 1) + ' / ' + ASSESSMENT_QUESTIONS.length + (mode === 'pre' ? '' : ' · คะแนน ' + qz.correct) + '</p></div>' +
       '</div>' +
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png?v=20260916-newhome" alt="หน้าหลัก"></button>' +
     '</div>' +
@@ -5233,7 +5252,7 @@ function renderAssessment() {
       '</div>' +
       optsHtml +
       (qz.answered ? '<div class="center" style="margin-top:16px"><button onclick="nextAssessmentQuestion()" class="btn mintb">' +
-        (qz.qIndex + 1 >= ASSESSMENT_QUESTIONS.length ? 'ดูผลคะแนน' : 'ข้อต่อไป') + '</button></div>' : '') +
+        (qz.qIndex + 1 >= ASSESSMENT_QUESTIONS.length ? (mode === 'pre' ? 'บันทึกและเรียนต่อ' : 'ดูผลคะแนน') : 'ข้อต่อไป') + '</button></div>' : '') +
     '</div>';
 }
 function answerAssessment(oi) {
@@ -5247,7 +5266,7 @@ function answerAssessment(oi) {
 }
 function nextAssessmentQuestion() {
   var qz = state.assessmentQuiz;
-  if (!qz) return;
+  if (!qz || !qz.answered) return;
   if (qz.qIndex + 1 >= ASSESSMENT_QUESTIONS.length) {
     finishAssessment();
   } else {
@@ -5280,13 +5299,13 @@ function renderAssessmentResult() {
     : '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>';
   appEl.innerHTML =
     '<div class="center-view" style="position:relative">' +
-      '<div class="pcard ' + (pct >= 70 ? 'mint' : 'yellow') + ' pop" style="max-width:560px;width:100%">' +
+      '<div class="pcard ' + (mode === 'pre' || pct >= 70 ? 'mint' : 'yellow') + ' pop" style="max-width:560px;width:100%">' +
         '<div class="tape tape-mint"></div>' +
         '<div style="font-size:48px;margin-bottom:8px">' + assessmentIcon(mode) + '</div>' +
         '<h2 class="ink" style="font-size:26px;margin-bottom:6px">' + assessmentTitle(mode) + '</h2>' +
         '<p class="soft small" style="margin-bottom:14px">บันทึกคะแนนเรียบร้อยแล้ว</p>' +
-        '<p class="t-orange" style="font-size:42px;font-weight:700">' + score + '/' + total + '</p>' +
-        '<p class="soft small">คิดเป็น ' + pct + '%</p>' +
+        (mode === 'pre' ? '<p class="soft">ทำแบบทดสอบก่อนเรียนเรียบร้อย พร้อมเริ่มเรียนแล้ว</p>' : '<p class="t-orange" style="font-size:42px;font-weight:700">' + score + '/' + total + '</p>' +
+        '<p class="soft small">คิดเป็น ' + pct + '%</p>') +
         '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">' +
           '<button onclick="changeView(\'home\')" class="btn whiteb sm"><img class="home-icon-img" src="./home-button.png?v=20260916-newhome" alt=""> กลับหน้าหลัก</button>' +
           nextAction +
@@ -5333,7 +5352,7 @@ function quickFunctionButtons() {
   var event = journeyEvent(done);
   return '<div class="home-statusbar">' +
     '<div class="functionbar assessment-actions">' +
-      '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">' + (preDone ? '✓' : '01') + '</span><span><b>ก่อนเรียน</b><span>' + (preDone ? assessmentLabel(stu, 'pre') + ' · ทำแล้ว' : 'ต้องทำก่อนเริ่มบทที่ 1') + '</span></span></button>' +
+      '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">' + (preDone ? '✓' : '01') + '</span><span><b>ก่อนเรียน</b><span>' + (preDone ? 'ทำแล้ว' : 'ต้องทำก่อนเริ่มบทที่ 1') + '</span></span></button>' +
       '<button class="funcbtn" onclick="startAssessment(\'post\')"' + (postReady ? '' : ' disabled') + '><span class="fi">' + (postReady ? '02' : '🔒') + '</span><span><b>หลังเรียน</b><span>' + (postReady ? (assessmentLabel(stu, 'post') === '-' ? 'พร้อมทำเมื่อมั่นใจ' : assessmentLabel(stu, 'post')) : 'ปลดล็อกเมื่อได้ดาวครบ ' + lessons.length + ' บท') + '</span></span></button>' +
     '</div>' +
   '</div>';
@@ -6263,7 +6282,7 @@ function renderDashboard() {
       '</div>' + lessonBadgesHtml(i, student) + '<button class="btn whiteb sm" style="margin-top:10px" onclick="openLesson(' + i + ')">📖 ' + (p.quizDone ? 'ทบทวนบทเรียน' : 'เรียนต่อ') + '</button></article>';
   }).join('');
 
-  appEl.innerHTML =
+  var markup =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:32px">📊</div>' +
@@ -6278,7 +6297,7 @@ function renderDashboard() {
         '<article class="progress-stat pink"><div class="progress-stat-icon">📚</div><p class="progress-stat-label">คะแนนบทเรียน</p><p class="progress-stat-value">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/' + maxLessonPoints() + '</span></p><p class="progress-stat-note">⭐ ' + totalStars() + '/' + lessons.length + ' ดาว · ' + lessonMedalSummary() + '</p></article>' +
         '<article class="progress-stat blue"><div class="progress-stat-icon">🎮</div><p class="progress-stat-label">โบนัสภารกิจ</p><p class="progress-stat-value">' + state.score + '<span class="soft" style="font-size:14px">/' + maxScenarioScore() + '</span></p><p class="progress-stat-note">ผ่าน ' + scenariosDone + '/' + scenarios.length + ' ด่าน · ตราสถานการณ์ ' + state.badges.length + '</p></article>' +
         '<article class="progress-stat yellow"><div class="progress-stat-icon">✍️</div><p class="progress-stat-label">ดาวเขียนพรอมต์</p><p class="progress-stat-value">' + totalPromptStars() + '<span class="soft" style="font-size:14px">/' + maxPromptStars() + '</span></p><p class="progress-stat-note">ทำแล้ว ' + sessionPStars.filter(function(n){ return n > 0; }).length + '/' + PROMPT_CHALLENGES.length + ' โจทย์</p></article>' +
-        '<article class="progress-stat mint"><div class="progress-stat-icon">🧭</div><p class="progress-stat-label">ก่อนเรียน → หลังเรียน</p><p class="progress-stat-value" style="font-size:20px">' + assessmentLabel(student, 'pre') + ' → ' + assessmentLabel(student, 'post') + '</p><p class="progress-stat-note">ดูพัฒนาการของตัวเองจากผลทดสอบ</p></article>' +
+        '<article class="progress-stat mint"><div class="progress-stat-icon">🧭</div><p class="progress-stat-label">ก่อนเรียน → หลังเรียน</p><p class="progress-stat-value" style="font-size:20px">' + (preDone ? 'ทำแล้ว' : 'ยังไม่ทำ') + ' → ' + assessmentLabel(student, 'post') + '</p><p class="progress-stat-note">ดูพัฒนาการของตัวเองจากผลทดสอบ</p></article>' +
         '<article class="progress-stat success"><p class="progress-stat-label">🎯 ความสำเร็จรวม</p><div class="success-ring" style="--done:' + overall + '%" role="img" aria-label="ทำกิจกรรมครบ ' + overall + ' เปอร์เซ็นต์"><strong>' + overall + '%</strong></div><p class="progress-stat-note">ทำครบ ' + taskDone + '/' + taskTotal + ' กิจกรรม</p><p class="progress-stat-note">บทเรียน · พรอมต์ · ภารกิจ · ก่อน–หลังเรียน</p></article>' +
       '</section>' +
       '<section class="progress-next"><div class="progress-next-copy"><b>🎯 ' + nextTitle + '</b><span>' + nextNote + '</span></div>' + nextAction + '</section>' +
@@ -6298,6 +6317,11 @@ function renderDashboard() {
         '</div></aside>' +
       '</section>' +
     '</div>';
+  // Polling and realtime events may only change timestamps or other students.
+  if (dashboardMarkup === markup && appEl.querySelector && appEl.querySelector('.progress-dashboard')) return false;
+  dashboardMarkup = markup;
+  appEl.innerHTML = markup;
+  return true;
 }
 
 function resetAll() {
@@ -6656,10 +6680,10 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./public/teacher-admin.js?v=20260916-teacher2"></script>
+<script src="./public/teacher-admin.js?v=20260917-flow"></script>
 <script src="./public/google-login.js"></script>
 <script src="./public/chat-history.js?v=20260916-friendly"></script>
-<script src="./public/student-reports.js?v=20260916-teacher2"></script>
+<script src="./public/student-reports.js?v=20260917-flow"></script>
 <script src="./public/teacher-workspace.js?v=20260916-teacher2"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */

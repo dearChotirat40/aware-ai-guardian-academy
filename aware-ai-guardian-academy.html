@@ -326,6 +326,8 @@ button:disabled{cursor:not-allowed; opacity:.55}
 .pop{animation:popIn .45s cubic-bezier(.175,.885,.32,1.275) both}
 @keyframes popIn{0%{transform:scale(.6); opacity:0} 100%{transform:scale(1); opacity:1}}
 .fadein{animation:fadeIn .4s ease-in}
+.learning-flow .pop{animation:none}
+.dashboard-refresh .pop,.dashboard-refresh .toy-mini.got,.dashboard-refresh .random-toy-slot.got .toy-icon{animation:none}
 @keyframes fadeIn{from{opacity:0} to{opacity:1}}
 .float{animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
@@ -3617,11 +3619,19 @@ function stripTick() {
   refreshSecureLeaderboard({strip:true});
 }
 
+var dashboardMarkup = null;
 function render() {
   stopSpeak();
-  appEl.innerHTML = '';
-  appEl.classList.add('fadein');
-  setTimeout(function(){ appEl.classList.remove('fadein'); }, 450);
+  appEl.classList.toggle('learning-flow', ['assessment','assessmentresult','lesson','quiz','quizresult'].indexOf(state.view) !== -1);
+  var dashboard = state.view === 'dashboard' && appEl.querySelector('.progress-dashboard');
+  var dashboardScroll = dashboard ? dashboard.scrollTop : 0;
+  appEl.classList.toggle('dashboard-refresh', !!dashboard);
+  if (!dashboard) {
+    dashboardMarkup = null;
+    appEl.classList.remove('fadein');
+  } else {
+    appEl.classList.remove('fadein');
+  }
   switch (state.view) {
     case 'login': renderLogin(); break;
     case 'nickname': renderNicknameSetup(); break;
@@ -3633,7 +3643,9 @@ function render() {
     case 'quizresult': renderQuizResult(); break;
     case 'assessment': renderAssessment(); break;
     case 'assessmentresult': renderAssessmentResult(); break;
-    case 'dashboard': renderDashboard(); break;
+    case 'dashboard':
+      if (renderDashboard() === false) { updateRankStrip(); return; }
+      break;
     case 'sendreport': renderSendReport(); break;
     case 'prompt': renderPromptMenu(); break;
     case 'promptwork': renderPromptWork(); break;
@@ -3653,6 +3665,10 @@ function render() {
       try { appEl.insertAdjacentHTML('beforeend',
         '<div class="chatdock noprint"><button class="chatfab" onclick="openChat()" title="ถามน้องชวนคิด"><img class="buddyimg" src="' + buddyAvatarSrc() + '" alt=""> ถามน้องชวนคิด</button></div>'); } catch(e) {}
     }
+  }
+  if (dashboard) {
+    var updatedDashboard = appEl.querySelector('.progress-dashboard');
+    if (updatedDashboard) updatedDashboard.scrollTop = dashboardScroll;
   }
 }
 function changeView(v) {
@@ -5198,6 +5214,9 @@ function startAssessment(mode) {
     alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาทำแบบทดสอบระหว่างบทให้ครบทั้ง ' + lessons.length + ' บทก่อน');
     return;
   }
+  var saved = currentStudent();
+  if (saved && saved.assessments && saved.assessments[mode] && saved.assessments[mode].done) { state.currentAssessment = mode; changeView('assessmentresult'); return; }
+  if (state.currentAssessment === mode && state.assessmentQuiz) { changeView('assessment'); return; }
   state.currentAssessment = mode;
   state.assessmentQuiz = { qIndex:0, correct:0, answered:false, picked:null };
   changeView('assessment');
@@ -5208,7 +5227,7 @@ function renderAssessment() {
   var q = ASSESSMENT_QUESTIONS[qz.qIndex];
   var optsHtml = q.choices.map(function(c, oi) {
     var cls = '';
-    if (qz.answered) {
+    if (qz.answered && mode !== 'pre') {
       if (oi === q.answer) cls = ' right';
       else if (oi === qz.picked) cls = ' wrong';
     }
@@ -5221,7 +5240,7 @@ function renderAssessment() {
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:30px">' + assessmentIcon(mode) + '</div>' +
         '<div><h2 class="ink" style="font-size:21px;font-weight:700">' + assessmentTitle(mode) + '</h2>' +
-        '<p class="soft tiny">ข้อที่ ' + (qz.qIndex + 1) + ' / ' + ASSESSMENT_QUESTIONS.length + ' · คะแนน ' + qz.correct + '</p></div>' +
+        '<p class="soft tiny">ข้อที่ ' + (qz.qIndex + 1) + ' / ' + ASSESSMENT_QUESTIONS.length + (mode === 'pre' ? '' : ' · คะแนน ' + qz.correct) + '</p></div>' +
       '</div>' +
       '<button onclick="changeView(\'home\')" class="iconbtn" title="กลับหน้าหลัก"><img class="home-icon-img" src="./home-button.png?v=20260916-newhome" alt="หน้าหลัก"></button>' +
     '</div>' +
@@ -5233,7 +5252,7 @@ function renderAssessment() {
       '</div>' +
       optsHtml +
       (qz.answered ? '<div class="center" style="margin-top:16px"><button onclick="nextAssessmentQuestion()" class="btn mintb">' +
-        (qz.qIndex + 1 >= ASSESSMENT_QUESTIONS.length ? 'ดูผลคะแนน' : 'ข้อต่อไป') + '</button></div>' : '') +
+        (qz.qIndex + 1 >= ASSESSMENT_QUESTIONS.length ? (mode === 'pre' ? 'บันทึกและเรียนต่อ' : 'ดูผลคะแนน') : 'ข้อต่อไป') + '</button></div>' : '') +
     '</div>';
 }
 function answerAssessment(oi) {
@@ -5247,7 +5266,7 @@ function answerAssessment(oi) {
 }
 function nextAssessmentQuestion() {
   var qz = state.assessmentQuiz;
-  if (!qz) return;
+  if (!qz || !qz.answered) return;
   if (qz.qIndex + 1 >= ASSESSMENT_QUESTIONS.length) {
     finishAssessment();
   } else {
@@ -5280,13 +5299,13 @@ function renderAssessmentResult() {
     : '<button onclick="changeView(\'dashboard\')" class="btn mintb sm">📊 ดูความคืบหน้า</button>';
   appEl.innerHTML =
     '<div class="center-view" style="position:relative">' +
-      '<div class="pcard ' + (pct >= 70 ? 'mint' : 'yellow') + ' pop" style="max-width:560px;width:100%">' +
+      '<div class="pcard ' + (mode === 'pre' || pct >= 70 ? 'mint' : 'yellow') + ' pop" style="max-width:560px;width:100%">' +
         '<div class="tape tape-mint"></div>' +
         '<div style="font-size:48px;margin-bottom:8px">' + assessmentIcon(mode) + '</div>' +
         '<h2 class="ink" style="font-size:26px;margin-bottom:6px">' + assessmentTitle(mode) + '</h2>' +
         '<p class="soft small" style="margin-bottom:14px">บันทึกคะแนนเรียบร้อยแล้ว</p>' +
-        '<p class="t-orange" style="font-size:42px;font-weight:700">' + score + '/' + total + '</p>' +
-        '<p class="soft small">คิดเป็น ' + pct + '%</p>' +
+        (mode === 'pre' ? '<p class="soft">ทำแบบทดสอบก่อนเรียนเรียบร้อย พร้อมเริ่มเรียนแล้ว</p>' : '<p class="t-orange" style="font-size:42px;font-weight:700">' + score + '/' + total + '</p>' +
+        '<p class="soft small">คิดเป็น ' + pct + '%</p>') +
         '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">' +
           '<button onclick="changeView(\'home\')" class="btn whiteb sm"><img class="home-icon-img" src="./home-button.png?v=20260916-newhome" alt=""> กลับหน้าหลัก</button>' +
           nextAction +
@@ -5333,7 +5352,7 @@ function quickFunctionButtons() {
   var event = journeyEvent(done);
   return '<div class="home-statusbar">' +
     '<div class="functionbar assessment-actions">' +
-      '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">' + (preDone ? '✓' : '01') + '</span><span><b>ก่อนเรียน</b><span>' + (preDone ? assessmentLabel(stu, 'pre') + ' · ทำแล้ว' : 'ต้องทำก่อนเริ่มบทที่ 1') + '</span></span></button>' +
+      '<button class="funcbtn" onclick="startAssessment(\'pre\')"><span class="fi">' + (preDone ? '✓' : '01') + '</span><span><b>ก่อนเรียน</b><span>' + (preDone ? 'ทำแล้ว' : 'ต้องทำก่อนเริ่มบทที่ 1') + '</span></span></button>' +
       '<button class="funcbtn" onclick="startAssessment(\'post\')"' + (postReady ? '' : ' disabled') + '><span class="fi">' + (postReady ? '02' : '🔒') + '</span><span><b>หลังเรียน</b><span>' + (postReady ? (assessmentLabel(stu, 'post') === '-' ? 'พร้อมทำเมื่อมั่นใจ' : assessmentLabel(stu, 'post')) : 'ปลดล็อกเมื่อได้ดาวครบ ' + lessons.length + ' บท') + '</span></span></button>' +
     '</div>' +
   '</div>';
@@ -5970,9 +5989,15 @@ function randomBotNextPrize() {
   var pool = notYetOwned.length ? notYetOwned : RANDOM_BOT_PRIZES;
   return pool[Math.floor(Math.random() * pool.length)];
 }
-function randomBotBadgeCount() { return state.badges.length; }
-function randomBotDrawCount() { return randomBotCollectedPrizes().length; }
-function randomBotDrawRemaining() { return Math.max(0, randomBotBadgeCount() - randomBotDrawCount()); }
+function randomBotBadgeCount() {
+  return state.badges.length;
+}
+function randomBotDrawCount() {
+  return randomBotCollectedPrizes().length;
+}
+function randomBotDrawRemaining() {
+  return Math.max(0, randomBotBadgeCount() - randomBotDrawCount());
+}
 function randomBotCollectionHtml() {
   var prizes = randomBotCollectedPrizes();
   var uniquePrizes = randomBotUniquePrizes();
@@ -5981,72 +6006,33 @@ function randomBotCollectionHtml() {
   var badgeCount = randomBotBadgeCount();
   var remaining = randomBotDrawRemaining();
   var selectedAvatar = currentBuddyAvatar();
-  var slots = RANDOM_BOT_PRIZES.map(function(item){
+  var slots = RANDOM_BOT_PRIZES.map(function(item, i){
     var prize = owned[item.name];
     var selected = prize && selectedAvatar && selectedAvatar.name === prize.name;
-    return '<button type="button" class="random-toy-slot ' + (prize ? 'got' : '') + (selected ? ' selected' : '') + '"' + (prize ? ' onclick="chooseBuddyAvatar(\'' + item.name + '\')" aria-pressed="' + (selected ? 'true' : 'false') + '"' : ' disabled aria-label="ตุ๊กตาลึกลับ ยังไม่ปลดล็อก"') + '><div class="toy-pair"><span class="toy-mini bot-' + item.tone + ' ' + (prize ? 'got' : 'silhouette') + '">' + randomBotImage(item, 54) + '</span></div><div class="toy-name">' + (prize ? item.name : 'ตุ๊กตาลึกลับ') + '</div><div class="toy-lesson">' + (prize ? (selected ? '✓ กำลังเป็นอวตารน้องชวนคิด' : 'แตะเพื่อใช้เป็นอวตาร') : 'เงาตุ๊กตา · รอสุ่ม') + '</div></button>';
+    return '<button type="button" class="random-toy-slot ' + (prize ? 'got' : '') + (selected ? ' selected' : '') + '"' +
+      (prize ? ' onclick="chooseBuddyAvatar(\'' + item.name + '\')" aria-pressed="' + (selected ? 'true' : 'false') + '"' : ' disabled aria-label="ตุ๊กตาลึกลับ ยังไม่ปลดล็อก"') + '>' +
+      '<div class="toy-pair"><span class="toy-mini bot-' + item.tone + ' ' + (prize ? 'got' : 'silhouette') + '">' + randomBotImage(item, 54) + '</span></div>' +
+      '<div class="toy-name">' + (prize ? item.name : 'ตุ๊กตาลึกลับ') + '</div>' +
+      '<div class="toy-lesson">' + (prize ? (selected ? '✓ กำลังเป็นอวตารน้องชวนคิด' : 'แตะเพื่อใช้เป็นอวตาร') : 'เงาตุ๊กตา · รอสุ่ม') + '</div></button>';
   }).join('');
   return '<section class="random-toy-collection bot-collection-paper">' +
     '<div class="bot-collection-head"><div><h3>BOT COLLECTION</h3><p>น้องชวนคิด · ตราสะสม ' + badgeCount + ' ตรา · สุ่มแล้ว ' + prizes.length + ' ครั้ง · เหลือสิทธิ์ ' + remaining + ' ครั้ง<br>แตะตุ๊กตาที่ปลดล็อกแล้วเพื่อใช้เป็นอวตารน้องชวนคิด</p></div><strong class="bot-collection-count">' + uniquePrizes.length + '/' + RANDOM_BOT_PRIZES.length + '</strong></div>' +
     '<div class="random-toy-grid">' + slots + '</div>' +
     '<button onclick="openRandomCabinet()" class="bot-collection-draw">🧸 ไปตู้สุ่มน้องชวนคิด</button></section>';
 }
-function randomCabinetHtml() {
-  var prizes = randomBotCollectedPrizes();
-  var plays = prizes.length;
-  var badgeCount = randomBotBadgeCount();
-  var remaining = randomBotDrawRemaining();
-  var prize = prizes[prizes.length - 1];
-  var toys = RANDOM_BOT_PRIZES.slice(0, 5).map(function(item){ return '<span class="cabinet-bot bot-' + item.tone + '" aria-hidden="true">' + randomBotImage(item, 48) + '</span>'; }).join('');
-  var picking = !!state.clawPicking;
-  var status = (plays ? '<div class="cabinet-win">🎉 คุณได้รับ<div style="display:flex;justify-content:center;margin:7px">' + (prize ? randomBotImage(prize, 88) : '') + '</div><b>' + (prize ? prize.name : 'AI BOT พิเศษ') + '</b><br><span class="tiny">ตราสัญลักษณ์สะสมใช้สุ่มแล้ว ' + plays + ' ตัว · เก็บในความคืบหน้าเรียบร้อย</span></div>' : '') +
-    (remaining ? '<p class="cabinet-token">🏅 ตราสัญลักษณ์สะสม ' + badgeCount + ' ตรา · ใช้สุ่มได้อีก ' + remaining + ' ตัว</p>' : '<p class="cabinet-locked">🔒 ยังไม่มีสิทธิ์สุ่มเพิ่ม · รับตราสัญลักษณ์เพิ่มจากภารกิจหรือบทเรียน แล้วกลับมาสุ่มได้</p>');
-  if (!state.randomCabinetOpen) {
-    return '<section class="random-cabinet cabinet-launcher"><p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p><p class="cabinet-token">🏅 ใช้ตราสัญลักษณ์สะสมเป็นสิทธิ์สุ่มน้องชวนคิด</p><p class="cabinet-token">มี ' + badgeCount + ' ตรา · สุ่มแล้ว ' + plays + ' ตัว · เหลือ ' + remaining + ' สิทธิ์</p>' + (remaining ? '<button onclick="openRandomCabinet()" class="btn pinkb sm">🎁 เปิดตู้สุ่มเต็มหน้าจอ</button>' : '<p class="cabinet-locked">🔒 รับตราสัญลักษณ์เพิ่มแล้วกลับมาสุ่มได้</p>') + '</section>';
-  }
-  return '<section class="random-cabinet cabinet-fullscreen ' + (picking ? 'picking' : '') + '" role="dialog" aria-modal="true" aria-label="ตู้สุ่มหุ่น AI"><div class="cabinet-book-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="cabinet-full-panel"><button class="cabinet-close" onclick="closeRandomCabinet()" aria-label="ปิดตู้สุ่ม">×</button><p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p><div class="cabinet-window"><div class="cabinet-sign">🤖 ตู้สุ่มหุ่น AI<br><span class="tiny">ใช้ตราสัญลักษณ์สะสมเพื่อสุ่มน้องชวนคิด</span></div><div class="cabinet-bots">' + toys + '</div></div>' + (picking ? '<p class="cabinet-win">🏅 กำลังสุ่มน้องชวนคิดจากตราสัญลักษณ์สะสม…</p>' : status) + (remaining && !picking ? '<div class="cabinet-controls"><span class="cabinet-token">🏅 ตราสัญลักษณ์ ' + badgeCount + ' ตรา · เหลือสิทธิ์ ' + remaining + ' ครั้ง</span><button onclick="spinRandomCabinet()" class="btn pinkb sm" aria-label="สุ่มน้องชวนคิดจากตราสัญลักษณ์สะสม">🎁 สุ่มน้องชวนคิด</button></div>' : '') + '</div></section>';
-}
-function openRandomCabinet() {
-  if (randomBotDrawRemaining() <= 0) return;
-  state.randomCabinetOpen = true;
-  render();
-}
-function closeRandomCabinet() {
-  if (state.clawPicking) return;
-  state.randomCabinetOpen = false;
-  render();
-}
-function spinRandomCabinet() {
-  var i = typeof state.currentLesson === 'number' && lessonProgress[state.currentLesson] && randomBotPlayCount(lessonProgress[state.currentLesson]) < 2 ? state.currentLesson : lessonProgress.findIndex(function(p){ return randomBotPlayCount(p) < 2; });
-  if (i < 0 || randomBotDrawRemaining() <= 0 || state.clawPicking) return;
-  state.clawPicking = true;
-  state.clawLesson = i;
-  render();
-  setTimeout(function(){
-    var latest = lessonProgress[i];
-    var latestPlays = randomBotPlayCount(latest);
-    if (!latest || latestPlays >= 2 || randomBotDrawRemaining() <= 0) { state.clawPicking = false; render(); return; }
-    var pick = randomBotNextPrize();
-    var currentPrizes = Array.isArray(latest.clawPrizes) ? latest.clawPrizes.filter(Boolean).slice(0, latestPlays) : (latest.clawPrize ? [latest.clawPrize] : []);
-    currentPrizes.push(pick.name);
-    latest.clawPlays = latestPlays + 1;
-    latest.clawPlayed = latest.clawPlays >= 2;
-    latest.clawPrize = pick.name;
-    latest.clawPrizes = currentPrizes.slice(0, 2);
-    state.clawPicking = false;
-    state.clawLesson = -1;
-    saveProgress();
-    render();
-  }, 900);
-}
-
-/* ใช้หน้าตู้สุ่มจาก ai-bot-random.html โดยตรง และให้สิทธิ์สุ่มมาจากตราสะสมของแอป */
 function randomBotPagePath() {
   return location.pathname.indexOf('/public/') !== -1 ? './ai-bot-random.html' : './public/ai-bot-random.html';
 }
 var RANDOM_BOT_HANDOFF_KEY = 'awareai_random_bot_handoff_v1';
 function randomBotHandoffPayload() {
-  return { studentId:currentId, tickets:randomBotDrawRemaining(), owned:randomBotCollectedPrizes().map(function(item){ return item.name; }), prizes:[], returnTo:location.href, issuedAt:Date.now() };
+  return {
+    studentId: currentId,
+    tickets: randomBotDrawRemaining(),
+    owned: randomBotCollectedPrizes().map(function(item){ return item.name; }),
+    prizes: [],
+    returnTo: location.href,
+    issuedAt: Date.now()
+  };
 }
 function importRandomBotHandoff() {
   if (!currentId) return false;
@@ -6054,15 +6040,28 @@ function importRandomBotHandoff() {
   try { handoff = JSON.parse(sessionStorage.getItem(RANDOM_BOT_HANDOFF_KEY) || 'null'); } catch(e) { return false; }
   if (!handoff || handoff.studentId !== currentId || !Array.isArray(handoff.prizes)) return false;
   var imported = false;
-  handoff.prizes.forEach(function(name){ if (randomBotDrawRemaining() > 0 && takeRandomBotDraw(name)) imported = true; });
+  handoff.prizes.forEach(function(name){
+    if (randomBotDrawRemaining() <= 0) return;
+    if (takeRandomBotDraw(name)) imported = true;
+  });
   try { sessionStorage.removeItem(RANDOM_BOT_HANDOFF_KEY); } catch(e) {}
   if (imported) state.randomCabinetOpen = false;
   return imported;
 }
-window.addEventListener('pageshow', function(){ if (currentId && importRandomBotHandoff()) render(); });
-function randomBotFrame() { return document.getElementById('ai-bot-random-frame'); }
+window.addEventListener('pageshow', function(){
+  if (currentId && importRandomBotHandoff()) render();
+});
+function randomBotFrame() {
+  return document.getElementById('ai-bot-random-frame');
+}
 function randomBotFrameData(type, prize) {
-  return { type:type || 'ai-bot-config', tickets:randomBotDrawRemaining(), badgeCount:randomBotBadgeCount(), owned:randomBotCollectedPrizes().map(function(item){ return item.name; }), prize:prize ? {name:prize.name,file:prize.file} : null };
+  return {
+    type: type || 'ai-bot-config',
+    tickets: randomBotDrawRemaining(),
+    badgeCount: randomBotBadgeCount(),
+    owned: randomBotCollectedPrizes().map(function(item){ return item.name; }),
+    prize: prize ? {name:prize.name, file:prize.file} : null
+  };
 }
 function syncRandomBotFrame() {
   var frame = randomBotFrame();
@@ -6073,21 +6072,33 @@ function sendRandomBotPrize(prize) {
   if (frame && frame.contentWindow) frame.contentWindow.postMessage(randomBotFrameData('ai-bot-draw-result', prize), '*');
 }
 function takeRandomBotDraw(forcedPrizeName) {
-  var i = typeof state.currentLesson === 'number' && lessonProgress[state.currentLesson] && randomBotPlayCount(lessonProgress[state.currentLesson]) < 2 ? state.currentLesson : lessonProgress.findIndex(function(p){ return randomBotPlayCount(p) < 2; });
+  var i = typeof state.currentLesson === 'number' && lessonProgress[state.currentLesson] && randomBotPlayCount(lessonProgress[state.currentLesson]) < 2
+    ? state.currentLesson : lessonProgress.findIndex(function(p){ return randomBotPlayCount(p) < 2; });
   if (i < 0 || randomBotDrawRemaining() <= 0) return null;
-  var latest = lessonProgress[i], latestPlays = randomBotPlayCount(latest), pick = forcedPrizeName ? randomBotByName(forcedPrizeName) : randomBotNextPrize();
+  var latest = lessonProgress[i];
+  var latestPlays = randomBotPlayCount(latest);
+  var pick = forcedPrizeName ? randomBotByName(forcedPrizeName) : randomBotNextPrize();
   if (!pick) return null;
   var currentPrizes = Array.isArray(latest.clawPrizes) ? latest.clawPrizes.filter(Boolean).slice(0, latestPlays) : (latest.clawPrize ? [latest.clawPrize] : []);
   currentPrizes.push(pick.name);
-  latest.clawPlays = latestPlays + 1; latest.clawPlayed = latest.clawPlays >= 2; latest.clawPrize = pick.name; latest.clawPrizes = currentPrizes.slice(0, 2);
-  state.clawLesson = i; saveProgress(); return pick;
+  latest.clawPlays = latestPlays + 1;
+  latest.clawPlayed = latest.clawPlays >= 2;
+  latest.clawPrize = pick.name;
+  latest.clawPrizes = currentPrizes.slice(0, 2);
+  state.clawLesson = i;
+  saveProgress();
+  return pick;
 }
 function requestRandomBotDraw() {
   if (state.clawPicking) return;
   state.clawPicking = true;
   var pick = takeRandomBotDraw();
   if (!pick) { state.clawPicking = false; syncRandomBotFrame(); return; }
-  setTimeout(function(){ state.clawPicking = false; state.clawLesson = -1; sendRandomBotPrize(pick); }, 350);
+  setTimeout(function(){
+    state.clawPicking = false;
+    state.clawLesson = -1;
+    sendRandomBotPrize(pick);
+  }, 350);
 }
 window.addEventListener('message', function(event) {
   var data = event && event.data;
@@ -6098,19 +6109,34 @@ window.addEventListener('message', function(event) {
   if (data.type === 'ai-bot-draw-request') requestRandomBotDraw();
 });
 function randomCabinetHtml() {
-  var prizes = randomBotCollectedPrizes(), badgeCount = randomBotBadgeCount(), remaining = randomBotDrawRemaining();
-  if (!state.randomCabinetOpen) return '<section class="random-cabinet cabinet-launcher"><p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p><p class="cabinet-token">🏅 ใช้ตราสัญลักษณ์สะสมเป็นสิทธิ์สุ่มน้องชวนคิด</p><p class="cabinet-token">มี ' + badgeCount + ' ตรา · สุ่มแล้ว ' + prizes.length + ' ตัว · เหลือ ' + remaining + ' สิทธิ์</p><button onclick="openRandomCabinet()" class="btn pinkb sm">🧸 ไปตู้สุ่มตุ๊กตาน้องชวนคิด</button>' + (remaining ? '' : '<p class="cabinet-locked">🔒 ยังไม่มีสิทธิ์สุ่ม แต่เข้าดูคอลเลกชันตุ๊กตาได้</p>') + '</section>';
+  var prizes = randomBotCollectedPrizes();
+  var badgeCount = randomBotBadgeCount();
+  var remaining = randomBotDrawRemaining();
+  if (!state.randomCabinetOpen) {
+    return '<section class="random-cabinet cabinet-launcher"><p class="random-cabinet-title">AI <span>RANDOM</span> ตู้สุ่มน้องชวนคิด</p><p class="cabinet-token">🏅 ใช้ตราสัญลักษณ์สะสมเป็นสิทธิ์สุ่มน้องชวนคิด</p><p class="cabinet-token">มี ' + badgeCount + ' ตรา · สุ่มแล้ว ' + prizes.length + ' ตัว · เหลือ ' + remaining + ' สิทธิ์</p><button onclick="openRandomCabinet()" class="btn pinkb sm">🧸 ไปตู้สุ่มตุ๊กตาน้องชวนคิด</button>' + (remaining ? '' : '<p class="cabinet-locked">🔒 ยังไม่มีสิทธิ์สุ่ม แต่เข้าดูคอลเลกชันตุ๊กตาได้</p>') + '</section>';
+  }
   return '<section class="random-cabinet cabinet-fullscreen cabinet-file-frame" role="dialog" aria-modal="true" aria-label="ตู้สุ่มหุ่น AI"><button class="cabinet-close" onclick="closeRandomCabinet()" aria-label="ปิดตู้สุ่ม">×</button><iframe id="ai-bot-random-frame" class="ai-bot-random-frame" src="' + randomBotPagePath() + '?embed=1" title="AI BOT MYSTERY" onload="syncRandomBotFrame()"></iframe></section>';
 }
 function randomDollLinkHtml() {
   var remaining = randomBotDrawRemaining();
   var dolls = RANDOM_BOT_PRIZES.slice(0, 3).map(function(item){ return '<span class="random-doll-preview bot-' + item.tone + '">' + randomBotImage(item, 48) + '</span>'; }).join('');
-  var status = remaining ? 'มีสิทธิ์สุ่ม ' + remaining + ' ครั้งจากตราสัญลักษณ์สะสม' : 'ดูคอลเลกชันตุ๊กตาได้เลย · สะสมตราสัญลักษณ์เพิ่มเพื่อรับสิทธิ์สุ่ม';
+  var status = remaining
+    ? 'มีสิทธิ์สุ่ม ' + remaining + ' ครั้งจากตราสัญลักษณ์สะสม'
+    : 'ดูคอลเลกชันตุ๊กตาได้เลย · สะสมตราสัญลักษณ์เพิ่มเพื่อรับสิทธิ์สุ่ม';
   return '<section class="random-doll-link"><div class="random-doll-preview-row">' + dolls + '</div><div class="random-doll-copy"><h3>🧸 ตู้สุ่มตุ๊กตาน้องชวนคิด</h3><p>' + status + '</p></div><button onclick="openRandomCabinet()" class="btn pinkb sm">🧸 ไปตู้สุ่มตุ๊กตา</button></section>';
 }
-function openRandomCabinet() { try { sessionStorage.setItem(RANDOM_BOT_HANDOFF_KEY, JSON.stringify(randomBotHandoffPayload())); } catch(e) {} location.href = randomBotPagePath() + '?academy=1'; }
-function closeRandomCabinet() { if (state.clawPicking) return; state.randomCabinetOpen = false; render(); }
-function spinRandomCabinet() { requestRandomBotDraw(); }
+function openRandomCabinet() {
+  try { sessionStorage.setItem(RANDOM_BOT_HANDOFF_KEY, JSON.stringify(randomBotHandoffPayload())); } catch(e) {}
+  location.href = randomBotPagePath() + '?academy=1';
+}
+function closeRandomCabinet() {
+  if (state.clawPicking) return;
+  state.randomCabinetOpen = false;
+  render();
+}
+function spinRandomCabinet() {
+  requestRandomBotDraw();
+}
 
 function renderQuizResult() {
   var i = state.currentLesson;
@@ -6256,7 +6282,7 @@ function renderDashboard() {
       '</div>' + lessonBadgesHtml(i, student) + '<button class="btn whiteb sm" style="margin-top:10px" onclick="openLesson(' + i + ')">📖 ' + (p.quizDone ? 'ทบทวนบทเรียน' : 'เรียนต่อ') + '</button></article>';
   }).join('');
 
-  appEl.innerHTML =
+  var markup =
     '<div class="hdr">' +
       '<div style="display:flex;align-items:center;gap:12px">' +
         '<div style="font-size:32px">📊</div>' +
@@ -6271,7 +6297,7 @@ function renderDashboard() {
         '<article class="progress-stat pink"><div class="progress-stat-icon">📚</div><p class="progress-stat-label">คะแนนบทเรียน</p><p class="progress-stat-value">' + totalLessonRewardPoints() + '<span class="soft" style="font-size:14px">/' + maxLessonPoints() + '</span></p><p class="progress-stat-note">⭐ ' + totalStars() + '/' + lessons.length + ' ดาว · ' + lessonMedalSummary() + '</p></article>' +
         '<article class="progress-stat blue"><div class="progress-stat-icon">🎮</div><p class="progress-stat-label">โบนัสภารกิจ</p><p class="progress-stat-value">' + state.score + '<span class="soft" style="font-size:14px">/' + maxScenarioScore() + '</span></p><p class="progress-stat-note">ผ่าน ' + scenariosDone + '/' + scenarios.length + ' ด่าน · ตราสถานการณ์ ' + state.badges.length + '</p></article>' +
         '<article class="progress-stat yellow"><div class="progress-stat-icon">✍️</div><p class="progress-stat-label">ดาวเขียนพรอมต์</p><p class="progress-stat-value">' + totalPromptStars() + '<span class="soft" style="font-size:14px">/' + maxPromptStars() + '</span></p><p class="progress-stat-note">ทำแล้ว ' + sessionPStars.filter(function(n){ return n > 0; }).length + '/' + PROMPT_CHALLENGES.length + ' โจทย์</p></article>' +
-        '<article class="progress-stat mint"><div class="progress-stat-icon">🧭</div><p class="progress-stat-label">ก่อนเรียน → หลังเรียน</p><p class="progress-stat-value" style="font-size:20px">' + assessmentLabel(student, 'pre') + ' → ' + assessmentLabel(student, 'post') + '</p><p class="progress-stat-note">ดูพัฒนาการของตัวเองจากผลทดสอบ</p></article>' +
+        '<article class="progress-stat mint"><div class="progress-stat-icon">🧭</div><p class="progress-stat-label">ก่อนเรียน → หลังเรียน</p><p class="progress-stat-value" style="font-size:20px">' + (preDone ? 'ทำแล้ว' : 'ยังไม่ทำ') + ' → ' + assessmentLabel(student, 'post') + '</p><p class="progress-stat-note">ดูพัฒนาการของตัวเองจากผลทดสอบ</p></article>' +
         '<article class="progress-stat success"><p class="progress-stat-label">🎯 ความสำเร็จรวม</p><div class="success-ring" style="--done:' + overall + '%" role="img" aria-label="ทำกิจกรรมครบ ' + overall + ' เปอร์เซ็นต์"><strong>' + overall + '%</strong></div><p class="progress-stat-note">ทำครบ ' + taskDone + '/' + taskTotal + ' กิจกรรม</p><p class="progress-stat-note">บทเรียน · พรอมต์ · ภารกิจ · ก่อน–หลังเรียน</p></article>' +
       '</section>' +
       '<section class="progress-next"><div class="progress-next-copy"><b>🎯 ' + nextTitle + '</b><span>' + nextNote + '</span></div>' + nextAction + '</section>' +
@@ -6291,6 +6317,11 @@ function renderDashboard() {
         '</div></aside>' +
       '</section>' +
     '</div>';
+  // Polling and realtime events may only change timestamps or other students.
+  if (dashboardMarkup === markup && appEl.querySelector && appEl.querySelector('.progress-dashboard')) return false;
+  dashboardMarkup = markup;
+  appEl.innerHTML = markup;
+  return true;
 }
 
 function resetAll() {
@@ -6539,7 +6570,8 @@ function renderFeedback() {
         '<p class="ink" style="font-size:20px;font-weight:700">' + choice.badge.name + '</p></div>' +
       '</div>';
   }
-  /* เด้งตู้สุ่มทันทีเมื่อได้รับตราใหม่ แต่ไม่สุ่มแทนนักเรียน */
+  /* When a new badge is earned, the cabinet is shown immediately. Closing it keeps
+     the learner on this feedback page and never spends a draw automatically. */
   var cabinetHtml = choice.badge && choice.justEarnedBadge ? randomCabinetHtml() : '';
 
   var unlockMessage = '';
@@ -6648,10 +6680,10 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./public/teacher-admin.js?v=20260916-teacher2"></script>
+<script src="./public/teacher-admin.js?v=20260917-flow"></script>
 <script src="./public/google-login.js"></script>
 <script src="./public/chat-history.js?v=20260916-friendly"></script>
-<script src="./public/student-reports.js?v=20260916-teacher2"></script>
+<script src="./public/student-reports.js?v=20260917-flow"></script>
 <script src="./public/teacher-workspace.js?v=20260916-teacher2"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
