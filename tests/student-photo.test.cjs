@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+(async()=>{const c=require('./teacher-test-runtime.cjs')();
+ const photo='data:image/jpeg;base64,YWJj';assert.equal(c.avatarSrc({profilePhoto:photo}),photo);assert.equal(c.validProfilePhoto('javascript:alert(1)'),false);assert.equal(c.validProfilePhoto(photo+'A'.repeat(87000)),false);
+ c.currentId='test';c.db.students.test={profilePhoto:photo};c.saveProgress=()=>{};c.saveDB=()=>{};
+ c.firebaseBackend={saveStudent:async()=>{throw Error('offline')}};
+ vm.runInContext(fs.readFileSync('public/student-photo.js','utf8'),c);
+ await c.removeStudentPhoto();assert.equal(c.db.students.test.profilePhoto,photo);
+ let payload;c.firebaseBackend.saveStudent=async(id,data)=>{payload=data};await c.removeStudentPhoto();assert.equal(payload.profilePhoto,undefined);assert.equal(c.db.students.test.profilePhoto,undefined);
+ console.log('PASS: validated avatar source, photo size limit, failed save preserves photo, successful removal persists');
+})().catch(e=>{console.error(e);process.exitCode=1});
