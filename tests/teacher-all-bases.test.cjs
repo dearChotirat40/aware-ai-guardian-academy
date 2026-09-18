@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+(async()=>{
+ const c=require('./teacher-test-runtime.cjs')(),copy=x=>JSON.parse(JSON.stringify(x));
+ const cfg=c.curriculumSnapshot(),rewards=copy(cfg.modules);
+ cfg.lessons.forEach((l,i)=>{l.title='ฐานแก้ไข '+(i+1);l.situations[0].context='เรื่องราวที่ครูแก้ '+i;l.situations[0].videoUrl='https://example.com/base'+i+'.mp4';});
+ const unit=cfg.lessons[0];unit.flowSettings.welcomeTitle='ฐานของครู';unit.flowSettings.hintSeconds=90;
+ unit.situations[0].storyScenes=[{speaker:'ผู้สอน',text:'ข้อความใหม่ <ทดสอบ>',emoji:'🧑‍🏫'}];
+ unit.situations[0].activityData={cards:[{text:'การ์ดใหม่',answer:1}],groups:['กลุ่ม ก','กลุ่ม ข'],maxAttempts:2};
+ unit.situations[1].activityData={prompt:'พรอมต์ใหม่',sentence:'ประโยคใหม่',outputs:['ผล 1','ผล 2'],words:['คำใหม่'],note:'คำแนะนำใหม่'};
+ Object.assign(unit.situations[2].activityData,{correctValue:'2570',options:['2569','2570'],sourceTitle:'แหล่งใหม่',success:'ยืนยันแล้ว'});
+ c.teacherAdminTest.validate(cfg);c.applyCurriculum(cfg);
+ c.elements['teacher-admin-editor']={innerHTML:'',scrollIntoView(){}};c.teacherAdminContent('lessons');
+ assert.match(c.elements['teacher-admin-editor'].innerHTML,/ทุกฐาน/);assert.match(c.elements['teacher-admin-editor'].innerHTML,/ฐานแก้ไข 5/);assert.match(c.elements['teacher-admin-editor'].innerHTML,/ข้อมูลกิจกรรม/);
+ let saved;c.firebaseBackend={saveCurriculum:async x=>saved=copy(x),loadCurriculum:async()=>saved,teacherManage:async()=>({students:{},roster:[]})};await c.teacherAdminSave();
+ assert.equal(saved.lessons.length,5);assert.equal(c.lessons[4].situations[0].context,'เรื่องราวที่ครูแก้ 4');assert.deepEqual(copy(saved.modules),rewards);
+ c.saveProgress=()=>{};c.state.currentLesson=0;c.state.slideIdx=0;c.state.view='lesson';c.state.lessonTab='mission';
+ assert.match(c.unitOneHtml(c.lessons[0]),/ฐานของครู/);
+ c.unitOneFlow().stage='activity';c.unitOnePick(0,1);c.unitOneCheck();assert.equal(c.unitOneSession().done,true);
+ c.state.slideIdx=1;c.unitOneAsk();c.unitOneAsk();c.elements['unit-one-sentence']={value:'ประโยคใหม่'};c.unitOneWord();assert.equal(c.unitOneSession().done,true);assert.match(c.unitOneActivity(1,c.unitOneSession()),/3 ช่อง/);
+ c.state.slideIdx=2;c.unitOneSource('open');c.unitOneSource('2570');assert.equal(c.unitOneSession().done,true);assert.equal(c.unitOneSession().feedback,'ยืนยันแล้ว');
+ assert.match(c.lessonSituationVideoHtml(c.lessons[4].situations[0]),/base4.mp4/);
+ const invalid=copy(saved);invalid.lessons[0].situations[0].activityData.cards[0].answer=99;assert.throws(()=>c.teacherAdminTest.validate(invalid),/เฉลยการ์ด/);
+ const legacy=copy(saved);delete legacy.lessons[0].flowSettings;delete legacy.lessons[0].situations[0].activityData;c.applyCurriculum(legacy);assert(c.lessons[0].flowSettings);assert.equal(c.lessons[0].situations[0].videoUrl,'https://example.com/base0.mp4');
+ console.log('PASS: all five bases saved/reloaded, editable scene/activity data drives learner behavior, validation, legacy enrichment, rewards preserved');
+})().catch(e=>{console.error(e);process.exitCode=1;});

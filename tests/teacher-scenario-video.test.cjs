@@ -1,0 +1,27 @@
+const assert=require('node:assert/strict');
+(async()=>{
+ const c=require('./teacher-test-runtime.cjs')();
+ c.elements['teacher-admin-editor']={innerHTML:'',scrollIntoView(){}};
+ c.teacherAdminContent('lessons');
+ let html=c.elements['teacher-admin-editor'].innerHTML;
+ assert.match(html,/วิดีโอแยกสถานการณ์/);
+ let inputs=[...html.matchAll(/type="url"[^>]+oninput="teacherAdminValue\((\d+),this\)"/g)];assert(inputs.length>=4);
+ const url='https://www.youtube.com/watch?v=abcdefghijk';
+ c.teacherAdminValue(Number(inputs[0][1]),{value:url});
+ let saved;
+ c.firebaseBackend={saveCurriculum:async data=>{saved=JSON.parse(JSON.stringify(data));},loadCurriculum:async()=>saved,teacherManage:async()=>({students:{},roster:[]})};
+ await c.teacherAdminSave();
+ assert.equal(saved.lessons[0].situations[0].videoUrl,url);
+ assert.equal(c.lessons[0].situations[0].videoUrl,url);
+ assert.match(c.unitOneMediaHtml(c.lessons[0].situations[0],{frame:0}),/youtube.com\/embed\/abcdefghijk/);
+ assert.equal(c.unitOneVideoSource('https://youtube.com.evil.test/watch?v=abcdefghijk'),null);
+ assert.equal(c.unitOneVideoSource('javascript:alert(1)'),null);
+ assert.equal(c.unitOneVideoSource('https://example.com/clip.mp4').type,'file');
+ assert.equal(c.unitOneVideoSource('https://drive.google.com/file/d/sample_id/view').type,'embed');
+ c.teacherAdminContent('lessons');html=c.elements['teacher-admin-editor'].innerHTML;
+ inputs=[...html.matchAll(/type="url"[^>]+oninput="teacherAdminValue\((\d+),this\)"/g)];
+ c.teacherAdminValue(Number(inputs[0][1]),{value:''});await c.teacherAdminSave();
+ assert.equal(c.lessons[0].situations[0].videoUrl,'');c.state.slideIdx=0;
+ assert.match(c.unitOneMediaHtml(c.lessons[0].situations[0],{frame:0}),/สื่อเล่าเรื่อง/);
+ console.log('PASS: teacher video fields, database save/reload, supported video sources, invalid URL rejection and clearing back to story');
+})().catch(e=>{console.error(e);process.exitCode=1;});
