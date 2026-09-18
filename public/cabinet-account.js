@@ -131,10 +131,12 @@
       try { sessionStorage.setItem(key, pendingRequest); } catch (e) {}
     }
     state.clawPicking = true;
+    if(window.playLearningSound)window.playLearningSound("draw");
     return firebaseBackend.cabinetAccount(id, pendingRequest).then(function(data) {
       if (!accept(data, id)) return;
       try { sessionStorage.removeItem('awareai_cabinet_request:' + id); } catch (e) {}
       pendingRequest = null;
+      if(window.playLearningSound)window.playLearningSound('prize');
       notify('ai-bot-draw-result', { prize: randomBotByName(data.prize), accountId: id });
     }).catch(function(error) {
       if (currentId !== id) return;
