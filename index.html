@@ -1479,6 +1479,97 @@ body{font-size:18px;line-height:1.78}
 
 .u1-category-counts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.u1-category-counts span{display:inline-block;padding:6px 10px;border-radius:9px;font-size:15px;font-weight:700}.u1-count-right{background:#e0f4e8;color:#205b3b;border:1px solid #85bea0}.u1-count-wrong{background:#ffe9e9;color:#963b40;border:1px solid #d9a1a5}
 .u1-intro-art{width:min(100%,560px);margin:18px auto 24px}.u1-intro-art img{display:block;width:100%;height:auto;border-radius:20px;box-shadow:0 8px 24px rgba(36,78,112,.13)}@media(max-width:600px){.u1-welcome{padding:18px 14px}.u1-intro-art{margin:12px auto 20px}.u1-intro-art img{border-radius:14px}}
+
+/* Responsive lesson layouts: use available width before requiring vertical scrolling. */
+.lesson-viewport{padding:12px 18px;gap:0;font-size:15px}
+.lesson-viewport>*{flex-shrink:0;min-width:0}
+.lesson-viewport .u1-shell{width:100%;max-width:1180px}
+.lesson-viewport .u1-welcome,.lesson-viewport .u1-end{width:100%;max-width:1180px;margin:4px auto;padding:18px 24px}
+.lesson-viewport .u1-welcome{display:grid;grid-template-columns:minmax(220px,.9fr) minmax(0,1.1fr);column-gap:28px;align-content:center;align-items:center;text-align:left}
+.lesson-viewport .u1-welcome>*{grid-column:2;margin:6px 0}
+.lesson-viewport .u1-welcome .u1-intro-art{grid-column:1;grid-row:1 / span 9;width:100%;margin:0;align-self:center}
+.lesson-viewport .u1-intro-art img{max-height:calc(100dvh - 235px);width:100%;object-fit:contain;box-shadow:none}
+.lesson-viewport .u1-welcome h2,.lesson-viewport .u1-end h2{font-size:clamp(22px,2.4vw,30px);line-height:1.3}
+.lesson-viewport .u1-welcome p,.lesson-viewport .u1-end p{line-height:1.55}
+.lesson-viewport .u1-welcome .btn{justify-self:start;margin-top:8px}
+.lesson-viewport .u1-roadmap{gap:6px;margin:6px 0;justify-content:flex-start}
+.lesson-viewport .u1-roadmap button,.lesson-viewport .u1-roadmap span{padding:7px 10px;font-size:12px}
+.lesson-viewport .u1-heading{margin:8px 0;gap:8px}
+.lesson-viewport .u1-heading h2{font-size:22px;line-height:1.35}
+.lesson-viewport .u1-kicker{margin:0;font-size:11px}
+.lesson-viewport .u1-total{padding:6px 10px;font-size:12px}
+.lesson-viewport .u1-steps{margin:8px 0;gap:5px}
+.lesson-viewport .u1-steps li{padding:6px;font-size:12px}
+.lesson-viewport .u1-panel{padding:12px 16px;line-height:1.5;border-radius:16px}
+.lesson-viewport .u1-panel h3{font-size:19px}
+.lesson-viewport .u1-panel p{margin-top:5px;margin-bottom:5px}
+.lesson-viewport .u1-theater{min-height:160px;padding:16px;gap:18px}
+.lesson-viewport .u1-character{font-size:68px}
+.lesson-viewport .u1-bubble{padding:16px;font-size:18px}
+.lesson-viewport .u1-actions{margin:10px 0;gap:8px}
+.lesson-viewport .u1-panel video,.lesson-viewport .u1-panel iframe{max-height:calc(100dvh - 355px)!important;min-height:150px;object-fit:contain}
+.lesson-viewport .btn{font-size:15px;padding:8px 16px;min-height:42px}
+.lesson-viewport .u1-panel .qopt{margin:6px 0;padding:10px 14px;font-size:15px;line-height:1.5}
+.u1-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0}
+.lesson-viewport .u1-card-grid .innerbox{margin:0!important;padding:7px 9px!important;font-size:13px;line-height:1.4;display:flex!important;flex-direction:column;justify-content:space-between;gap:5px}
+.lesson-viewport .u1-card-grid select{display:block;width:100%;font-size:12px;padding:6px;min-height:34px;margin:0}
+.lesson-viewport [id^="u1-group-"]{padding:8px 10px!important;font-size:13px;min-width:0!important}
+.lesson-viewport [id^="u1-group-"] p:last-child{font-size:12px;line-height:1.35;margin-top:4px!important}
+.lesson-viewport .u1-category-counts{gap:4px;font-size:12px}
+.lesson-viewport .u1-stage-feedback .u1-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lesson-viewport .u1-stage-feedback .u1-panel>h3,.lesson-viewport .u1-stage-feedback .u1-knowledge{grid-column:1 / -1}
+.lesson-viewport .u1-stage-feedback article.innerbox{margin:0!important;padding:10px!important;font-size:14px}
+.lesson-viewport .u1-knowledge{padding:10px 14px;margin:0}
+.lesson-viewport .u1-success{padding:8px;margin:8px 0}
+.lesson-viewport .u1-panel table{margin:8px 0;font-size:12px}
+.lesson-viewport .u1-panel td,.lesson-viewport .u1-panel th{padding:3px 8px}
+.lesson-viewport .u1-trophy{font-size:54px;margin:4px}
+.lesson-viewport .u1-scorecards{margin:12px 0;gap:10px}
+.lesson-viewport .u1-scorecards>div{padding:12px;min-width:110px}
+.lesson-viewport .u1-scorecards b{font-size:26px}
+/* Shared lesson media in the remaining four bases. */
+.lesson-viewport .media-stage{padding:14px}
+.lesson-viewport .slide-source-image{max-height:45dvh;object-fit:contain}
+.lesson-viewport .videobox{max-height:45dvh}
+.lesson-viewport .videobox video,.lesson-viewport .videobox iframe{max-height:45dvh;object-fit:contain}
+@media(min-width:901px) and (max-height:800px){
+ body{padding:8px}#app{height:calc(100dvh - 16px)}
+ .lesson-viewport{padding:8px 14px;font-size:14px}
+ .lesson-viewport .u1-panel{padding:10px 12px}
+ .lesson-viewport .u1-heading h2{font-size:20px}
+ .lesson-viewport .u1-roadmap button{padding:5px 8px}
+ .lesson-viewport .u1-theater{min-height:140px}
+}
+@media(max-width:700px){
+ .lesson-viewport{padding:8px;font-size:14px}
+ .lesson-viewport .u1-welcome{display:flex;flex-direction:column;text-align:center;padding:12px;gap:5px}
+ .lesson-viewport .u1-welcome>*{margin:2px 0}
+ .lesson-viewport .u1-welcome .u1-intro-art{width:min(100%,220px)}
+ .lesson-viewport .u1-intro-art img{max-height:24dvh}
+ .lesson-viewport .u1-welcome h2{font-size:22px}
+ .lesson-viewport .u1-welcome .btn{align-self:center}
+ .lesson-viewport .u1-roadmap{justify-content:center}
+ .lesson-viewport .u1-heading{flex-direction:row;align-items:center}
+ .lesson-viewport .u1-heading h2{font-size:18px}
+ .u1-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lesson-viewport .u1-stage-feedback .u1-panel{grid-template-columns:1fr}
+ .lesson-viewport .u1-theater{flex-direction:row;padding:10px;gap:8px;min-height:150px}
+ .lesson-viewport .u1-character{font-size:42px}
+ .lesson-viewport .u1-bubble{font-size:16px;padding:12px}
+}
+
+
+@media(min-width:901px){
+ .lesson-viewport .u1-card-grid .innerbox{display:grid!important;grid-template-columns:1fr 1fr;align-items:center;min-height:48px}
+ .lesson-viewport [id^="u1-group-"]>p{display:inline-block;margin:3px 8px 0 0;font-size:12px}
+ .lesson-viewport [id^="u1-group-"]>b{display:block}
+ .lesson-viewport .u1-stage-activity .u1-panel>h3{font-size:17px}
+ .lesson-viewport .u1-stage-activity .u1-panel>p{font-size:13px;margin:3px 0}
+ .lesson-viewport .u1-heading{margin:5px 0}
+ .lesson-viewport .u1-steps{margin:5px 0}
+ .lesson-viewport .u1-steps li{padding:4px}
+ .lesson-viewport .u1-placed-cards{font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -5644,7 +5735,7 @@ function unitOneHtml(ls){
  state.slideIdx=f.index;var n=f.index,a=f.items[n],slide=ls.situations[n],stage=f.stage;
  if(stage==='welcome')return '<section class="u1-welcome"><p class="u1-kicker">AI GUARDIAN ACADEMY · UNIT 01</p><figure class="u1-intro-art"><img src="./public/unit-one-introduction.png" width="1254" height="1254" alt="รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม พร้อมน้องเอไอ: ค้นหาข้อมูล สร้างสรรค์ไอเดีย เรียนรู้และแก้ปัญหา และใช้ AI ในชีวิตประจำวัน" decoding="async"></figure><h2>'+escChat(ls.flowSettings.welcomeTitle)+'</h2><p>'+escChat(ls.flowSettings.welcomeText)+'</p><div class="u1-roadmap"><span>🎬 ดูเรื่องราว</span><span>🧩 ลงมือทดลอง</span><span>💬 ตอบคำถาม</span><span>🏆 รับรางวัล</span></div><p>สะสมคะแนนและดาวเพื่อรับประกาศเกียรติคุณ “'+escChat(ls.flowSettings.awardTitle)+'”</p>'+ (f.reviewOnly?'<p class="u1-total">โหมดทบทวน · คงคะแนนและรางวัลที่ได้รับแล้ว</p>':'') +'<p class="soft">4 สถานการณ์ · 8 คำถาม · คะแนนเต็ม '+UNIT_POINTS+' · ⭐ 1 ดาว</p><button class="btn blueb" onclick="unitOneBegin()">เริ่มสำรวจ AI →</button></section>';
  var stages=['media','activity','assessment','feedback'],labels=['ดูสื่อ','ทำกิจกรรม','ตอบคำถาม','สรุปความรู้'];
- var html='<section class="u1-shell"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){return '<button '+(i>0&&!f.items[i-1].reviewed?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':i>n?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div><ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
+ var html='<section class="u1-shell u1-stage-'+stage+'"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){return '<button '+(i>0&&!f.items[i-1].reviewed?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':i>n?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div><ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
  if(stage==='media')html+=unitOneMediaHtml(slide,a);
  if(stage==='activity')html+='<h3>ลงมือทดลอง</h3><p>'+escChat(slide.activity)+'</p>'+unitOneActivity(n,a)+(a.done?'<div class="u1-success" role="status">✓ กิจกรรมผ่านแล้ว · ปลดล็อกคำถาม 2 ข้อ</div><button class="btn mintb" onclick="unitOneStartAssessment()">ตอบคำถาม →</button>':'<p class="soft">🔒 ทำกิจกรรมให้ครบเพื่อปลดล็อกคำถาม</p>');
  if(stage==='assessment'){
@@ -5663,14 +5754,14 @@ function unitOneGroupHtml(n,i,a){
   var changed=checked&&cards.some(function(_,k){return a.picks[k]!==a.checkedPicks[k];});
   return '<b>'+escChat(title)+'</b><p class="soft tiny" style="margin-top:8px">วางแล้ว '+placed.length+' ใบ</p>'+
     (checked?'<div class="u1-category-counts" role="status" aria-label="ผลตรวจ '+escChat(title)+'"><span class="u1-count-right">✓ ถูก '+right+' ใบ</span><span class="u1-count-wrong">✗ ผิด '+wrong+' ใบ</span></div><p class="soft tiny">'+(changed?'ผลตรวจครั้งล่าสุด · แก้ไขแล้ว กรุณาตรวจใหม่':'ผลตรวจครั้งที่ '+a.attempts)+'</p>':'<p class="soft tiny">รอตรวจคำตอบ</p>')+
-    '<p style="margin-top:10px">'+placed.map(function(c){return escChat(c[0]);}).join('<br>')+'</p>';
+    (placed.length?'<details class="u1-placed-cards"><summary>ดูการ์ด '+placed.length+' ใบ</summary><p>'+placed.map(function(c){return escChat(c[0]);}).join('<br>')+'</p></details>':'');
 }
 function unitOneUpdateGroups(){var n=state.slideIdx,a=unitOneSession();unitOneConfig(n).groups.forEach(function(_,i){var el=document.getElementById('u1-group-'+i);if(el)el.innerHTML=unitOneGroupHtml(n,i,a);});}
 function unitOneActivity(n,a) {
   if(n===0||n===3){
     var cards=unitOneCardList(n);
     var groups=unitOneConfig(n).groups;
-    return '<p class="small">ลากการ์ดไปยังช่อง หรือเลือกจากเมนูใต้การ์ดได้ทั้งบนมือถือและคีย์บอร์ด</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+groups.map(function(g,i){return '<div id="u1-group-'+i+'" class="innerbox" style="flex:1;min-width:150px;padding:16px" ondragover="event.preventDefault()" ondrop="unitOneDrop(event,'+i+')">'+unitOneGroupHtml(n,i,a)+'</div>';}).join('')+'</div>'+cards.map(function(c,i){return '<label class="innerbox" draggable="true" ondragstart="event.dataTransfer.setData(\'text/plain\',\''+i+'\')" style="display:block;margin:8px 0;padding:12px">'+escChat(c[0])+' <select aria-label="จัดประเภท '+escChat(c[0])+'" onchange="unitOnePick('+i+',this.value)" '+(a.done||a.attempts>=unitOneAttemptLimit()?'disabled':'')+'><option value="-1">เลือกช่อง</option>'+groups.map(function(g,j){return '<option value="'+j+'" '+(a.picks[i]===j?'selected':'')+'>'+escChat(g)+'</option>';}).join('')+'</select></label>';}).join('')+'<button class="btn blueb sm" onclick="unitOneCheck()" '+(a.done||a.attempts>=unitOneAttemptLimit()?'disabled':'')+'>ตรวจคำตอบ</button><p role="status">'+(a.feedback||'')+'</p>'+(n===0?'<p class="tiny">จำนวนครั้งที่ตรวจได้ '+unitOneConfig(n).maxAttempts+' · ตรวจแล้ว '+a.attempts+'</p>':'')+(!a.done&&a.attempts>=unitOneAttemptLimit()?'<details><summary>ดูเฉลยเพื่อทบทวน</summary>'+cards.map(function(c){return escChat(c[0])+' → '+escChat(groups[c[1]]);}).join('<br>')+'</details><button class="btn whiteb sm" onclick="unitOneRestart()">เริ่มฝึกชุดใหม่</button>':'');
+    return '<p class="small">ลากการ์ดไปยังช่อง หรือเลือกจากเมนูใต้การ์ดได้ทั้งบนมือถือและคีย์บอร์ด</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+groups.map(function(g,i){return '<div id="u1-group-'+i+'" class="innerbox" style="flex:1;min-width:150px;padding:16px" ondragover="event.preventDefault()" ondrop="unitOneDrop(event,'+i+')">'+unitOneGroupHtml(n,i,a)+'</div>';}).join('')+'</div><div class="u1-card-grid">'+cards.map(function(c,i){return '<label class="innerbox" draggable="true" ondragstart="event.dataTransfer.setData(\'text/plain\',\''+i+'\')" style="display:block;margin:8px 0;padding:12px">'+escChat(c[0])+' <select aria-label="จัดประเภท '+escChat(c[0])+'" onchange="unitOnePick('+i+',this.value)" '+(a.done||a.attempts>=unitOneAttemptLimit()?'disabled':'')+'><option value="-1">เลือกช่อง</option>'+groups.map(function(g,j){return '<option value="'+j+'" '+(a.picks[i]===j?'selected':'')+'>'+escChat(g)+'</option>';}).join('')+'</select></label>';}).join('')+'</div><button class="btn blueb sm" onclick="unitOneCheck()" '+(a.done||a.attempts>=unitOneAttemptLimit()?'disabled':'')+'>ตรวจคำตอบ</button><p role="status">'+(a.feedback||'')+'</p>'+(n===0?'<p class="tiny">จำนวนครั้งที่ตรวจได้ '+unitOneConfig(n).maxAttempts+' · ตรวจแล้ว '+a.attempts+'</p>':'')+(!a.done&&a.attempts>=unitOneAttemptLimit()?'<details><summary>ดูเฉลยเพื่อทบทวน</summary>'+cards.map(function(c){return escChat(c[0])+' → '+escChat(groups[c[1]]);}).join('<br>')+'</details><button class="btn whiteb sm" onclick="unitOneRestart()">เริ่มฝึกชุดใหม่</button>':'');
   }
   if(n===1){
     var outputs=unitOneConfig(n).outputs;
@@ -5942,7 +6033,7 @@ function renderLesson() {
       '</div>' +
       '<button onclick="changeView(\'lessons\')" class="iconbtn visual-back-btn lesson-back-btn" title="ย้อนกลับไปห้องเรียน" aria-label="ย้อนกลับไปห้องเรียน"><img class="back-icon-img" src="./return-button.png" alt="ย้อนกลับ"></button>' +
     '</div>' +
-    '<div class="body-area scroll">' +
+    '<div class="body-area scroll lesson-viewport">' +
       lessonTabBar(p) +
       content +
     '</div>';
