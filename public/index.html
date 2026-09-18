@@ -1580,6 +1580,7 @@ body{font-size:18px;line-height:1.78}
 .u1-chat-message b{font-size:13px;color:#315e80}.u1-chat-message p{font-size:15px;line-height:1.65}
 .u1-chat-right{margin-left:auto;background:#daf0e6;border-radius:16px 4px 16px 16px}
 @media(max-width:600px){.u1-chat{padding:10px}.u1-chat-message{width:94%;padding:9px 12px}.u1-chat-message p{font-size:14px}}
+.u1-chat-person{display:flex;align-items:center;gap:9px;margin-bottom:6px}.u1-chat-avatar{display:inline-block;width:48px;height:48px;overflow:hidden;border-radius:50%;border:2px solid #fff;background:#fff2db;flex-shrink:0}.u1-chat-avatar img{display:block;width:100%;height:auto;transform:scale(2.8);transform-origin:50% 16%}
 </style>
 </head>
 <body>
@@ -5740,7 +5741,7 @@ function unitOneVideoSource(value){
   return null;
 }
 function unitOneMediaHtml(slide,a){
-  if(slide.mediaType==='chat')return '<section class="u1-chat" aria-label="บทสนทนาสถานการณ์"><header>💬 แชทกลุ่ม · รายงานสังคมศึกษา<small>สถานการณ์จำลองเพื่อการเรียนรู้ · ตัวเลขไม่ใช่ข้อมูลฝุ่นปัจจุบัน</small></header>'+slide.storyScenes.map(function(m){return '<article class="u1-chat-message '+(m.speaker==='ต้น'?'u1-chat-right':'')+'"><b>'+escChat(m.emoji)+' '+escChat(m.speaker)+'</b><p>'+escChat(m.text)+'</p></article>';}).join('')+'</section><details class="u1-knowledge"><summary>💡 กดดูเกร็ดความรู้</summary><p>'+escChat(slide.learning)+'</p></details><button class="btn mintb" onclick="unitOneMediaEnded()">อ่านแชทแล้ว · ไปตรวจแหล่งข้อมูล →</button>';
+  if(slide.mediaType==='chat')return '<section class="u1-chat" aria-label="บทสนทนาสถานการณ์"><header>💬 แชทกลุ่ม · รายงานสังคมศึกษา<small>สถานการณ์จำลองเพื่อการเรียนรู้ · ตัวเลขไม่ใช่ข้อมูลฝุ่นปัจจุบัน</small></header>'+slide.storyScenes.map(function(m){return '<article class="u1-chat-message '+(m.speaker==='ต้น'?'u1-chat-right':'')+'"><b class="u1-chat-person">'+(m.speaker==='ต้น'||m.speaker==='มีนา'?'<span class="u1-chat-avatar"><img src="./'+(m.speaker==='ต้น'?'ton-profile.png':'meena-profile.png')+'" alt="'+escChat(m.speaker)+'"></span>':escChat(m.emoji)+' ')+'<span>'+escChat(m.speaker)+'</span></b><p>'+escChat(m.text)+'</p></article>';}).join('')+'</section><details class="u1-knowledge"><summary>💡 กดดูเกร็ดความรู้</summary><p>'+escChat(slide.learning)+'</p></details><button class="btn mintb" onclick="unitOneMediaEnded()">อ่านแชทแล้ว · ไปตรวจแหล่งข้อมูล →</button>';
 
   if(slide.imageUrl && /^(https:\/\/|\.\/)[^<>\"']+$/.test(slide.imageUrl))return '<figure class="u1-scene-image"><a href="'+escChat(slide.imageUrl)+'" target="_blank" rel="noopener"><img src="'+escChat(slide.imageUrl)+'" alt="'+escChat(slide.imageAlt||slide.title)+'"></a></figure><section class="u1-story-text"><h3>สถานการณ์</h3><p>'+escChat(slide.context)+'</p></section><details class="u1-knowledge"><summary>💡 กดดูเกร็ดความรู้</summary><p>'+escChat(slide.learning)+'</p></details><button class="btn mintb" onclick="unitOneMediaEnded()">ดูสื่อแล้ว · เริ่มกิจกรรม →</button>';
   var source=unitOneVideoSource(slide.videoUrl),video=source&&source.type==='file'?source.url:'';
