@@ -271,6 +271,12 @@ begin
       exists(select 1 from public.app_curriculum ac cross join lateral jsonb_array_elements(ac.data->'modules'->'scenarios') sc
        cross join lateral jsonb_array_elements(sc->'choices') c where ac.id='current' and c->'badge'->>'id'=b)
       else b in ('badge1','badge2','badge3','badge4','badge5') end;
+  -- Each completed lesson earns one draw, including previously completed lessons.
+  -- Derive entitlement from progress, so revisiting the end screen never adds another ticket.
+  select earned + count(*) into earned
+    from jsonb_array_elements(coalesce(d->'lp','[]'::jsonb)) with ordinality as progress(value, idx)
+    where idx <= coalesce((select jsonb_array_length(data->'lessons') from public.app_curriculum where id='current'),5)
+      and value->>'quizDone' = 'true';
   select * into w from public.cabinet_wallets where student_id = p_student_id for update;
   if not found then
     legacy := '[]'::jsonb;

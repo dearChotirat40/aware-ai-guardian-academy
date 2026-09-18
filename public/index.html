@@ -5727,8 +5727,12 @@ function unitOneMediaHtml(slide,a){
   var scene=unitOneSceneList()[a.frame];
   return '<p class="u1-kicker">สื่อเล่าเรื่องทีละฉาก · '+(a.frame+1)+' / '+unitOneSceneList().length+'</p><div class="u1-theater"><span class="u1-character">'+escChat(scene[2])+'</span><div class="u1-bubble"><b>'+escChat(scene[0])+'</b><p>'+escChat(scene[1])+'</p></div></div><div class="u1-actions"><button class="btn blueb sm" onclick="unitOnePlay()">▶ เล่นพร้อมเสียงอ่าน</button><button class="btn whiteb sm" onclick="unitOneStopMedia()">⏸ หยุด</button><button class="btn mintb sm" onclick="unitOneStopMedia();unitOneMediaNext()">'+(a.frame<unitOneSceneList().length-1?'ฉากถัดไป →':'จบเรื่อง · เข้ากิจกรรม →')+'</button></div><p class="soft tiny">ใช้สื่อเล่าเรื่องระหว่างรอคลิปวิดีโอประจำสถานการณ์ · อ่านเองได้หากอุปกรณ์ไม่มีเสียงภาษาไทย</p><details><summary>อ่านเนื้อเรื่องฉบับเต็ม</summary><p style="line-height:2">'+escChat(slide.context)+'</p></details>';
 }
+function lessonDrawRewardHtml(p){
+  if(!p || !p.quizDone)return '';
+  return '<div class="u1-success" role="status">🏅 ได้รับเหรียญตราจบบท 1 เหรียญ · ใช้สุ่ม BOT ได้ 1 ครั้ง<br><small>รับครั้งเดียวต่อบท · เหรียญที่ยังไม่ใช้สะสมไว้ได้</small><div><button class="btn pinkb sm" onclick="openRandomCabinet()">🤖 ใช้เหรียญตราสุ่ม BOT</button></div></div>';
+}
 function unitOneEndHtml(){
- var p=lessonProgress[0];return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div><p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions"><button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button><button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
+ var p=lessonProgress[0];return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div>'+lessonDrawRewardHtml(p)+'<p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions"><button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button><button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
 }
 function unitOneHtml(ls){
  var f=unitOneFlow();if((lessonProgress[0].quizDone&&!f.reviewOnly)||f.stage==='end')return unitOneEndHtml();
@@ -6274,7 +6278,7 @@ function randomBotNextPrize() {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 function randomBotBadgeCount() {
-  return state.badges.length;
+  return state.badges.length + lessonProgress.filter(function(p){return p.quizDone;}).length;
 }
 function randomBotDrawCount() {
   return randomBotCollectedPrizes().length;
@@ -6452,7 +6456,7 @@ function renderQuizResult() {
       '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
       '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
-      randomDollLinkHtml() +
+      lessonDrawRewardHtml(p) +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
         '<button onclick="openLessonBonus()" class="btn pinkb sm">🎁 ทำโบนัสภารกิจท้ายบท</button>' +
         nextStepButton +

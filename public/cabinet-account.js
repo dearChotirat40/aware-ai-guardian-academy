@@ -99,7 +99,7 @@
   window.importRandomBotHandoff = function () { return false; };
   window.takeRandomBotDraw = function () { return null; };
   window.randomCabinetHtml = function () {
-    return '<section class="random-cabinet cabinet-launcher"><p class="random-cabinet-title">ตู้สุ่มของฉัน</p><p class="cabinet-token">🏅 1 เหรียญตรา = 1 สิทธิ์สุ่ม · ผลสุ่มบันทึกในบัญชี</p><button onclick="openRandomCabinet()" class="btn pinkb sm">เปิดตู้สุ่มของฉัน</button></section>';
+    return '<section class="random-cabinet cabinet-launcher"><p class="random-cabinet-title">ตู้สุ่มของฉัน</p><p class="cabinet-token">🏅 จบแต่ละบทได้ 1 เหรียญตรา · 1 เหรียญตรา = สุ่ม BOT 1 ครั้ง · ผลสุ่มบันทึกในบัญชี</p><button onclick="openRandomCabinet()" class="btn pinkb sm">เปิดตู้สุ่มของฉัน</button></section>';
   };
   window.randomBotCollectedPrizes = function () {
     var active = forAccount();

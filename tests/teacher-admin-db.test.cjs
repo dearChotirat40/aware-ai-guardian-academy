@@ -43,9 +43,9 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
  data=await call();assert.equal(data.students.roster_bob.lp.length,4);assert.equal(data.students.roster_bob.lp[0].postScore,5);
  assert.deepEqual(data.students.roster_bob.pStars,[1,0,1]);
  await assert.rejects(save(c),/CONFLICT/);
- const wallet=(await db.query("select cabinet_account('roster_bob',null) w")).rows[0].w;assert.equal(wallet.tickets,1);
+ const wallet=(await db.query("select cabinet_account('roster_bob',null) w")).rows[0].w;assert.equal(wallet.tickets,2); // One scenario badge plus one completed lesson.
  await call([{kind:'wallet',id:'roster_bob',wallet:{prizes:[],bonus_tickets:2}}]);
- assert.equal((await db.query("select cabinet_account('roster_bob',null) w")).rows[0].w.tickets,3);
+ assert.equal((await db.query("select cabinet_account('roster_bob',null) w")).rows[0].w.tickets,4);
  await call([{kind:'delete',id:'roster_alice2'}]);data=await call();assert(!data.students.roster_alice2);assert(!data.wallets.roster_alice2);
  assert.equal((await db.query('select count(*) n from student_sessions')).rows[0].n,0);
  await db.exec(`insert into app_settings values('test_mode','{"enabled":true}',0)`);
