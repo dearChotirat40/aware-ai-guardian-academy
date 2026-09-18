@@ -3,7 +3,7 @@
  'use strict';
  var key='awareai_sound_enabled',enabled=true,ctx=null,last=0;
  try{enabled=localStorage.getItem(key)!=='off';}catch(e){}
- var tunes={tap:[[520,0,.045]],correct:[[660,0,.09],[880,.1,.14]],retry:[[330,0,.1],[262,.11,.14]],complete:[[523,0,.1],[659,.12,.1],[784,.24,.1],[1047,.36,.22]],draw:[[440,0,.07],[554,.09,.07],[659,.18,.07]],prize:[[659,0,.1],[784,.12,.1],[1047,.24,.28]]};
+ var tunes={chat:[[880,0,.07],[1175,.085,.12]],tap:[[520,0,.045]],correct:[[660,0,.09],[880,.1,.14]],retry:[[330,0,.1],[262,.11,.14]],complete:[[523,0,.1],[659,.12,.1],[784,.24,.1],[1047,.36,.22]],draw:[[440,0,.07],[554,.09,.07],[659,.18,.07]],prize:[[659,0,.1],[784,.12,.1],[1047,.24,.28]]};
  function stop(){if(ctx&&ctx.state==='running')ctx.suspend().catch(function(){});}
  function play(name){
   if(!enabled||document.hidden)return;
