@@ -18,9 +18,9 @@ for(let n=0;n<4;n++){
   assert.equal(c.unitOneSession().attempts,3);c.unitOnePick(0,1);assert.equal(c.unitOneSession().picks[0],0);
   c.unitOneRestart();c.unitOneCards.forEach((card,i)=>c.unitOnePick(i,card[1]));c.unitOneCheck();
  }else if(n===1){
-  for(let i=0;i<5;i++)c.unitOneAsk();c.elements['unit-one-sentence']={value:'วันนี้อากาศร้อน ฉันจึงอยาก'};
+  for(let i=0;i<c.unitOneConfig(n).outputs.length;i++)c.unitOneAsk();c.elements['unit-one-sentence']={value:'วันนี้อากาศร้อน ฉันจึงอยาก'};
   for(let i=0;i<5;i++)c.unitOneWord();assert.equal(c.unitOneSession().words.length,5);
-  assert.match(c.unitOneActivity(n,c.unitOneSession()),/10 ช่อง/);
+  assert.match(c.unitOneActivity(n,c.unitOneSession()),/8 ช่อง/);
  }else if(n===2){
   c.unitOneSource('2566');assert.equal(c.unitOneSession().done,false);
   c.unitOneSource('open');c.unitOneSource('2569');assert.equal(c.unitOneSession().done,false);c.unitOneSource('2566');
