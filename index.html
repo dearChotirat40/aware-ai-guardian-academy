@@ -5332,7 +5332,9 @@ function pretestCompleted() {
   var s = currentStudent();
   return !!(s && s.assessments && s.assessments.pre && s.assessments.pre.done);
 }
+var UNIT_ONE_TEST_OPEN = true; // Temporary testing access; disable before classroom release.
 function lessonUnlocked(index) {
+  if(index===0 && UNIT_ONE_TEST_OPEN)return true;
   if (!pretestCompleted()) return false;
   for (var i = 0; i < index; i++) {
     if (!normalizeLessonProgress(lessonProgress[i]).quizDone) return false;
@@ -5624,6 +5626,7 @@ function openLesson(i) {
   state.lessonTab = 'mission';
   state.slideIdx = 0;
   state.unitOneHintKey = null;
+  if(i===0 && UNIT_ONE_TEST_OPEN){unitOneReview();}
   changeView('lesson');
 }
 
@@ -5662,7 +5665,7 @@ function unitOneStage(stage){
 }
 function unitOneBegin(){var f=unitOneFlow();f.started=true;state.slideIdx=f.index;unitOneStage('media');}
 function unitOneMove(i){
-  var f=unitOneFlow();if(i<0||i>3||i>0&&!f.items[i-1].reviewed)return;
+  var f=unitOneFlow();if(i<0||i>3||i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN)return;
   state.slideIdx=i;f.index=i;
   unitOneStage(f.items[i].answers.length===2?'feedback':f.items[i].done?'assessment':f.items[i].mediaDone?'activity':'media');
 }
@@ -5696,6 +5699,7 @@ function unitOnePlay(){
   unitOneMediaTimer=setTimeout(function(){if(currentId!==account||state.slideIdx!==index)return;unitOneMediaNext();if(state.view==='lesson'&&state.currentLesson===0&&state.lessonTab==='mission'&&unitOneFlow().stage==='media')unitOnePlay();},10000);
 }
 function unitOneMediaEnded(){if(unitOneFlow().stage!=='media')return;unitOneSession().mediaDone=true;unitOneStage('activity');}
+function unitOneTestQuestions(){if(!UNIT_ONE_TEST_OPEN||!unitOneFlow().reviewOnly)return;var a=unitOneSession();a.done=true;a.answers=[];unitOneStage('assessment');}
 function unitOneStartAssessment(){if(!unitOneSession().done)return;unitOneStage('assessment');}
 function unitOneAnswer(choice){
   var f=unitOneFlow(),a=unitOneSession();if(f.stage!=='assessment'||!a.done||a.answers.length>=2||(lessonProgress[0].quizDone&&!f.reviewOnly))return;
@@ -5710,7 +5714,7 @@ function unitOneContinue(){
 }
 function unitOneComplete(){
   var f=unitOneFlow();if(!f.items.every(function(a){return a.done&&a.answers.length===2&&a.reviewed;}))return;
-  var p=lessonProgress[0];if(!p.quizDone){var before=journeySteps();p.postScore=unitOneScore();p.postTotal=8;p.quizAttempted=true;p.quizDone=true;p.scenarioDone=true;p.slideSeen=3;p.stars=1;markJourneyStep(before);}
+  var p=lessonProgress[0];if(f.reviewOnly){f.stage='end';unitOneStopMedia();render();return;}if(!p.quizDone){var before=journeySteps();p.postScore=unitOneScore();p.postTotal=8;p.quizAttempted=true;p.quizDone=true;p.scenarioDone=true;p.slideSeen=3;p.stars=1;markJourneyStep(before);}
   f.stage='end';unitOneStopMedia();unitOnePersist();render();
 }
 function unitOneVideoSource(value){
@@ -5736,14 +5740,16 @@ function lessonDrawRewardHtml(p){
   return '<div class="u1-success" role="status">🏅 ได้รับเหรียญตราจบบท 1 เหรียญ · ใช้สุ่ม BOT ได้ 1 ครั้ง<br><small>รับครั้งเดียวต่อบท · เหรียญที่ยังไม่ใช้สะสมไว้ได้</small><div><button class="btn pinkb sm" onclick="openRandomCabinet()">🤖 ใช้เหรียญตราสุ่ม BOT</button></div></div>';
 }
 function unitOneEndHtml(){
+ if(UNIT_ONE_TEST_OPEN&&unitOneFlow().reviewOnly)return '<section class="u1-end"><h2>🧪 ทดสอบบทที่ 1 ครบแล้ว</h2><p>คะแนน เหรียญตรา และของสะสมเดิมยังอยู่ครบ</p><button class="btn blueb" onclick="unitOneReview()">เริ่มทดสอบใหม่</button></section>';
  var p=lessonProgress[0];return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div>'+lessonDrawRewardHtml(p)+'<p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions"><button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button><button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
 }
 function unitOneHtml(ls){
  var f=unitOneFlow();if((lessonProgress[0].quizDone&&!f.reviewOnly)||f.stage==='end')return unitOneEndHtml();
  state.slideIdx=f.index;var n=f.index,a=f.items[n],slide=ls.situations[n],stage=f.stage;
- if(stage==='welcome')return '<section class="u1-welcome"><p class="u1-kicker">AI GUARDIAN ACADEMY · UNIT 01</p><figure class="u1-intro-art"><img src="./public/unit-one-introduction.png" width="1254" height="1254" alt="รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม พร้อมน้องเอไอ: ค้นหาข้อมูล สร้างสรรค์ไอเดีย เรียนรู้และแก้ปัญหา และใช้ AI ในชีวิตประจำวัน" decoding="async"></figure><h2>'+escChat(ls.flowSettings.welcomeTitle)+'</h2><p>'+escChat(ls.flowSettings.welcomeText)+'</p><div class="u1-roadmap"><span>🎬 ดูเรื่องราว</span><span>🧩 ลงมือทดลอง</span><span>💬 ตอบคำถาม</span><span>🏆 รับรางวัล</span></div><p>สะสมคะแนนและดาวเพื่อรับประกาศเกียรติคุณ “'+escChat(ls.flowSettings.awardTitle)+'”</p>'+ (f.reviewOnly?'<p class="u1-total">โหมดทบทวน · คงคะแนนและรางวัลที่ได้รับแล้ว</p>':'') +'<p class="soft">4 สถานการณ์ · 8 คำถาม · คะแนนเต็ม '+UNIT_POINTS+' · ⭐ 1 ดาว</p><button class="btn blueb" onclick="unitOneBegin()">เริ่มสำรวจ AI →</button></section>';
+ if(stage==='welcome')return '<section class="u1-welcome"><p class="u1-kicker">AI GUARDIAN ACADEMY · UNIT 01</p><figure class="u1-intro-art"><img src="./public/unit-one-introduction.png" width="1254" height="1254" alt="รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม พร้อมน้องเอไอ: ค้นหาข้อมูล สร้างสรรค์ไอเดีย เรียนรู้และแก้ปัญหา และใช้ AI ในชีวิตประจำวัน" decoding="async"></figure><h2>'+escChat(ls.flowSettings.welcomeTitle)+'</h2><p>'+escChat(ls.flowSettings.welcomeText)+'</p><div class="u1-roadmap"><span>🎬 ดูเรื่องราว</span><span>🧩 ลงมือทดลอง</span><span>💬 ตอบคำถาม</span><span>🏆 รับรางวัล</span></div><p>สะสมคะแนนและดาวเพื่อรับประกาศเกียรติคุณ “'+escChat(ls.flowSettings.awardTitle)+'”</p>'+ (f.reviewOnly?'<p class="u1-total">โหมดทบทวน / ทดสอบ · คงคะแนนและรางวัลที่ได้รับแล้ว</p>':'') +'<p class="soft">4 สถานการณ์ · 8 คำถาม · คะแนนเต็ม '+UNIT_POINTS+' · ⭐ 1 ดาว</p><button class="btn blueb" onclick="unitOneBegin()">เริ่มสำรวจ AI →</button></section>';
  var stages=['media','activity','assessment','feedback'],labels=['ดูสื่อ','ทำกิจกรรม','ตอบคำถาม','สรุปความรู้'];
- var html='<section class="u1-shell u1-stage-'+stage+'"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){return '<button '+(i>0&&!f.items[i-1].reviewed?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':i>n?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div><ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
+ var html='<section class="u1-shell u1-stage-'+stage+'"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){return '<button '+(i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':i>n&&!UNIT_ONE_TEST_OPEN?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div><ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
+ if(UNIT_ONE_TEST_OPEN)html+='<div class="u1-actions"><span>🧪 ทดสอบบทที่ 1 · ไม่เปลี่ยนคะแนนเดิม</span><button class="btn whiteb sm" onclick="unitOneStage(\'media\')">ดูสื่อ</button><button class="btn whiteb sm" onclick="unitOneStage(\'activity\')">กิจกรรม</button><button class="btn whiteb sm" onclick="unitOneTestQuestions()">ลองคำถาม</button></div>';
  if(stage==='media')html+=unitOneMediaHtml(slide,a);
  if(stage==='activity')html+='<h3>ลงมือทดลอง</h3><p>'+escChat(slide.activity)+'</p>'+unitOneActivity(n,a)+(a.done?'<div class="u1-success" role="status">✓ กิจกรรมผ่านแล้ว · ปลดล็อกคำถาม 2 ข้อ</div><button class="btn mintb" onclick="unitOneStartAssessment()">ตอบคำถาม →</button>':'<p class="soft">🔒 ทำกิจกรรมให้ครบเพื่อปลดล็อกคำถาม</p>');
  if(stage==='assessment'){
