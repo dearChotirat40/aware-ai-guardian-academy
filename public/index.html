@@ -1474,6 +1474,9 @@ body{font-size:18px;line-height:1.78}
 .progress-stat .dashboard-image-icon{width:64px;height:64px;background:transparent;border-radius:0}.dashboard-image-icon img{display:block;width:100%;height:100%;object-fit:contain}
 
 .progress-stat:has(.dashboard-image-icon){text-align:center}.progress-stat .dashboard-image-icon{margin-left:auto;margin-right:auto}
+/* Sequential unit-one learning path. */
+.u1-shell{max-width:1040px;margin:auto}.u1-welcome,.u1-end{max-width:960px;margin:12px auto;padding:clamp(24px,5vw,54px);text-align:center;border:2px solid #91bdd1;border-radius:28px;background:radial-gradient(ellipse at top,#fff9db,#edf8ff 65%);box-shadow:0 10px 0 #d0e3ed}.u1-welcome h2,.u1-end h2{font-size:clamp(25px,4vw,38px);color:#244e70}.u1-welcome p,.u1-end p{line-height:1.9;margin:14px 0}.u1-kicker{font-size:12px;letter-spacing:.04em;color:#42677d;font-weight:700;margin:0 0 8px}.u1-trophy{font-size:86px;margin:10px;animation:u1-arrive .6s ease-out}.u1-roadmap{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:18px 0}.u1-roadmap button,.u1-roadmap span{font:inherit;font-size:13px;border:1.5px solid #afcbd9;border-radius:14px;background:#fff;padding:11px 14px;color:#345771}.u1-roadmap button[aria-current=step]{background:#214f72;color:white;border-color:#214f72}.u1-roadmap button:disabled{opacity:.5;cursor:not-allowed}.u1-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:22px 0}.u1-heading h2{font-size:clamp(21px,3vw,29px);color:#254e70;line-height:1.5}.u1-total{display:inline-block;background:#fff2c6;border:1px solid #e4d194;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700}.u1-steps{display:flex;list-style:none;gap:8px;padding:0;margin:18px 0}.u1-steps li{flex:1;padding:10px;background:#edf2f5;border-radius:10px;text-align:center;font-size:13px;color:#5d7381}.u1-steps .active{background:#d5f3eb;color:#18644e;font-weight:bold;box-shadow:inset 0 -3px #70bea4}.u1-panel{background:#fffefb;border:2px solid #ccdde5;border-radius:24px;padding:clamp(18px,3vw,32px);line-height:1.9}.u1-panel select,.u1-panel input{font:inherit;font-size:14px;padding:8px;border:1px solid #9cb7c9;border-radius:8px;max-width:100%}.u1-panel table{border-collapse:collapse;font-size:13px;margin:18px 0}.u1-panel td,.u1-panel th{padding:9px;border:1px solid #d0dfe5;text-align:left}.u1-panel caption{font-weight:bold}.u1-theater{min-height:300px;display:flex;align-items:center;gap:30px;padding:32px;border-radius:22px;background:linear-gradient(135deg,#d8f0f7,#e6e9fc);overflow:hidden}.u1-character{font-size:100px;animation:u1-arrive .4s ease-out}.u1-bubble{background:white;border-radius:22px;padding:24px;box-shadow:0 6px 0 #bad0df;animation:u1-arrive .4s ease-out;font-size:clamp(17px,2.5vw,22px);flex:1}.u1-bubble b{color:#39648a;font-size:14px}.u1-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:20px 0}.u1-knowledge{background:#fff5d5;border:2px solid #e4c878;border-radius:20px;padding:22px;margin:20px 0;animation:u1-arrive .4s ease-out}.u1-success{background:#dff4e9;color:#245d44;border-radius:14px;padding:14px;margin:16px 0}.u1-scorecards{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:26px 0}.u1-scorecards>div{min-width:140px;background:#fff;border:2px solid #afc9dc;padding:20px;border-radius:18px}.u1-scorecards b{display:block;font-size:32px;color:#25557a}.u1-scorecards span{font-size:13px;color:#577080}.u1-end{border-color:#d8b45a;background:radial-gradient(ellipse at top,#fff0b6,#fffdf2 70%)}.u1-panel .qopt{width:100%;text-align:left;font:inherit;white-space:normal}.u1-panel button:focus-visible,.u1-roadmap button:focus-visible{outline:3px solid #356eca;outline-offset:3px}@keyframes u1-arrive{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}@media(max-width:600px){.u1-heading{align-items:flex-start;flex-direction:column}.u1-steps{gap:4px}.u1-steps li{font-size:11px;padding:9px 4px}.u1-theater{padding:20px;gap:12px;flex-direction:column;min-height:320px}.u1-character{font-size:68px}.u1-bubble{padding:18px}.u1-roadmap button{flex:1 1 42%;font-size:12px}.u1-actions .btn{width:100%}.u1-panel .innerbox select{display:block;width:100%;margin-top:8px}}@media(prefers-reduced-motion:reduce){.u1-trophy,.u1-character,.u1-bubble,.u1-knowledge{animation:none}}
+
 </style>
 </head>
 <body>
@@ -2082,6 +2085,12 @@ var DOCUMENT_SITUATIONS = [
     ]
   }
 ];
+
+/* บทที่ 1: สถานการณ์ย่อยตามเอกสารฉบับปรับปรุง */
+DOCUMENT_SITUATIONS[0].situations = [{"id": "1.1", "emoji": "📱", "title": "แอปไหนคือ AI กันแน่", "difficulty": "ง่าย", "context": "คาบแรกวันจันทร์ ครูพริมเขียนบนกระดานว่า “เปิดโทรศัพท์ แล้วเขียนชื่อฟีเจอร์ที่คิดว่าเป็น AI มา 5 อย่าง” ต้นเขียน ฟิลเตอร์แต่งหน้าในแอปวิดีโอสั้น ปุ่มลบคนออกจากรูปในแกลเลอรี คำบรรยายใต้คลิปที่ขึ้นเองอัตโนมัติ น้องเอไอที่เขาใช้ทำการบ้าน และเครื่องคิดเลข มีนาแย้งว่าเครื่องคิดเลขไม่น่าใช่ ต้นเถียงว่า “ก็มันคิดเลขให้เราไง” มีนาจึงกดเครื่องคิดเลข 7 คูณ 8 สามครั้ง ได้ 56 ทุกครั้งไม่ผิดเพี้ยน แล้วพิมพ์ถามน้องเอไอว่า “ขอชื่อโครงงานวิทยาศาสตร์ 3 ชื่อ” สามครั้งด้วยข้อความเดิม ได้ชื่อไม่ซ้ำกันเลยสักครั้ง ครูพริมจึงขีดกระดานเป็นสามช่อง คือ โปรแกรมทั่วไป AI เฉพาะทาง และ AI ที่สร้างของใหม่ แล้วให้ทั้งห้องช่วยกันย้ายรายชื่อลงช่อง", "activity": "ลากการ์ดฟีเจอร์ 9 ใบ ไปวางใน 3 ช่องบนกระดาน ระบบบอกเมื่อวางครบว่าช่องใดยังผิดกี่ใบ (แก้ได้ 2 ครั้ง)", "hint": "ลองถามตัวเองว่า ถ้าไม่มีข้อมูลตัวอย่างให้เรียนรู้ โปรแกรมนี้ยังทำงานได้หรือไม่ และผลลัพธ์ที่ได้เป็นการเลือกจากของที่มีอยู่แล้ว หรือเป็นของใหม่ที่เพิ่งถูกสร้างขึ้น", "learning": "ปัญญาประดิษฐ์คือระบบที่เรียนรู้รูปแบบจากข้อมูลเพื่อทำงานที่ปกติต้องใช้ความสามารถของมนุษย์ ต่างจากโปรแกรมทั่วไปที่ทำงานตามชุดคำสั่งตายตัว ปัญญาประดิษฐ์แบ่งได้หลายประเภท เช่น AI เชิงทำนายหรือจำแนก และ Generative AI ที่สร้างเนื้อหาใหม่ (คำว่า “ปัญญาประดิษฐ์” ถูกใช้อย่างเป็นทางการครั้งแรกเมื่อปี ค.ศ. 1956)", "place": "ห้องเรียนของครูพริม"}, {"id": "1.2", "emoji": "💬", "title": "ถามเหมือนเดิม แต่ตอบไม่เหมือนเดิม", "difficulty": "ปานกลาง", "context": "ต้นถามน้องเอไอว่า “แนะนำหัวข้อโครงงานวิทยาศาสตร์ ม.4” สามครั้งติดกันด้วยข้อความเดิมทุกตัวอักษร โดยเปิดโหมดคิดก่อนตอบไว้ทั้งสามครั้ง ครั้งแรกได้ 5 หัวข้อ ครั้งที่สองซ้ำกับครั้งแรกเพียง 2 หัวข้อ ครั้งที่สามมีหัวข้อใหม่โผล่มาอีก 3 หัวข้อ มีนาจึงลองพิมพ์ประโยคค้างไว้ว่า “วันนี้อากาศร้อน ฉันจึงอยาก” แล้วให้น้องเอไอเติมต่อห้าครั้ง ได้คำว่า ดื่ม ว่าย นอน กิน และอาบ ทุกคำเข้ากับประโยคได้หมด แต่ไม่มีครั้งไหนได้คำว่า ใส่เสื้อกันหนาว เลยสักครั้ง ครูพริมเห็นเข้าจึงถามว่า ผลแบบนี้บอกอะไรเกี่ยวกับวิธีที่น้องเอไอเลือกคำ", "activity": "กดปุ่มถามซ้ำ 5 ครั้งด้วยข้อความเดิม แล้วพิมพ์ประโยคค้างไว้ให้น้องเอไอเติมต่ออีก 5 ครั้ง บันทึกคำที่ได้ลงตาราง", "hint": "ลองแยกให้ออกว่าคำตอบทั้งสามครั้ง “ต่างกันที่สำนวนภาษา” หรือ “ต่างกันที่ข้อเท็จจริง” แล้วคิดต่อว่าอะไรคือสิ่งที่ระบบทำได้ดี กับอะไรคือสิ่งที่ระบบไม่ได้รับประกัน", "learning": "Generative Al เรียนรู้รูปแบบทางสถิติของภาษาจากข้อมูลจำนวนมาก แล้วทำนายคำถัดไปที่มีความน่าจะเป็นสูงทีละคำจนได้ข้อความทั้งย่อหน้า ไม่ได้เปิดคลังคำตอบสำเร็จรูปมาตอบ จึงตอบคำถามเดียวกันได้หลายแบบ", "place": "ห้องเรียนของครูพริม"}, {"id": "1.3", "emoji": "🔎", "title": "ข่าวเมื่อวานที่น้องเอไอไม่รู้", "difficulty": "ค่อนข้างยาก", "context": "วิชาสังคมศึกษาสั่งรายงานค่าฝุ่น PM2.5 เขตสายไหม “ของสัปดาห์ที่ผ่านมา” กำหนดส่งวันศุกร์ มีนาพิมพ์คำค้นในเครื่องมือค้นหา แล้วอ่านกล่องสรุปคำตอบที่ AI เขียนไว้บนสุดของหน้า ได้ค่าเฉลี่ยราว 40 ไมโครกรัมต่อลูกบาศก์เมตร เธอคัดลอกตัวเลขนั้นลงรายงานทันทีโดยไม่ได้กดลิงก์ใด ส่วนต้นเลื่อนผ่านกล่องสรุปลงไปกดลิงก์ต้นทางที่อ้างไว้ใต้กล่อง พบว่าหน้านั้นเป็นข้อมูลของปี 2566 ไม่ใช่สัปดาห์ที่ผ่านมา เขาจึงเข้าเว็บหน่วยงานโดยตรงและพบตารางรายวันพร้อมชื่อสถานีตรวจวัดและวันที่เผยแพร่ เมื่อเฉลี่ยเจ็ดวันได้ 52 ไมโครกรัมต่อลูกบาศก์เมตร เหลือเวลาอีกสองวัน ทั้งคู่ต้องตัดสินใจว่าจะใช้ตัวเลขใด", "activity": "กดลิงก์ใต้กล่องสรุปคำตอบของ AI แล้วหาวันที่เผยแพร่ในหน้าเว็บต้นทางให้เจอ", "hint": "ถามว่าคำตอบนี้พาเราไปหาหลักฐานต้นทางได้หรือไม่ ถ้ากดดูแหล่งที่มาไม่ได้เลย ให้ถือว่ายังเป็นข้อมูลที่รอการยืนยัน", "learning": "เครื่องมือค้นหาทำหน้าที่ชี้ไปยังหน้าเว็บต้นทางที่ระบุผู้เผยแพร่และวันที่ได้ ส่วน Generative Al อาจไม่ครอบคลุมเหตุการณ์ล่าสุดและมักไม่มีแหล่งอ้างอิง ข้อมูลตัวเลขทางการจึงต้องยืนยันจากแหล่งต้นทางเสมอ", "place": "ห้องเรียนของครูพริม"}, {"id": "1.4", "emoji": "📚", "title": "หนังสือที่ไม่มีในห้องสมุด", "difficulty": "ยาก", "context": "เย็นวันอังคาร ต้นกับมีนาทำรายงานเรื่องแหล่งเรียนรู้ในจังหวัด ต้นขอชื่อหนังสืออ้างอิง น้องเอไอตอบว่า “คู่มือแหล่งเรียนรู้ชุมชน สำนักพิมพ์ครูไทย พ.ศ. 2563” พร้อมแนบลิงก์ร้านหนังสือออนไลน์มาให้ด้วย ดูน่าเชื่อถือมาก แต่พอมีนากดลิงก์กลับขึ้นหน้าว่าไม่พบสินค้า และค้นชื่อเรื่องในระบบห้องสมุดโรงเรียนกับหอสมุดแห่งชาติก็ไม่พบทั้งสองที่ ต่อมามีนาถามถึงงานเปิดบ้านของจังหวัดที่เพิ่งจัดเมื่อเดือนที่แล้ว คราวนี้น้องเอไอไม่ได้เปิดการค้นเว็บ จึงตอบว่ายืนยันข้อมูลล่าสุดไม่ได้ และเมื่อขอตัวอย่างอาชีพในท้องถิ่น 10 อาชีพ คำตอบที่ได้เป็นโปรแกรมเมอร์ นักการตลาด และพนักงานธนาคารเสียส่วนใหญ่ ไม่มีช่างซ่อมมอเตอร์ไซค์หรือแม่ค้าตลาดนัดที่ทั้งคู่เดินผ่านทุกวันเลยสักอาชีพ", "activity": "ลากเหตุการณ์ผิดพลาด 3 เหตุการณ์ (หนังสือ, งานเดือนที่แล้ว, อาชีพ) ไปจับคู่กับข้อจำกัด (อาการหลอน, ข้อมูลจำกัดเวลา, อคติจากข้อมูลฝึก)", "hint": "แยกสิ่งที่เกิดขึ้นออกเป็น ของที่ไม่มีอยู่จริง, ของที่ยังไม่รู้เพราะเพิ่งเกิด, และของที่รู้ไม่ครบ (หรือ \"แยกคำถามออกเป็นวิธีคิดกับตัวเลข\" ตามการประยุกต์ด่านข้อจำกัด AI)", "learning": "Hallucination คือการที่ AI สร้างข้อมูลหรือแหล่งอ้างอิงที่ไม่มีหลักฐานรองรับ แม้คำตอบจะดูมั่นใจ จึงควรตรวจสอบกับแหล่งจริง รวมทั้งตรวจวันที่และมุมมองที่อาจขาดหายไป", "place": "ห้องเรียนของครูพริม"}];
+DOCUMENT_SITUATIONS[0].quiz = [{"id": "1.1.1", "q": "ผลการทดลองของมีนา คือเครื่องคิดเลขได้ 56 ทุกครั้ง ส่วนน้องเอไอตอบไม่ซ้ำกันเลย สนับสนุนข้อสรุปใดได้ดีที่สุด", "choices": ["ระบบหนึ่งทำตามกฎตายตัว อีกระบบสร้างผลใหม่ทุกครั้ง จึงคนละประเภท", "AI ทุกชนิดต้องตอบไม่ซ้ำกัน", "เครื่องคิดเลขเรียนรู้จากคำตอบก่อนหน้า", "ผลลัพธ์ต่างกันแปลว่าระบบเสีย"], "answer": 0, "explain": "การทดลองนี้เปรียบเทียบความคงที่ของผลลัพธ์ ซึ่งสะท้อนวิธีทำงานเบื้องหลัง", "hint": "ลองถามตัวเองว่า ถ้าไม่มีข้อมูลตัวอย่างให้เรียนรู้ โปรแกรมนี้ยังทำงานได้หรือไม่ และผลลัพธ์ที่ได้เป็นการเลือกจากของที่มีอยู่แล้ว หรือเป็นของใหม่ที่เพิ่งถูกสร้างขึ้น"}, {"id": "1.1.2", "q": "เกณฑ์ใดใช้แยกแอปแนะนำเพลงอัตโนมัติ ออกจากแอปที่สร้างมิวสิกวิดีโอใหม่ ได้ตรงที่สุด", "choices": ["ความเร็วของแอป", "จำนวนผู้ใช้งาน", "ผลลัพธ์เป็นการเลือกของเดิม หรือเป็นของใหม่ที่เพิ่งสร้าง", "การเชื่อมต่ออินเทอร์เน็ต"], "answer": 2, "explain": "ความเร็ว ความนิยม และการเชื่อมอินเทอร์เน็ต เป็นคุณสมบัติของบริการ ไม่ใช่เกณฑ์จำแนกประเภทของ AI", "hint": "ลองถามตัวเองว่า ถ้าไม่มีข้อมูลตัวอย่างให้เรียนรู้ โปรแกรมนี้ยังทำงานได้หรือไม่ และผลลัพธ์ที่ได้เป็นการเลือกจากของที่มีอยู่แล้ว หรือเป็นของใหม่ที่เพิ่งถูกสร้างขึ้น"}, {"id": "1.2.1", "q": "ผลการเติมคำทั้งห้าครั้งสนับสนุนข้อสรุปใดเกี่ยวกับการเลือกคำของ AI ได้ดีที่สุด", "choices": ["ยืนยันได้ว่า AI เข้าใจเหมือนมนุษย์", "พิสูจน์ว่า AI ไม่มีการสุ่มเลย", "คำที่ได้สอดคล้องกับบริบท จึงสนับสนุนการเลือกคำแบบถ่วงน้ำหนัก แต่การทดลองเพียง 5 ครั้งยังพิสูจน์ไม่ได้เด็ดขาด", "ทุกคำมีโอกาสเท่ากันเสมอ"], "answer": 2, "explain": "แบบจำลองให้น้ำหนักคำตามบริบท การไม่พบคำหนึ่งในตัวอย่างขนาดเล็กไม่ได้หักล้างการสุ่มอย่างเด็ดขาด", "hint": "ลองแยกให้ออกว่าคำตอบทั้งสามครั้ง “ต่างกันที่สำนวนภาษา” หรือ “ต่างกันที่ข้อเท็จจริง” แล้วคิดต่อว่าอะไรคือสิ่งที่ระบบทำได้ดี กับอะไรคือสิ่งที่ระบบไม่ได้รับประกัน"}, {"id": "1.2.2", "q": "ถ้าให้น้องเอไอเติมประโยค “ประธานชมรมถ่ายภาพคนแรกของโรงเรียนชื่อ” ซึ่งไม่เคยมีใครบันทึกไว้ที่ใด ผลน่าจะเป็นอย่างไร", "choices": ["อาจเติมชื่อที่ฟังดูเข้าที่ ทั้งที่ไม่มีข้อมูลรองรับ", "ต้องตอบถูกเพราะประโยคชัดเจน", "จะค้นทะเบียนโรงเรียนให้อัตโนมัติเสมอ", "รับประกันว่าจะไม่เติมชื่อใด ๆ"], "answer": 0, "explain": "การสร้างข้อความไม่ได้รับประกันการตรวจข้อเท็จจริง ระบบอาจแต่งชื่อหรือแจ้งว่าไม่มีข้อมูลก็ได้", "hint": "ลองแยกให้ออกว่าคำตอบทั้งสามครั้ง “ต่างกันที่สำนวนภาษา” หรือ “ต่างกันที่ข้อเท็จจริง” แล้วคิดต่อว่าอะไรคือสิ่งที่ระบบทำได้ดี กับอะไรคือสิ่งที่ระบบไม่ได้รับประกัน"}, {"id": "1.3.1", "q": "เมื่อพิจารณาที่มาของตัวเลขทั้งสอง สาเหตุที่ 40 กับ 52 ต่างกันคือข้อใด", "choices": ["AI คำนวณผิดเสมอ", "ค่าเฉลี่ยจากทุกปีต้องเท่ากัน", "กล่องสรุปอ้างหน้าเว็บปี 2566 ส่วนอีกค่ามาจากการวัดจริงสัปดาห์ที่แล้ว", "ตัวเลขที่น้อยกว่าย่อมถูกต้อง"], "answer": 2, "explain": "ตัวเลขอ้างอิงคนละช่วงเวลา จึงใช้แทนกันไม่ได้ ต้องตรวจวันที่และสถานีให้ตรงกับโจทย์", "hint": "ถามว่าคำตอบนี้พาเราไปหาหลักฐานต้นทางได้หรือไม่ ถ้ากดดูแหล่งที่มาไม่ได้เลย ให้ถือว่ายังเป็นข้อมูลที่รอการยืนยัน"}, {"id": "1.3.2", "q": "เงื่อนไขใดในโจทย์ที่ทำให้ตัวเลขจากกล่องสรุปใช้ไม่ได้ตั้งแต่ต้น", "choices": ["กล่องสรุปมีข้อความสั้นเกินไป", "ต้นใช้เวลาค้นนานกว่า", "ข้อมูลจากเว็บไซต์ใช้ไม่ได้ทุกกรณี", "โจทย์ขอข้อมูลสัปดาห์ที่แล้ว แต่ต้นทางที่อ้างเป็นข้อมูลปี 2566"], "answer": 3, "explain": "เป็นเงื่อนไขที่ชนกับข้อจำกัดของ AI พอดี คือความใหม่ของช่วงเวลาและความจำเป็นต้องอ้างอิงต้นทางได้", "hint": "ถามว่าคำตอบนี้พาเราไปหาหลักฐานต้นทางได้หรือไม่ ถ้ากดดูแหล่งที่มาไม่ได้เลย ให้ถือว่ายังเป็นข้อมูลที่รอการยืนยัน"}, {"id": "1.4.1", "q": "ความผิดพลาดสามครั้งที่ทั้งคู่เจอ เป็นข้อจำกัดคนละแบบ ข้อใดวิเคราะห์ได้ถูกต้อง", "choices": ["ทั้งสามเหตุการณ์เป็นอาการหลอน", "หนังสือคืออาการหลอน งานเดือนที่แล้วคือข้อมูลจำกัดเวลา อาชีพคืออคติ", "หนังสือคืออคติ ส่วนอาชีพคือข้อมูลจำกัดเวลา", "ทั้งสามเหตุการณ์เป็นเพราะอินเทอร์เน็ตช้า"], "answer": 1, "explain": "ของที่ไม่มีอยู่จริงต้องค้นยืนยัน ของที่ยังไม่รู้ต้องดูวันที่ ส่วนของที่รู้ไม่ครบต้องมองหาสิ่งที่หายไป", "hint": "แยกสิ่งที่เกิดขึ้นออกเป็น ของที่ไม่มีอยู่จริง, ของที่ยังไม่รู้เพราะเพิ่งเกิด, และของที่รู้ไม่ครบ (หรือ \"แยกคำถามออกเป็นวิธีคิดกับตัวเลข\" ตามการประยุกต์ด่านข้อจำกัด AI)"}, {"id": "1.4.2", "q": "ในความผิดพลาดทั้งสามครั้ง ข้อใดที่ผู้ใช้มีโอกาสมองข้ามมากที่สุด", "choices": ["หนังสือ เพราะลิงก์เสียยืนยันว่ามีจริง", "รายชื่ออาชีพ เพราะคำตอบดูสมบูรณ์ ไม่มีจุดผิดให้จับได้เลย", "งานล่าสุด เพราะ AI ยอมรับข้อจำกัดแล้ว", "ทุกกรณีสังเกตง่ายเท่ากัน"], "answer": 1, "explain": "ความไม่ครอบคลุมไม่มีอะไรผิดให้เห็น จึงต้องใช้การตั้งคำถามว่ามีใครขาดหายไป", "hint": "แยกสิ่งที่เกิดขึ้นออกเป็น ของที่ไม่มีอยู่จริง, ของที่ยังไม่รู้เพราะเพิ่งเกิด, และของที่รู้ไม่ครบ (หรือ \"แยกคำถามออกเป็นวิธีคิดกับตัวเลข\" ตามการประยุกต์ด่านข้อจำกัด AI)"}];
+DOCUMENT_SITUATIONS[0].mission.name = "หน่วยที่ 1: ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์";
+lessons[0].title = "บทที่ 1: ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์";
 DOCUMENT_SITUATIONS.forEach(function(unit, index){
   lessons[index].mission = unit.mission;
   lessons[index].situations = unit.situations;
@@ -2098,6 +2107,16 @@ DOCUMENT_SITUATIONS.forEach(function(unit, index){
    เปลี่ยนรุ่นเพื่อไม่ให้สำเนาเดิมบนเบราว์เซอร์หรือฐานข้อมูลทับบทเรียนตามไฟล์ */
 var CURRICULUM_VERSION = 4;
 var CURRICULUM_KEY = 'awareai_curriculum_v4';
+lessons[0].situations.forEach(function(s){s.videoUrl = s.videoUrl || '';});
+lessons[0].unitOneRevision = 1;
+var UNIT_ONE_CMS_DEFAULTS = [{"storyScenes": [{"speaker": "ครูพริม", "text": "เปิดโทรศัพท์ แล้วเขียนฟีเจอร์ที่คิดว่าเป็น AI มา 5 อย่าง", "emoji": "🧑‍🏫"}, {"speaker": "ต้น", "text": "ฟิลเตอร์แต่งหน้า ลบคนออกจากรูป คำบรรยายอัตโนมัติ น้องเอไอ และเครื่องคิดเลข!", "emoji": "👦"}, {"speaker": "มีนา", "text": "เครื่องคิดเลข 7 × 8 ได้ 56 ทุกครั้ง แต่น้องเอไอตั้งชื่อโครงงานใหม่ได้หลายแบบ", "emoji": "👧"}, {"speaker": "ครูพริม", "text": "ลองแยกลง 3 ช่อง: โปรแกรมทั่วไป · AI เฉพาะทาง · AI สร้างของใหม่", "emoji": "🧩"}], "activityData": {"groups": ["โปรแกรมทั่วไป", "AI ทำนาย / จำแนก", "AI สร้างเนื้อหาใหม่"], "cards": [{"text": "เครื่องคิดเลข", "answer": 0}, {"text": "นาฬิกาปลุกตามเวลาที่ตั้ง", "answer": 0}, {"text": "แปลงเซลเซียสเป็นฟาเรนไฮต์ตามสูตร", "answer": 0}, {"text": "แนะนำเพลงจากประวัติการฟัง", "answer": 1}, {"text": "กรองสแปมจากรูปแบบอีเมล", "answer": 1}, {"text": "รู้จำเสียงพูดเป็นคำบรรยาย", "answer": 1}, {"text": "สร้างภาพจากข้อความ", "answer": 2}, {"text": "แชตบอตสร้างชื่อโครงงาน", "answer": 2}, {"text": "สร้างมิวสิกวิดีโอใหม่", "answer": 2}], "maxAttempts": 3}}, {"storyScenes": [{"speaker": "ต้น", "text": "แนะนำหัวข้อโครงงานวิทยาศาสตร์ ม.4 — ถามเหมือนเดิม 3 ครั้ง ทำไมได้หัวข้อต่างกัน?", "emoji": "👦"}, {"speaker": "มีนา", "text": "ลองเติมประโยค “วันนี้อากาศร้อน ฉันจึงอยาก” ซ้ำ 5 ครั้งกัน", "emoji": "👧"}, {"speaker": "น้องเอไอ", "text": "ดื่ม · ว่าย · นอน · กิน · อาบ", "emoji": "🤖"}, {"speaker": "ครูพริม", "text": "คำแตกต่างกัน แต่เข้ากับบริบท ผลนี้บอกอะไรเกี่ยวกับการเลือกคำ?", "emoji": "🧑‍🏫"}], "activityData": {"prompt": "แนะนำหัวข้อโครงงานวิทยาศาสตร์ ม.4", "sentence": "วันนี้อากาศร้อน ฉันจึงอยาก", "outputs": ["สวนผักประหยัดน้ำ · เครื่องกรองน้ำ · สีจากดอกไม้ · เตาแสงอาทิตย์ · กระดาษรีไซเคิล", "สวนผักประหยัดน้ำ · เครื่องกรองน้ำ · พลาสติกชีวภาพ · ฉนวนธรรมชาติ · วัดความชื้น", "สีจากดอกไม้ · เตาแสงอาทิตย์ · เซนเซอร์ฝุ่น · ปุ๋ยจากเศษอาหาร · เครื่องให้อาหารปลา", "เซนเซอร์ฝุ่น · วัดคุณภาพน้ำ · สบู่สมุนไพร · พลังงานลม · แบตเตอรี่มะนาว", "ปุ๋ยจากเศษอาหาร · ฟิล์มจากแป้ง · ผ้ากรองฝุ่น · กล่องเก็บความเย็น · เครื่องวัดแสง"], "words": ["ดื่ม", "ว่าย", "นอน", "กิน", "อาบ"], "note": "คำตัวอย่างชุดนี้ออกแบบสำหรับบริบทอากาศร้อน ลองสังเกตว่าคำเข้ากับประโยคที่คุณพิมพ์หรือไม่"}}, {"storyScenes": [{"speaker": "มีนา", "text": "รายงานขอ PM2.5 สัปดาห์ที่ผ่านมา กล่องสรุป AI บอกเฉลี่ย 40 ไมโครกรัมต่อลูกบาศก์เมตร", "emoji": "👧"}, {"speaker": "ต้น", "text": "เดี๋ยวก่อน! ลิงก์ใต้กล่องสรุปอ้างข้อมูลปี 2566", "emoji": "👦"}, {"speaker": "ต้น", "text": "เว็บหน่วยงานมีสถานีและวันที่ครบ ค่าเฉลี่ย 7 วันของสัปดาห์ที่ผ่านมาเป็น 52", "emoji": "🔎"}, {"speaker": "ครูพริม", "text": "ก่อนเลือกตัวเลข ตรวจแหล่งต้นทางและช่วงเวลาให้ตรงกับโจทย์", "emoji": "🧑‍🏫"}], "activityData": {"summary": "AI สรุป: ค่า PM2.5 เฉลี่ยประมาณ 40 ไมโครกรัมต่อลูกบาศก์เมตร", "sourceTitle": "หน้าต้นทางจำลอง: รายงาน PM2.5 เขตสายไหม", "published": "เผยแพร่: 15 ธันวาคม 2566 · ค่าเฉลี่ย 40 ไมโครกรัมต่อลูกบาศก์เมตร", "comparison": "ตารางอีกแหล่งในเรื่อง: สถานีสายไหม สัปดาห์ที่ผ่านมา 48, 50, 52, 54, 56, 51, 53 → เฉลี่ย 52", "question": "ต้นทางของค่า 40 เผยแพร่ปีใด?", "options": ["2566", "2569"], "correctValue": "2566", "success": "✓ ถูกต้อง ต้นทางเป็นปี 2566 จึงใช้แทนสัปดาห์ที่ผ่านมาไม่ได้", "retry": "ลองดูปีที่เผยแพร่บนหน้าต้นทางอีกครั้ง"}}, {"storyScenes": [{"speaker": "น้องเอไอ", "text": "ลองอ้าง “คู่มือแหล่งเรียนรู้ชุมชน สำนักพิมพ์ครูไทย พ.ศ. 2563”", "emoji": "🤖"}, {"speaker": "มีนา", "text": "ลิงก์เปิดไม่พบสินค้า และค้นชื่อหนังสือในห้องสมุดไม่พบทั้งสองแห่ง", "emoji": "👧"}, {"speaker": "น้องเอไอ", "text": "ยังยืนยันงานเดือนที่แล้วไม่ได้เมื่อไม่ได้ค้นเว็บ ส่วนอาชีพแนะนำ: โปรแกรมเมอร์ นักการตลาด พนักงานธนาคาร", "emoji": "🤖"}, {"speaker": "ต้น", "text": "แล้วช่างซ่อมมอเตอร์ไซค์กับแม่ค้าตลาดนัดล่ะ? ลองแยกข้อจำกัดทั้ง 3 แบบกัน", "emoji": "👦"}], "activityData": {"groups": ["อาการหลอน", "ข้อมูลจำกัดเวลา", "อคติจากข้อมูลฝึก"], "cards": [{"text": "หนังสือและลิงก์ที่ค้นไม่พบ", "answer": 0}, {"text": "ยืนยันงานเดือนที่แล้วไม่ได้เมื่อไม่ค้นเว็บ", "answer": 1}, {"text": "รายชื่ออาชีพขาดอาชีพในชุมชน", "answer": 2}], "maxAttempts": 0}}];
+function enrichLessonCMS(items){
+  items.forEach(function(l){(l.situations || []).forEach(function(s){if(typeof s.videoUrl!=='string')s.videoUrl='';});});
+  var unit=items[0];if(!unit)return;
+  if(!unit.flowSettings)unit.flowSettings={welcomeTitle:'ฐานที่ 1 ห้องแยกประเภท',welcomeText:'รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม',awardTitle:'นักสำรวจ AI',hintSeconds:60};
+  (unit.situations || []).forEach(function(s,i){var base=UNIT_ONE_CMS_DEFAULTS[i];if(!base)return;['storyScenes','activityData'].forEach(function(k){if(!s[k])s[k]=JSON.parse(JSON.stringify(base[k]));});});
+}
+enrichLessonCMS(lessons);
 var DEFAULT_LESSONS = JSON.parse(JSON.stringify(lessons));
 var DEFAULT_VIDEO_LINKS = VIDEO_LINKS.slice();
 function curriculumSnapshot() {
@@ -2106,6 +2125,8 @@ function curriculumSnapshot() {
 function applyCurriculum(data) {
   if (!data || data.version !== CURRICULUM_VERSION || !Array.isArray(data.lessons) || data.lessons.length !== DEFAULT_LESSONS.length) return false;
   lessons = JSON.parse(JSON.stringify(data.lessons));
+  if (!lessons[0].unitOneRevision) ['title','mission','situations','simulation','quiz','unitOneRevision'].forEach(function(k){ lessons[0][k] = JSON.parse(JSON.stringify(DEFAULT_LESSONS[0][k])); });
+  enrichLessonCMS(lessons);
   VIDEO_LINKS = Array.isArray(data.videos) ? data.videos.slice(0, lessons.length) : DEFAULT_VIDEO_LINKS.slice();
   while (VIDEO_LINKS.length < lessons.length) VIDEO_LINKS.push('');
   return true;
@@ -2327,7 +2348,8 @@ function normalizeLessonProgress(p) {
     clawPlayed: clawPlays >= 2,
     clawPrize: String(p.clawPrize || storedPrizes[storedPrizes.length - 1] || ''),
     clawPlays: clawPlays,
-    clawPrizes: storedPrizes
+    clawPrizes: storedPrizes,
+    unitOneFlow: p.unitOneFlow && p.unitOneFlow.version === 2 ? JSON.parse(JSON.stringify(p.unitOneFlow)) : null
   };
 }
 
@@ -4351,7 +4373,7 @@ function hintSlotHtml() {
   }
   if (state.hintReady) {
     return '<div class="center pop" style="margin-bottom:16px">' +
-      '<button onclick="showHint()" class="btn whiteb sm" style="border-style:dashed">🤔 ตอบไม่ได้ใช่ไหม? กดขอคำใบ้ได้เลย</button>' +
+      '<button onclick="showHint()" class="btn whiteb sm" style="border-style:dashed">' + (state.currentLesson === 0 ? '💡 ขอคำใบ้' : '💡 ต้องการคำใบ้ไหม?') + '</button>' +
     '</div>';
   }
   return '<p class="soft tiny center" style="margin-bottom:16px">💭 ลองวิเคราะห์ด้วยตัวเองก่อน... ถ้าติดจริง ๆ ปุ่มคำใบ้จะปรากฏขึ้นมาช่วย</p>';
@@ -5505,6 +5527,7 @@ function openLesson(i) {
   state.lessonBonusMode = false;
   state.lessonTab = 'mission';
   state.slideIdx = 0;
+  state.unitOneHintKey = null;
   changeView('lesson');
 }
 
@@ -5513,7 +5536,139 @@ function lessonSituationList(lesson) {
   if (lesson && Array.isArray(lesson.situations) && lesson.situations.length) return lesson.situations;
   return lesson && Array.isArray(lesson.slides) ? lesson.slides : [];
 }
+/* กิจกรรมฝึกไม่เพิ่มหรือลดรางวัลเดิม คะแนนจริงใช้แบบทดสอบท้ายบท */
+var unitOneCards = [
+  ['เครื่องคิดเลข',0],['นาฬิกาปลุกตามเวลาที่ตั้ง',0],['แปลงเซลเซียสเป็นฟาเรนไฮต์ตามสูตร',0],
+  ['แนะนำเพลงจากประวัติการฟัง',1],['กรองสแปมจากรูปแบบอีเมล',1],['รู้จำเสียงพูดเป็นคำบรรยาย',1],
+  ['สร้างภาพจากข้อความ',2],['แชตบอตสร้างชื่อโครงงาน',2],['สร้างมิวสิกวิดีโอใหม่',2]
+];
+/* Unit one: sequential media → activity → two questions → feedback. */
+var unitOneMediaTimer = null;
+function unitOneFlow() {
+  if(state.unitOneReviewFlow && state.unitOneReviewAccount===currentId)return state.unitOneReviewFlow;
+  var p=lessonProgress[0];
+  if(!p.unitOneFlow || p.unitOneFlow.version!==2) p.unitOneFlow={version:2,started:false,index:0,stage:'welcome',items:[0,1,2,3].map(function(){return {picks:[],attempts:0,asks:0,words:[],sentence:'',answers:[],mediaDone:false,done:false,reviewed:false,frame:0};})};
+  return p.unitOneFlow;
+}
+function unitOneReview(){
+  state.unitOneReviewAccount=currentId;state.unitOneReviewFlow={version:2,reviewOnly:true,started:false,index:0,stage:'welcome',items:[0,1,2,3].map(function(){return {picks:[],attempts:0,asks:0,words:[],sentence:'',answers:[],mediaDone:false,done:false,reviewed:false,frame:0};})};state.slideIdx=0;render();
+}
+function unitOneConfig(n){return lessons[0].situations[n===undefined?state.slideIdx:n].activityData;}
+function unitOneSceneList(){var list=lessons[0].situations[state.slideIdx].storyScenes.map(function(x){return [x.speaker,x.text,x.emoji];});var a=unitOneSession();a.frame=Math.max(0,Math.min(a.frame||0,list.length-1));return list;}
+function unitOneCardList(n){return unitOneConfig(n).cards.map(function(c){return [c.text,c.answer];});}
+function unitOneAttemptLimit(){return unitOneConfig().maxAttempts || Infinity;}
+function unitOneSession(){return unitOneFlow().items[state.slideIdx||0];}
+function unitOnePersist(){saveProgress();}
+function unitOneStopMedia(){if(unitOneMediaTimer)clearTimeout(unitOneMediaTimer);unitOneMediaTimer=null;stopSpeak();}
+function unitOneStage(stage){
+  unitOneStopMedia();var f=unitOneFlow();f.stage=stage;f.index=state.slideIdx;
+  state.unitOneHintKey=null;unitOnePersist();render();
+}
+function unitOneBegin(){var f=unitOneFlow();f.started=true;state.slideIdx=f.index;unitOneStage('media');}
+function unitOneMove(i){
+  var f=unitOneFlow();if(i<0||i>3||i>0&&!f.items[i-1].reviewed)return;
+  state.slideIdx=i;f.index=i;
+  unitOneStage(f.items[i].answers.length===2?'feedback':f.items[i].done?'assessment':f.items[i].mediaDone?'activity':'media');
+}
+function unitOnePick(i,value){var a=unitOneSession();if(unitOneFlow().stage!=='activity'||a.done||a.attempts>=unitOneAttemptLimit())return;a.picks[i]=Number(value);unitOnePersist();}
+function unitOneDrop(event,group){event.preventDefault();var text=event.dataTransfer.getData('text/plain');if(!/^\d+$/.test(text))return;var i=Number(text);if(i>=unitOneCardList().length)return;unitOnePick(i,group);render();}
+function unitOneCheck(){
+  var a=unitOneSession(),cards=unitOneCardList();
+  if(unitOneFlow().stage!=='activity'||a.done||(a.attempts>=unitOneAttemptLimit()))return;
+  if(cards.some(function(_,i){return !Number.isInteger(a.picks[i])||a.picks[i]<0||a.picks[i]>=unitOneConfig().groups.length;})){a.feedback='เลือกให้ครบทุกใบก่อนตรวจคำตอบ';render();return;}
+  a.attempts++;var counts=unitOneConfig().groups.map(function(){return 0;});cards.forEach(function(c,i){if(a.picks[i]!==c[1])counts[a.picks[i]]++;});a.done=counts.every(function(n){return n===0;});
+  a.feedback=a.done?'✓ จับคู่ถูกต้องครบแล้ว':counts.map(function(n,i){return 'ช่อง '+(i+1)+' ผิด '+n+' ใบ';}).join(' · ');
+  if(!a.done&&a.attempts===unitOneAttemptLimit())a.feedback+=' · ครบจำนวนครั้งที่กำหนดแล้ว อ่านเฉลยแล้วเริ่มฝึกใหม่ได้';
+  unitOnePersist();render();
+}
+function unitOneRestart(){var a=unitOneSession();if(a.done)return;a.picks=[];a.attempts=0;a.feedback='';unitOnePersist();render();}
+function unitOneAsk(){var a=unitOneSession();if(unitOneFlow().stage!=='activity'||a.asks>=unitOneConfig().outputs.length)return;a.asks++;unitOnePersist();render();}
+function unitOneWord(){
+  var a=unitOneSession(),input=document.getElementById('unit-one-sentence');if(unitOneFlow().stage!=='activity'||a.asks<unitOneConfig().outputs.length||a.words.length>=unitOneConfig().words.length)return;
+  if(!a.words.length){a.sentence=String(input&&input.value||'').trim();if(!a.sentence){alert('พิมพ์ประโยคค้างไว้ก่อน');return;}}
+  a.words.push(unitOneConfig().words[a.words.length]);a.done=a.asks===unitOneConfig().outputs.length&&a.words.length===unitOneConfig().words.length;unitOnePersist();render();
+}
+function unitOneSource(value){var a=unitOneSession();if(unitOneFlow().stage!=='activity')return;if(value==='open')a.opened=true;else if(a.opened){a.checked=true;a.done=value===unitOneConfig().correctValue;a.feedback=a.done?unitOneConfig().success:unitOneConfig().retry;}unitOnePersist();render();}
+function unitOneMediaNext(){
+  if(state.view!=='lesson'||state.currentLesson!==0||state.lessonTab!=='mission'||unitOneFlow().stage!=='media')return;
+  var a=unitOneSession();if(a.frame<unitOneSceneList().length-1){a.frame++;unitOnePersist();render();}else unitOneMediaEnded();
+}
+function unitOnePlay(){
+  if(state.view!=='lesson'||state.currentLesson!==0||state.lessonTab!=='mission'||unitOneFlow().stage!=='media')return;
+  unitOneStopMedia();var a=unitOneSession(),scene=unitOneSceneList()[a.frame];speak(scene[0]+'. '+scene[1]);
+  var account=currentId,index=state.slideIdx;
+  unitOneMediaTimer=setTimeout(function(){if(currentId!==account||state.slideIdx!==index)return;unitOneMediaNext();if(state.view==='lesson'&&state.currentLesson===0&&state.lessonTab==='mission'&&unitOneFlow().stage==='media')unitOnePlay();},10000);
+}
+function unitOneMediaEnded(){if(unitOneFlow().stage!=='media')return;unitOneSession().mediaDone=true;unitOneStage('activity');}
+function unitOneStartAssessment(){if(!unitOneSession().done)return;unitOneStage('assessment');}
+function unitOneAnswer(choice){
+  var f=unitOneFlow(),a=unitOneSession();if(f.stage!=='assessment'||!a.done||a.answers.length>=2||(lessonProgress[0].quizDone&&!f.reviewOnly))return;
+  var q=lessons[0].quiz[state.slideIdx*2+a.answers.length];if(!Number.isInteger(choice)||choice<0||choice>=q.choices.length)return;
+  a.answers.push(choice);state.unitOneHintKey=null;unitOnePersist();
+  if(a.answers.length===2)unitOneStage('feedback');else render();
+}
+function unitOneScore(){return unitOneFlow().items.reduce(function(total,a,n){return total+a.answers.reduce(function(sum,pick,j){return sum+(pick===lessons[0].quiz[n*2+j].answer?1:0);},0);},0);}
+function unitOneContinue(){
+  var a=unitOneSession();if(unitOneFlow().stage!=='feedback'||a.answers.length!==2)return;
+  a.reviewed=true;unitOnePersist();if(state.slideIdx<3)unitOneMove(state.slideIdx+1);else unitOneComplete();
+}
+function unitOneComplete(){
+  var f=unitOneFlow();if(!f.items.every(function(a){return a.done&&a.answers.length===2&&a.reviewed;}))return;
+  var p=lessonProgress[0];if(!p.quizDone){var before=journeySteps();p.postScore=unitOneScore();p.postTotal=8;p.quizAttempted=true;p.quizDone=true;p.scenarioDone=true;p.slideSeen=3;p.stars=1;markJourneyStep(before);}
+  f.stage='end';unitOneStopMedia();unitOnePersist();render();
+}
+function unitOneVideoSource(value){
+  var url=String(value || '').trim();
+  if(!/^https:\/\/[^\s<>"']+$/i.test(url))return null;
+  if(/\.(mp4|webm)(\?|#|$)/i.test(url))return {type:'file',url:url};
+  var yt=url.match(/^https:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[?&#/]|$)/i);
+  if(yt)return {type:'embed',url:'https://www.youtube.com/embed/'+yt[1]};
+  var drive=url.match(/^https:\/\/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)(?:\/|$)/i);
+  if(drive)return {type:'embed',url:'https://drive.google.com/file/d/'+drive[1]+'/preview'};
+  return null;
+}
+function unitOneMediaHtml(slide,a){
+  var source=unitOneVideoSource(slide.videoUrl),video=source&&source.type==='file'?source.url:'';
+  if(source&&source.type==='embed')return '<iframe src="'+escChat(source.url)+'" title="วิดีโอสถานการณ์ '+escChat(slide.id)+'" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:20px"></iframe><p class="soft small">ดูคลิปจบแล้ว กดปุ่มเพื่อเริ่มกิจกรรม หากเล่นไม่ได้ ให้ตรวจสิทธิ์การแชร์วิดีโอกับคุณครู</p><button class="btn mintb" onclick="unitOneMediaEnded()">✓ ดูคลิปจบแล้ว · เริ่มกิจกรรม</button><details><summary>อ่านเนื้อเรื่องประกอบ</summary><p>'+escChat(slide.context)+'</p></details>';
+  if(video&&/\.(mp4|webm)(\?|#|$)/i.test(video))return '<video controls autoplay playsinline onended="unitOneMediaEnded()" style="width:100%;max-height:460px;border-radius:20px" src="'+escChat(video)+'"></video><details><summary>อ่านเนื้อเรื่องประกอบ</summary><p>'+escChat(slide.context)+'</p></details>';
+  var scene=unitOneSceneList()[a.frame];
+  return '<p class="u1-kicker">สื่อเล่าเรื่องทีละฉาก · '+(a.frame+1)+' / '+unitOneSceneList().length+'</p><div class="u1-theater"><span class="u1-character">'+escChat(scene[2])+'</span><div class="u1-bubble"><b>'+escChat(scene[0])+'</b><p>'+escChat(scene[1])+'</p></div></div><div class="u1-actions"><button class="btn blueb sm" onclick="unitOnePlay()">▶ เล่นพร้อมเสียงอ่าน</button><button class="btn whiteb sm" onclick="unitOneStopMedia()">⏸ หยุด</button><button class="btn mintb sm" onclick="unitOneStopMedia();unitOneMediaNext()">'+(a.frame<unitOneSceneList().length-1?'ฉากถัดไป →':'จบเรื่อง · เข้ากิจกรรม →')+'</button></div><p class="soft tiny">ใช้สื่อเล่าเรื่องระหว่างรอคลิปวิดีโอประจำสถานการณ์ · อ่านเองได้หากอุปกรณ์ไม่มีเสียงภาษาไทย</p><details><summary>อ่านเนื้อเรื่องฉบับเต็ม</summary><p style="line-height:2">'+escChat(slide.context)+'</p></details>';
+}
+function unitOneEndHtml(){
+ var p=lessonProgress[0];return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div><p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions"><button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button><button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
+}
+function unitOneHtml(ls){
+ var f=unitOneFlow();if((lessonProgress[0].quizDone&&!f.reviewOnly)||f.stage==='end')return unitOneEndHtml();
+ state.slideIdx=f.index;var n=f.index,a=f.items[n],slide=ls.situations[n],stage=f.stage;
+ if(stage==='welcome')return '<section class="u1-welcome"><p class="u1-kicker">AI GUARDIAN ACADEMY · UNIT 01</p><div class="u1-trophy">🧩</div><h2>'+escChat(ls.flowSettings.welcomeTitle)+'</h2><p>'+escChat(ls.flowSettings.welcomeText)+'</p><div class="u1-roadmap"><span>🎬 ดูเรื่องราว</span><span>🧩 ลงมือทดลอง</span><span>💬 ตอบคำถาม</span><span>🏆 รับรางวัล</span></div><p>สะสมคะแนนและดาวเพื่อรับประกาศเกียรติคุณ “'+escChat(ls.flowSettings.awardTitle)+'”</p>'+ (f.reviewOnly?'<p class="u1-total">โหมดทบทวน · คงคะแนนและรางวัลที่ได้รับแล้ว</p>':'') +'<p class="soft">4 สถานการณ์ · 8 คำถาม · คะแนนเต็ม '+UNIT_POINTS+' · ⭐ 1 ดาว</p><button class="btn blueb" onclick="unitOneBegin()">เริ่มสำรวจ AI →</button></section>';
+ var stages=['media','activity','assessment','feedback'],labels=['ดูสื่อ','ทำกิจกรรม','ตอบคำถาม','สรุปความรู้'];
+ var html='<section class="u1-shell"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){return '<button '+(i>0&&!f.items[i-1].reviewed?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':i>n?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div><ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
+ if(stage==='media')html+=unitOneMediaHtml(slide,a);
+ if(stage==='activity')html+='<h3>ลงมือทดลอง</h3><p>'+escChat(slide.activity)+'</p>'+unitOneActivity(n,a)+(a.done?'<div class="u1-success" role="status">✓ กิจกรรมผ่านแล้ว · ปลดล็อกคำถาม 2 ข้อ</div><button class="btn mintb" onclick="unitOneStartAssessment()">ตอบคำถาม →</button>':'<p class="soft">🔒 ทำกิจกรรมให้ครบเพื่อปลดล็อกคำถาม</p>');
+ if(stage==='assessment'){
+   var j=a.answers.length,q=ls.quiz[n*2+j],key=String(currentId)+'/'+n+'/'+j;
+   if(state.unitOneHintKey!==key){state.unitOneHintKey=key;resetHint(lessons[0].flowSettings.hintSeconds);}
+   html+='<p class="u1-kicker">คำถาม '+q.id+' · '+(j+1)+'/2</p><h3 style="line-height:1.8">'+escChat(q.q)+'</h3><p class="soft tiny">บันทึกคำตอบครั้งแรก · ดูเฉลยหลังตอบครบสองข้อ</p>'+q.choices.map(function(c,i){return '<button class="qopt" onclick="unitOneAnswer('+i+')">'+['ก','ข','ค','ง'][i]+'. '+escChat(c)+'</button>';}).join('')+hintBlock(q.hint);
+ }
+ if(stage==='feedback')html+='<h3>เฉลยและทบทวน</h3>'+ls.quiz.slice(n*2,n*2+2).map(function(q,i){return '<article class="innerbox" style="margin:12px 0;padding:16px"><b>'+q.id+' '+(a.answers[i]===q.answer?'✓ ถูกต้อง':'ลองเรียนรู้จากเฉลย')+'</b><p>คำตอบของคุณ: '+escChat(q.choices[a.answers[i]])+'</p><p><b>เฉลย:</b> '+escChat(q.choices[q.answer])+'</p><p>'+escChat(q.explain)+'</p></article>';}).join('')+'<aside class="u1-knowledge" role="region" aria-label="เกร็ดความรู้"><h3>💡 เกร็ดความรู้</h3><p>'+escChat(slide.learning)+'</p></aside><p class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8 · คิดเป็นคะแนนบทเรียนเมื่อจบหน่วย (เต็ม '+UNIT_POINTS+')</p><button class="btn blueb" onclick="unitOneContinue()">'+(n<3?'⏭️ ไปเหตุการณ์ถัดไป':'🏆 ดูผลสรุปและรับประกาศเกียรติคุณ')+'</button>';
+ return html+'</div></section>';
+}
+function unitOneActivity(n,a) {
+  if(n===0||n===3){
+    var cards=unitOneCardList(n);
+    var groups=unitOneConfig(n).groups;
+    return '<p class="small">ลากการ์ดไปยังช่อง หรือเลือกจากเมนูใต้การ์ดได้ทั้งบนมือถือและคีย์บอร์ด</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+groups.map(function(g,i){return '<div class="innerbox" style="flex:1;min-width:150px;padding:16px" ondragover="event.preventDefault()" ondrop="unitOneDrop(event,'+i+')"><b>'+escChat(g)+'</b><p>'+cards.filter(function(c,k){return a.picks[k]===i;}).map(function(c){return escChat(c[0]);}).join('<br>')+'</p></div>';}).join('')+'</div>'+cards.map(function(c,i){return '<label class="innerbox" draggable="true" ondragstart="event.dataTransfer.setData(\'text/plain\',\''+i+'\')" style="display:block;margin:8px 0;padding:12px">'+escChat(c[0])+' <select aria-label="จัดประเภท '+escChat(c[0])+'" onchange="unitOnePick('+i+',this.value)" '+(a.done||a.attempts>=unitOneAttemptLimit()?'disabled':'')+'><option value="-1">เลือกช่อง</option>'+groups.map(function(g,j){return '<option value="'+j+'" '+(a.picks[i]===j?'selected':'')+'>'+escChat(g)+'</option>';}).join('')+'</select></label>';}).join('')+'<button class="btn blueb sm" onclick="unitOneCheck()" '+(a.done||a.attempts>=unitOneAttemptLimit()?'disabled':'')+'>ตรวจคำตอบ</button><p role="status">'+(a.feedback||'')+'</p>'+(n===0?'<p class="tiny">จำนวนครั้งที่ตรวจได้ '+unitOneConfig(n).maxAttempts+' · ตรวจแล้ว '+a.attempts+'</p>':'')+(!a.done&&a.attempts>=unitOneAttemptLimit()?'<details><summary>ดูเฉลยเพื่อทบทวน</summary>'+cards.map(function(c){return escChat(c[0])+' → '+escChat(groups[c[1]]);}).join('<br>')+'</details><button class="btn whiteb sm" onclick="unitOneRestart()">เริ่มฝึกชุดใหม่</button>':'');
+  }
+  if(n===1){
+    var outputs=unitOneConfig(n).outputs;
+    return '<p class="soft small">แบบจำลองเพื่อการเรียนรู้: ใช้ผลตัวอย่างที่เตรียมไว้ ไม่ได้เชื่อมต่อ AI จริง</p><p><b>พรอมต์เดิม:</b> '+escChat(unitOneConfig(n).prompt)+'</p><button class="btn blueb sm" onclick="unitOneAsk()" '+(a.asks>=unitOneConfig().outputs.length?'disabled':'')+'>ถามซ้ำ '+a.asks+'/'+outputs.length+'</button><ol>'+outputs.slice(0,a.asks).map(function(o){return '<li>'+escChat(o)+'</li>';}).join('')+'</ol><label>ประโยคค้างไว้ <input id="unit-one-sentence" value="'+escChat(a.sentence||unitOneConfig(n).sentence)+'" '+(a.words.length?'disabled':'')+' style="width:100%"></label><p class="tiny">'+escChat(unitOneConfig(n).note)+'</p><button class="btn blueb sm" onclick="unitOneWord()" '+(a.asks<unitOneConfig().outputs.length||a.words.length>=unitOneConfig().words.length?'disabled':'')+'>เติมประโยคเดิม '+a.words.length+'/'+unitOneConfig(n).words.length+'</button><table style="width:100%"><caption>ตารางบันทึกการทดลอง '+(outputs.length+unitOneConfig(n).words.length)+' ช่อง</caption><tr><th>ครั้ง</th><th>คำที่เติม</th></tr>'+outputs.map(function(w,i){return '<tr><td>ถามซ้ำ '+(i+1)+'</td><td>'+(i<a.asks?escChat(w):'—')+'</td></tr>';}).join('')+unitOneConfig(n).words.map(function(_,i){return '<tr><td>เติมคำ '+(i+1)+'</td><td>'+(escChat(a.words[i]||'—'))+'</td></tr>';}).join('')+'</table>';
+  }
+  var source=unitOneConfig(n);
+  return '<div class="innerbox"><b>หน้าค้นหาจำลอง · ข้อมูลเพื่อการเรียนรู้</b><p>'+escChat(source.summary)+'</p><button class="btn whiteb sm" onclick="unitOneSource(\'open\')">🔗 เปิดแหล่งที่มาใต้กล่องสรุป</button></div>'+(a.opened?'<div class="innerbox" style="margin-top:12px"><h4>'+escChat(source.sourceTitle)+'</h4><p>'+escChat(source.published)+'</p><p>'+escChat(source.comparison)+'</p><label>'+escChat(source.question)+' <select onchange="unitOneSource(this.value)"><option value="">เลือกคำตอบ</option>'+source.options.map(function(v){return '<option value="'+escChat(v)+'">'+escChat(v)+'</option>';}).join('')+'</select></label><p role="status">'+escChat(a.feedback||'')+'</p></div>':'');
+}
+function lessonSituationVideoHtml(slide){var v=unitOneVideoSource(slide.videoUrl);if(!v)return '';return v.type==='file'?'<video controls playsinline style="width:100%;max-height:420px" src="'+escChat(v.url)+'"></video>':'<iframe title="วิดีโอสถานการณ์" style="width:100%;aspect-ratio:16/9;border:0" src="'+escChat(v.url)+'" allowfullscreen></iframe>';}
 function lessonMissionHtml(ls, t) {
+  if (state.currentLesson === 0) return unitOneHtml(ls);
   var sim = ls.simulation || {};
   var mission = ls.mission || {};
   var progress = normalizeLessonProgress(lessonProgress[state.currentLesson]);
@@ -5535,6 +5690,7 @@ function lessonMissionHtml(ls, t) {
       '<div class="center" style="margin-bottom:14px"><span style="font-size:50px">' + (slide.emoji || '🧑‍🎓') + '</span><p class="tiny ' + t.deep + '" style="font-weight:700;margin-top:6px">สถานการณ์ ' + (slide.id || (idx + 1)) + ' · ' + (idx + 1) + ' / ' + situations.length + '</p></div>' +
       '<h3 class="' + t.deep + '" style="font-size:23px;text-align:center;line-height:1.45">' + slide.title + '</h3>' +
       '<p class="soft tiny center" style="margin-top:5px">📍 ' + (slide.place || sim.place || 'สถานการณ์ใกล้ตัว') + '</p>' +
+      lessonSituationVideoHtml(slide) +
       '<p class="small" style="line-height:2;text-align:left;margin-top:14px"><b>เรื่องราว:</b> ' + (slide.context || slide.text || sim.context || '') + '</p>' +
       '<div class="innerbox" style="margin-top:14px"><p class="small" style="line-height:1.9"><b class="' + t.deep + '">🤔 ประเด็นชวนคิด:</b> ' + focus + '</p><p class="small" style="line-height:1.9;margin-top:8px"><b class="t-mint">💡 สิ่งที่ควรเรียนรู้:</b> ' + learning + '</p></div>' +
       '<details class="innerbox" style="margin-top:12px"><summary class="small ' + t.deep + '" style="cursor:pointer;font-weight:700">💭 คำใบ้สำหรับคิดต่อ</summary><p class="soft small" style="line-height:1.9;margin-top:8px">' + hint + '</p></details>' +
@@ -5613,6 +5769,7 @@ function returnToLessonBonus() {
   changeView('lesson');
 }
 function lessonTabBar(p) {
+  if(state.currentLesson===0)return '<div class="lesson-inner-menu"><button class="tab active" onclick="setTab(\'mission\')">🗺️ เส้นทางหน่วยที่ 1</button>'+(p.quizDone?'<button class="tab" onclick="openLessonBonus()">🎁 โบนัสภารกิจท้ายบท</button>':'')+'</div>';
   var quizUnlocked = p.quizDone || lessonMediaCompleted(p);
   return '<div class="lesson-inner-menu">' +
     '<div class="tabbar" role="navigation" aria-label="เมนูย่อยบทเรียน">' +
@@ -5629,6 +5786,7 @@ function setTab(tab) {
   render();
 }
 function tryOpenQuiz() {
+  if(state.currentLesson===0&&!lessonProgress[0].quizDone){state.lessonTab='mission';render();return;}
   var p = normalizeLessonProgress(lessonProgress[state.currentLesson]);
   if (p.quizDone) {
     state.quiz = { mode:'mid', qIndex:lessons[state.currentLesson].quiz.length - 1, correct:p.postScore || 0, answered:true, picked:null, completed:true };
@@ -5832,6 +5990,7 @@ function finishSlides() {
 function startQuiz(mode, lessonIndex) {
   if (typeof lessonIndex === 'number') state.currentLesson = lessonIndex;
   mode = mode || 'mid';
+  if(state.currentLesson===0&&!lessonProgress[0].quizDone){state.lessonTab='mission';changeView('lesson');return;}
   var saved = normalizeLessonProgress(lessonProgress[state.currentLesson]);
   if (saved.quizDone) {
     state.quiz = { mode:mode, qIndex:lessons[state.currentLesson].quiz.length - 1, correct:saved.postScore || 0, answered:true, picked:null, completed:true };
@@ -5845,7 +6004,7 @@ function startQuiz(mode, lessonIndex) {
     return;
   }
   state.quiz = { mode: mode, qIndex: 0, correct: 0, answered: false, picked: null };
-  resetHint(12);
+  resetHint(state.currentLesson === 0 ? 60 : 12);
   changeView('quiz');
 }
 
@@ -5917,7 +6076,7 @@ function nextQuestion() {
     qz.qIndex++;
     qz.answered = false;
     qz.picked = null;
-    resetHint(12);
+    resetHint(state.currentLesson === 0 ? 60 : 12);
     render();
   } else {
     var p = lessonProgress[state.currentLesson];
@@ -6701,11 +6860,11 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./teacher-admin.js?v=20260917-stablelesson"></script>
+<script src="./teacher-admin.js?v=20260918-save-all"></script>
 <script src="./google-login.js"></script>
 <script src="./chat-history.js?v=stable-20260916-friendly"></script>
 <script src="./student-reports.js?v=20260917-flow"></script>
-<script src="./teacher-workspace.js?v=20260916-teacher2"></script>
+<script src="./teacher-workspace.js?v=20260918-save-all"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
 try {
