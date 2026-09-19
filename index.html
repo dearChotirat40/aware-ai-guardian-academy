@@ -2276,6 +2276,7 @@ function enrichLessonCMS(items){
   if(Array.isArray(unit.quiz)){unit.quiz[6]=JSON.parse(JSON.stringify(SCENE_ONE_FOUR_QUIZ[0]));unit.quiz[7]=JSON.parse(JSON.stringify(SCENE_ONE_FOUR_QUIZ[1]));}
   if(!unit.flowSettings)unit.flowSettings={welcomeTitle:'ฐานที่ 1 ห้องแยกประเภท',welcomeText:'รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม',awardTitle:'นักสำรวจ AI',hintSeconds:60};
   unit.flowSettings.initialOpenLessons=1;
+  unit.flowSettings.unitOneSubsectionsInitiallyOpen=true;
   unit.flowSettings.requirePreviousCompletion=true;
   unit.flowSettings.requireBonusForNext=true;
   (unit.situations || []).forEach(function(s,i){var base=UNIT_ONE_CMS_DEFAULTS[i];if(!base)return;['storyScenes','activityData'].forEach(function(k){if(!s[k])s[k]=JSON.parse(JSON.stringify(base[k]));});});
@@ -5402,6 +5403,7 @@ function pretestCompleted() {
   return !!(s && s.assessments && s.assessments.pre && s.assessments.pre.done);
 }
 var UNIT_ONE_TEST_OPEN = false;
+var UNIT_ONE_SUBSECTIONS_OPEN = true;
 function lessonCompletedForUnlock(index) {
   var p = normalizeLessonProgress(lessonProgress[index]);
   return !!(p.quizDone && scenarioCompleted(index));
@@ -5736,7 +5738,7 @@ function unitOneStage(stage){
 }
 function unitOneBegin(){var f=unitOneFlow();f.started=true;state.slideIdx=f.index;unitOneStage('media');}
 function unitOneMove(i){
-  var f=unitOneFlow();if(i<0||i>3||i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN)return;
+  var f=unitOneFlow();if(i<0||i>3||i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN&&!UNIT_ONE_SUBSECTIONS_OPEN)return;
   state.slideIdx=i;f.index=i;
   unitOneStage(f.items[i].answers.length===2?'feedback':f.items[i].done?'assessment':f.items[i].mediaDone?'activity':'media');
 }
@@ -5884,7 +5886,7 @@ function unitOneHtml(ls){
  state.slideIdx=f.index;var n=f.index,a=f.items[n],slide=ls.situations[n],stage=f.stage;
  if(stage==='welcome')return '<section class="u1-welcome"><p class="u1-kicker">AI GUARDIAN ACADEMY · UNIT 01</p><figure class="u1-intro-art"><img src="./public/unit-one-introduction.png" width="1254" height="1254" alt="รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม พร้อมน้องเอไอ: ค้นหาข้อมูล สร้างสรรค์ไอเดีย เรียนรู้และแก้ปัญหา และใช้ AI ในชีวิตประจำวัน" decoding="async"></figure><h2>'+escChat(ls.flowSettings.welcomeTitle)+'</h2><p>'+escChat(ls.flowSettings.welcomeText)+'</p><div class="u1-roadmap"><span>🎬 ดูเรื่องราว</span><span>🧩 ลงมือทดลอง</span><span>💬 ตอบคำถาม</span><span>🏆 รับรางวัล</span></div><p>สะสมคะแนนและดาวเพื่อรับประกาศเกียรติคุณ “'+escChat(ls.flowSettings.awardTitle)+'”</p>'+ (f.reviewOnly?'<p class="u1-total">โหมดทบทวน / ทดสอบ · คงคะแนนและรางวัลที่ได้รับแล้ว</p>':'') +'<p class="soft">4 สถานการณ์ · 8 คำถาม · คะแนนเต็ม '+UNIT_POINTS+' · ⭐ 1 ดาว</p><button class="btn blueb" onclick="unitOneBegin()">เริ่มสำรวจ AI →</button></section>';
  var stages=['media','activity','assessment','feedback'],labels=['ดูสื่อ','ทำกิจกรรม','ตอบคำถาม','สรุปความรู้'];
- var html='<section class="u1-shell u1-stage-'+stage+'"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){return '<button '+(i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':i>n&&!UNIT_ONE_TEST_OPEN?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div>'+(slide.objective?'<p class="innerbox small" style="margin:0 0 14px;padding:11px 14px"><b>🎯 จุดประสงค์การเรียนรู้:</b> '+escChat(slide.objective)+'</p>':'')+'<ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
+ var html='<section class="u1-shell u1-stage-'+stage+'"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){var locked=i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN&&!UNIT_ONE_SUBSECTIONS_OPEN;return '<button '+(locked?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':locked?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div>'+(slide.objective?'<p class="innerbox small" style="margin:0 0 14px;padding:11px 14px"><b>🎯 จุดประสงค์การเรียนรู้:</b> '+escChat(slide.objective)+'</p>':'')+'<ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
  if(UNIT_ONE_TEST_OPEN)html+='<div class="u1-actions"><span>🧪 ทดสอบบทที่ 1 · ไม่เปลี่ยนคะแนนเดิม</span><button class="btn whiteb sm" onclick="unitOneStage(\'media\')">ดูสื่อ</button><button class="btn whiteb sm" onclick="unitOneStage(\'activity\')">กิจกรรม</button><button class="btn whiteb sm" onclick="unitOneTestQuestions()">ลองคำถาม</button></div>';
  if(stage==='media')html+=unitOneMediaHtml(slide,a);
  if(stage==='activity')html+='<h3>ลงมือทดลอง</h3><p>'+escChat(slide.activity)+'</p>'+unitOneActivity(n,a)+'<div id="u1-activity-status">'+unitOneActivityStatusHtml(a)+'</div>';

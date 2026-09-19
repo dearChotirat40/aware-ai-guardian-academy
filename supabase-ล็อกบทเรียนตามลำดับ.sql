@@ -12,6 +12,7 @@ set data = jsonb_set(
              '{lessons,0,flowSettings}',
              coalesce(data #> '{lessons,0,flowSettings}', '{}'::jsonb) || jsonb_build_object(
                'initialOpenLessons', 1,
+               'unitOneSubsectionsInitiallyOpen', true,
                'requirePreviousCompletion', true,
                'requireBonusForNext', true
              ),
