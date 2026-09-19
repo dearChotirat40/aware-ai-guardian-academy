@@ -7160,7 +7160,7 @@ function makeChoice(choiceIndex) {
 
 </script>
 <script src="./teacher-admin.js?v=20260919-teacher-dashboard-2"></script>
-<script src="./google-login.js"></script>
+<script src="./google-login.js?v=20260919-cross-browser"></script>
 <script src="./chat-history.js?v=stable-20260916-friendly"></script>
 <script src="./student-reports.js?v=20260919-all-reports-2"></script>
 <script src="./teacher-workspace.js?v=20260918-phone-menu"></script>
@@ -7186,7 +7186,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
     var supabase = supabaseSdk.createClient(
       window.SUPABASE_CONFIG.url,
       window.SUPABASE_CONFIG.publishableKey,
-      { auth: { flowType: "pkce", detectSessionInUrl: true, persistSession: true } }
+      { auth: { flowType: "pkce", detectSessionInUrl: false, persistSession: true } }
     );
 
     function clean(value) {
@@ -7222,7 +7222,12 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
           return response.json();
         }).then(function(settings) {
           if (!settings.external || !settings.external.google) throw new Error("Google provider not enabled");
-          return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:new URL('./', window.location.href).href.split(/[?#]/)[0],queryParams:{prompt:"select_account"}}}).then(check);
+          var redirectUrl = new URL(window.location.href);
+          redirectUrl.search = '';
+          redirectUrl.hash = '';
+          redirectUrl.pathname = redirectUrl.pathname.replace(/[^/]*$/, '');
+          try { sessionStorage.setItem('awareai_google_login_pending', '1'); } catch(e) {}
+          return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:redirectUrl.href,queryParams:{prompt:"select_account"}}}).then(check);
         });
       },
       teacherManage: function(action, payload) {
@@ -7356,8 +7361,28 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       }};
     }
 
-    supabase.auth.getSession().then(function(result) {
-      var session = check(result).session;
+    var backendUserId = null;
+    function publishBackend(session) {
+      var nextId = session && session.user && session.user.id;
+      if (!nextId || nextId === backendUserId) return;
+      backendUserId = nextId;
+      window.onFirebaseReady(buildBackend(session));
+    }
+    function cleanOAuthUrl() {
+      var url = new URL(window.location.href);
+      ['code','error','error_code','error_description'].forEach(function(key){ url.searchParams.delete(key); });
+      if (/access_token|refresh_token|error/.test(url.hash)) url.hash = '';
+      history.replaceState(null, '', url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : '') + url.hash);
+      try { sessionStorage.removeItem('awareai_google_login_pending'); } catch(e) {}
+    }
+    var callbackCode = new URLSearchParams(window.location.search).get('code');
+    var initialSession = callbackCode
+      ? supabase.auth.exchangeCodeForSession(callbackCode).then(function(result){ cleanOAuthUrl(); return check(result).session; })
+      : supabase.auth.getSession().then(function(result){ return check(result).session; });
+    supabase.auth.onAuthStateChange(function(event, session) {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') publishBackend(session);
+    });
+    initialSession.then(function(session) {
       if (session) return session;
       return supabase.auth.signInAnonymously().then(function(signInResult){ return check(signInResult).session; });
     }).then(function(session){
@@ -7379,7 +7404,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
           return response.json();
         });
       };
-      window.onFirebaseReady(buildBackend(session));
+      publishBackend(session);
     });
   }).catch(function(error) {
     window.onFirebaseError(error);

@@ -18,9 +18,9 @@
     if (!card) return;
     var box = document.createElement('div');
     box.style.cssText = 'margin-top:16px;border-top:1px solid #ddd;padding-top:14px';
-    box.innerHTML = '<button id="google-login-button" type="button" class="btn whiteb" style="width:100%" onclick="loginWithGoogle()">เข้าสู่ระบบด้วย Google</button>' +
+    box.innerHTML = '<button id="google-login-button" type="button" class="btn whiteb" style="width:100%" onclick="loginWithGoogle()">🔐 เข้าสู่ระบบด้วย Google</button>' +
       '<p id="google-login-status" role="status" class="soft tiny center" style="margin-top:10px"></p>' +
-      '<p class="soft tiny center" style="margin-top:8px">ครั้งแรกใช้รหัสจากครูเพื่อเชื่อมบัญชีเดิม คะแนนและของสะสมจะอยู่ครบ</p>' +
+      '<p class="soft tiny center" style="margin-top:8px">ครั้งแรกใช้รหัสจากครูเพื่อเชื่อมบัญชีเดิม แล้วกลับมาใช้บัญชีและชื่อเล่นเดียวกันได้บน Chrome, Safari, Edge และเว็บที่ติดตั้งเป็นแอป</p>' +
       (googleAccount ? '<button type="button" class="btn whiteb sm" onclick="signOutGoogle()">ออกจากบัญชี Google / เปลี่ยนบัญชี</button>' : '');
     card.appendChild(box);
     status(message);
