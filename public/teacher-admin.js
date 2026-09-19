@@ -206,7 +206,7 @@
       h+='<div class="teacher-field-groups">'+Object.keys(edit.value).map(function(k){return '<section class="teacher-field-group">'+field(edit.value[k],[k],labels[k] || k)+'</section>';}).join('')+'</div>';
     } else {
       if(edit.key==='lessons'){
-        h+='<section class="innerbox" style="padding:18px;margin:16px 0"><h3>🎬 วิดีโอแยกสถานการณ์ · ทุกฐาน</h3><p>วางลิงก์ YouTube, Google Drive หรือไฟล์ .mp4 / .webm (https://) แล้วกด “บันทึกลงฐานข้อมูล” เพื่อบันทึกทุกฐานในครั้งเดียว</p><p class="soft small">เว้นว่างเพื่อใส่คลิปภายหลัง · ขยายรายการบทเรียนด้านล่างเพื่อแก้เนื้อเรื่อง กิจกรรม คำถาม เฉลย คำใบ้ และเกร็ดความรู้</p>';
+        h+='<section class="innerbox" style="padding:18px;margin:16px 0"><h3>🎬 วิดีโอแยกสถานการณ์ · ทุกฐาน</h3><p>วางลิงก์ YouTube, Google Drive หรือไฟล์ .mp4 / .webm (https://) แล้วกด “บันทึกลงฐานข้อมูล” เพื่อบันทึกทุกฐานในครั้งเดียว</p><p class="soft small">เว้นว่างเพื่อใส่คลิปภายหลัง · ขยายรายการบทเรียนด้านล่างเพื่อแก้เนื้อเรื่อง กิจกรรม คำถาม เฉลย คำใบ้ และ Did you know?</p>';
         edit.value.forEach(function(l,li){h+='<details '+(li===0?'open':'')+'><summary>'+esc(l.title)+'</summary>';(l.situations || []).forEach(function(s,i){h+=field(s.videoUrl,[li,'situations',i,'videoUrl'],s.id+' '+s.title);});h+='</details>';});
         h+='</section>';
       }
