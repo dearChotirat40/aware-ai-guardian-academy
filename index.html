@@ -1610,6 +1610,22 @@ body #app .teacher-trigger span:first-child{font-size:24px}
 .u1-burgundy .u1-lockscreen{min-height:0;flex:1;display:flex;flex-direction:column;justify-content:center}
 .u1-chat-continue{min-height:64px}.u1-chat-quick{min-height:42px}.u1-burgundy button{transition:background-color .15s,opacity .15s;touch-action:manipulation}.u1-burgundy button:hover,.u1-burgundy button:active{transform:none!important}
 @media(max-width:600px){.u1-burgundy{height:76svh;min-height:420px}.u1-burgundy .u1-lockscreen{padding:20px 16px}.u1-lockscreen>strong{margin:8px 0 25px}.u1-notification{margin-bottom:20px}}
+.teacher-control-center{margin-bottom:20px;padding:22px;border:2px solid #8bd7bf;background:linear-gradient(145deg,#f3fff9,#e8f8ff)}
+.teacher-control-head,.teacher-report-home{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.teacher-control-head h2,.teacher-report-home h2{margin:3px 0 6px;font-size:clamp(1.45rem,3vw,2rem)}
+.teacher-eyebrow{font-size:.72rem;font-weight:900;letter-spacing:.14em;color:#287b8e}
+.teacher-quick-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin:18px 0}
+.teacher-quick{min-height:138px;border:2px solid #bfd3df;border-radius:20px;background:#fff;padding:16px;text-align:left;cursor:pointer;box-shadow:0 6px 0 rgba(34,72,94,.1);transition:transform .16s,box-shadow .16s}
+.teacher-quick:hover,.teacher-quick:focus-visible{transform:translateY(-3px);box-shadow:0 9px 0 rgba(34,72,94,.12);outline:3px solid #ffd35a}
+.teacher-quick span{display:block;font-size:2rem;margin-bottom:8px}.teacher-quick b{display:block;font-size:1.05rem;color:#173f59}.teacher-quick small{display:block;margin-top:5px;line-height:1.5;color:#587181}
+.teacher-quick.report{border-color:#76b9ef;background:#eef8ff}.teacher-quick.students{border-color:#79d6bb;background:#effff8}.teacher-quick.content{border-color:#efb3d0;background:#fff2f8}.teacher-quick.rewards{border-color:#f2cc65;background:#fff9e7}
+.teacher-save-status{padding:10px 14px;border-radius:12px;background:#fff;border:1px solid #bfd7df;font-weight:700}
+.teacher-tool-box{scroll-margin-top:16px;background:#fff;border:1px solid #b9d9d0;border-radius:18px;padding:16px;margin-top:14px}.teacher-tool-box h3{margin-bottom:10px}
+.teacher-tool-row,.teacher-report-actions{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:10px 0}.teacher-tool-row label{display:grid;gap:5px;min-width:min(100%,280px);flex:1}.teacher-tool-row label>span{font-weight:800;font-size:.85rem}
+.teacher-report-home{margin-bottom:16px;padding:22px;border:2px solid #83bfe8;background:linear-gradient(135deg,#eef8ff,#fff)}.teacher-report-home>div:first-child{flex:1;min-width:260px}.teacher-report-actions{align-items:stretch;max-width:370px}.teacher-report-actions .btn{flex:1 1 100%;justify-content:center;min-height:46px}
+#teacher-roster-anchor,#teacher-content-menu,#teacher-reset-tools{scroll-margin-top:18px}
+@media(max-width:760px){.teacher-quick-grid{grid-template-columns:repeat(2,1fr)}.teacher-control-center{padding:14px}.teacher-quick{min-height:124px;padding:13px}.teacher-report-actions{width:100%;max-width:none}}
+@media(max-width:420px){.teacher-quick-grid{grid-template-columns:1fr}.teacher-quick{min-height:auto}.teacher-tool-row .btn{width:100%}}
 </style>
 </head>
 <body>
@@ -7143,10 +7159,10 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./public/teacher-admin.js?v=20260919-all-accounts"></script>
+<script src="./public/teacher-admin.js?v=20260919-teacher-dashboard"></script>
 <script src="./public/google-login.js"></script>
 <script src="./public/chat-history.js?v=stable-20260916-friendly"></script>
-<script src="./public/student-reports.js?v=20260919-attempts"></script>
+<script src="./public/student-reports.js?v=20260919-all-reports"></script>
 <script src="./public/teacher-workspace.js?v=20260918-phone-menu"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */

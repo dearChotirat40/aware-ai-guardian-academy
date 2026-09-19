@@ -5,6 +5,12 @@
  function date(v){return new Date(v).toLocaleString('th-TH');}
  function status(text){var e=document.getElementById('report-status');if(e)e.textContent=text;}
  function host(){return document.getElementById('report-content');}
+ function csv(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+ window.downloadAllStudentSummary=function(){
+  var headers=['รหัสนักเรียน','เลขที่','ชื่อเล่น','ทำก่อนเรียน','คะแนนก่อนเรียน','บทเรียนที่จบ','คะแนนบทเรียนรวม','ดาวพรอมต์','คะแนนภารกิจ','จำนวนเหรียญ','หน้าล่าสุด'];
+  var rows=Object.keys(db.students).sort().map(function(id){var s=db.students[id]||{},a=s.assessments&&s.assessments.pre||{},lp=s.lp||[];return [s.code||id.replace(/^roster_/,''),s.num||'',s.nickname||'',a.done?'ทำแล้ว':'ยังไม่ทำ',a.done?(a.score||0)+'/'+(a.total||0):'',lp.filter(function(p){return p&&p.quizDone;}).length,lp.reduce(function(n,p){return n+Number(p&&p.postScore||0);},0),(s.pStars||[]).reduce(function(n,x){return n+Number(x||0);},0),s.score||0,(s.badgeIds||[]).length,s.last||'-'];});
+  var body='\ufeff'+[headers].concat(rows).map(function(r){return r.map(csv).join(',');}).join('\n');var u=URL.createObjectURL(new Blob([body],{type:'text/csv;charset=utf-8'}));var a=document.createElement('a');a.href=u;a.download='รายงานสรุปนักเรียนทั้งหมด.csv';a.click();setTimeout(function(){URL.revokeObjectURL(u);},1000);
+ };
  window.closeReportArchive=function(){generation++;var e=document.getElementById('report-archive');if(e)e.remove();currentReport=null;};
  window.openReportArchive=async function(teacher){
   if(!firebaseBackend)return;
@@ -43,5 +49,5 @@
  var oldLogout=logout; logout=function(){closeReportArchive();return oldLogout();};
  var oldApply=applyStudent; applyStudent=function(id){if(id!==currentId)closeReportArchive();return oldApply(id);};
  var teacherRender=renderTeacher;
- renderTeacher=function(){teacherRender();var h=document.querySelector('.body-area');if(h)h.insertAdjacentHTML('afterbegin','<section id="teacher-report-panel" class="pcard blue" style="margin-bottom:16px"><h3>📁 คลังรายงานรายบุคคล</h3><p>ข้อมูลล่าสุดของทุกคนและรายงานย้อนหลัง รวมประวัติสนทนา</p><button class="btn blueb" onclick="openReportArchive(true)">เปิดรายงานนักเรียนทุกคน</button></section>');};
+ renderTeacher=function(){teacherRender();var h=document.querySelector('.body-area');if(h)h.insertAdjacentHTML('afterbegin','<section id="teacher-report-panel" class="pcard blue teacher-report-home"><div><span class="teacher-eyebrow">ALL REPORTS</span><h2>📊 รายงานทั้งหมด</h2><p>ดูข้อมูลล่าสุดและรายงานย้อนหลังของทุกคน รวมผลก่อน–หลังเรียน บทเรียน กิจกรรม ความพยายาม แชท เหรียญ และ BOT</p></div><div class="teacher-report-actions"><button class="btn blueb" onclick="openReportArchive(true)">📂 เปิดคลังรายงานทั้งหมด</button><button class="btn mintb" onclick="downloadAllStudentSummary()">⬇️ ดาวน์โหลดสรุปทุกบัญชี CSV</button><button class="btn whiteb" onclick="window.print()">🖨️ พิมพ์หน้านี้ / บันทึก PDF</button></div></section><div id="teacher-roster-anchor"></div>');};
 }());
