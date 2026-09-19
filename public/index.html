@@ -2239,8 +2239,8 @@ DOCUMENT_SITUATIONS.forEach(function(unit, index){
 /* เนื้อหาที่ครูแก้จากหน้ารายงาน: เก็บสำรองในเครื่อง และซิงก์ฐานข้อมูลเมื่อเชื่อมต่อได้ */
 /* ใช้เนื้อหาจากไฟล์ “เนื้อหาบทเรียนความรู้เท่าทัน AI ม4” เป็นค่าเริ่มต้น
    เปลี่ยนรุ่นเพื่อไม่ให้สำเนาเดิมบนเบราว์เซอร์หรือฐานข้อมูลทับบทเรียนตามไฟล์ */
-var CURRICULUM_VERSION = 5;
-var CURRICULUM_KEY = 'awareai_curriculum_v5';
+var CURRICULUM_VERSION = 6;
+var CURRICULUM_KEY = 'awareai_curriculum_v6';
 lessons[0].situations.forEach(function(s){s.videoUrl = s.videoUrl || '';});
 lessons[0].unitOneRevision = 1;
 var UNIT_ONE_CMS_DEFAULTS = [{"storyScenes": [{"speaker": "ครูพริม", "text": "เปิดโทรศัพท์ แล้วเขียนฟีเจอร์ที่คิดว่าเป็น AI มา 5 อย่าง", "emoji": "🧑‍🏫"}, {"speaker": "ต้น", "text": "ฟิลเตอร์แต่งหน้า ลบคนออกจากรูป คำบรรยายอัตโนมัติ น้องเอไอ และเครื่องคิดเลข!", "emoji": "👦"}, {"speaker": "มีนา", "text": "เครื่องคิดเลข 7 × 8 ได้ 56 ทุกครั้ง แต่น้องเอไอตั้งชื่อโครงงานใหม่ได้หลายแบบ", "emoji": "👧"}, {"speaker": "ครูพริม", "text": "ลองแยกลง 3 ช่อง: โปรแกรมทั่วไป · AI เฉพาะทาง · AI สร้างของใหม่", "emoji": "🧩"}], "activityData": {"groups": ["โปรแกรมทั่วไป", "AI ทำนาย / จำแนก", "AI สร้างเนื้อหาใหม่"], "cards": [{"text": "เครื่องคิดเลข", "answer": 0}, {"text": "นาฬิกาปลุกตามเวลาที่ตั้ง", "answer": 0}, {"text": "แปลงเซลเซียสเป็นฟาเรนไฮต์ตามสูตร", "answer": 0}, {"text": "แนะนำเพลงจากประวัติการฟัง", "answer": 1}, {"text": "กรองสแปมจากรูปแบบอีเมล", "answer": 1}, {"text": "รู้จำเสียงพูดเป็นคำบรรยาย", "answer": 1}, {"text": "สร้างภาพจากข้อความ", "answer": 2}, {"text": "แชตบอตสร้างชื่อโครงงาน", "answer": 2}, {"text": "สร้างมิวสิกวิดีโอใหม่", "answer": 2}], "maxAttempts": 3}}, {"storyScenes": [{"speaker": "ต้น", "text": "แนะนำหัวข้อโครงงานวิทยาศาสตร์ ม.4 — ถามเหมือนเดิม 3 ครั้ง ทำไมได้หัวข้อต่างกัน?", "emoji": "👦"}, {"speaker": "มีนา", "text": "ลองเติมประโยค “วันนี้อากาศร้อน ฉันจึงอยาก” ซ้ำ 5 ครั้งกัน", "emoji": "👧"}, {"speaker": "น้องเอไอ", "text": "ดื่ม · ว่าย · นอน · กิน · อาบ", "emoji": "🤖"}, {"speaker": "ครูพริม", "text": "คำแตกต่างกัน แต่เข้ากับบริบท ผลนี้บอกอะไรเกี่ยวกับการเลือกคำ?", "emoji": "🧑‍🏫"}], "activityData": {"prompt": "แนะนำหัวข้อโครงงานวิทยาศาสตร์ ม.4", "sentence": "วันนี้อากาศร้อน ฉันจึงอยาก", "outputs": ["การศึกษาการเจริญเติบโตของพืช · การลดขยะพลาสติกในโรงเรียน · ผลของแสงต่อการสังเคราะห์แสง · การสำรวจคุณภาพน้ำในชุมชน · การใช้พลังงานทดแทนในโรงเรียน", "การศึกษาการเจริญเติบโตของพืช · สมบัติการดูดซับของถ่านกัมมันต์ · การพัฒนาผลิตภัณฑ์จากวัสดุเหลือใช้ · การตรวจวัดคุณภาพอากาศ · ผลของอุณหภูมิต่อการงอกของเมล็ด", "การเพาะเลี้ยงจุลินทรีย์ในอาหาร · การลดขยะพลาสติกในโรงเรียน · การพัฒนาพลังงานจากกากพืช · การตรวจวัดคุณภาพน้ำในชุมชน · การใช้สมุนไพรในการยับยั้งเชื้อแบคทีเรีย"], "words": ["ดื่ม", "ว่าย", "นอน", "กิน", "อาบ"], "note": "คำตัวอย่างชุดนี้ออกแบบสำหรับบริบทอากาศร้อน ลองสังเกตว่าคำเข้ากับประโยคที่คุณพิมพ์หรือไม่"}}, {"storyScenes": [{"speaker": "มีนา", "text": "รายงานขอ PM2.5 สัปดาห์ที่ผ่านมา กล่องสรุป AI บอกเฉลี่ย 40 ไมโครกรัมต่อลูกบาศก์เมตร", "emoji": "👧"}, {"speaker": "ต้น", "text": "เดี๋ยวก่อน! ลิงก์ใต้กล่องสรุปอ้างข้อมูลปี 2566", "emoji": "👦"}, {"speaker": "ต้น", "text": "เว็บหน่วยงานมีสถานีและวันที่ครบ ค่าเฉลี่ย 7 วันของสัปดาห์ที่ผ่านมาเป็น 52", "emoji": "🔎"}, {"speaker": "ครูพริม", "text": "ก่อนเลือกตัวเลข ตรวจแหล่งต้นทางและช่วงเวลาให้ตรงกับโจทย์", "emoji": "🧑‍🏫"}], "activityData": {"summary": "AI สรุป: ค่า PM2.5 เฉลี่ยประมาณ 40 ไมโครกรัมต่อลูกบาศก์เมตร", "sourceTitle": "หน้าต้นทางจำลอง: รายงาน PM2.5 เขตสายไหม", "published": "เผยแพร่: 15 ธันวาคม 2566 · ค่าเฉลี่ย 40 ไมโครกรัมต่อลูกบาศก์เมตร", "comparison": "ตารางอีกแหล่งในเรื่อง: สถานีสายไหม สัปดาห์ที่ผ่านมา 48, 50, 52, 54, 56, 51, 53 → เฉลี่ย 52", "question": "ต้นทางของค่า 40 เผยแพร่ปีใด?", "options": ["2566", "2569"], "correctValue": "2566", "success": "✓ ถูกต้อง ต้นทางเป็นปี 2566 จึงใช้แทนสัปดาห์ที่ผ่านมาไม่ได้", "retry": "ลองดูปีที่เผยแพร่บนหน้าต้นทางอีกครั้ง"}}, {"storyScenes": [{"speaker": "น้องเอไอ", "text": "ลองอ้าง “คู่มือแหล่งเรียนรู้ชุมชน สำนักพิมพ์ครูไทย พ.ศ. 2563”", "emoji": "🤖"}, {"speaker": "มีนา", "text": "ลิงก์เปิดไม่พบสินค้า และค้นชื่อหนังสือในห้องสมุดไม่พบทั้งสองแห่ง", "emoji": "👧"}, {"speaker": "น้องเอไอ", "text": "ยังยืนยันงานเดือนที่แล้วไม่ได้เมื่อไม่ได้ค้นเว็บ ส่วนอาชีพแนะนำ: โปรแกรมเมอร์ นักการตลาด พนักงานธนาคาร", "emoji": "🤖"}, {"speaker": "ต้น", "text": "แล้วช่างซ่อมมอเตอร์ไซค์กับแม่ค้าตลาดนัดล่ะ? ลองแยกข้อจำกัดทั้ง 3 แบบกัน", "emoji": "👦"}], "activityData": {"groups": ["อาการหลอน", "ข้อมูลจำกัดเวลา", "อคติจากข้อมูลฝึก"], "cards": [{"text": "หนังสือและลิงก์ที่ค้นไม่พบ", "answer": 0}, {"text": "ยืนยันงานเดือนที่แล้วไม่ได้เมื่อไม่ค้นเว็บ", "answer": 1}, {"text": "รายชื่ออาชีพขาดอาชีพในชุมชน", "answer": 2}], "maxAttempts": 0}}];
@@ -2275,6 +2275,9 @@ function enrichLessonCMS(items){
   var fourth=unit.situations&&unit.situations[3];if(fourth&&fourth.contentRevision!==5)Object.assign(fourth,JSON.parse(JSON.stringify(SCENE_ONE_FOUR_UPDATE)));
   if(Array.isArray(unit.quiz)){unit.quiz[6]=JSON.parse(JSON.stringify(SCENE_ONE_FOUR_QUIZ[0]));unit.quiz[7]=JSON.parse(JSON.stringify(SCENE_ONE_FOUR_QUIZ[1]));}
   if(!unit.flowSettings)unit.flowSettings={welcomeTitle:'ฐานที่ 1 ห้องแยกประเภท',welcomeText:'รู้จัก AI ผ่าน 4 เหตุการณ์ของต้น มีนา และครูพริม',awardTitle:'นักสำรวจ AI',hintSeconds:60};
+  unit.flowSettings.initialOpenLessons=1;
+  unit.flowSettings.requirePreviousCompletion=true;
+  unit.flowSettings.requireBonusForNext=true;
   (unit.situations || []).forEach(function(s,i){var base=UNIT_ONE_CMS_DEFAULTS[i];if(!base)return;['storyScenes','activityData'].forEach(function(k){if(!s[k])s[k]=JSON.parse(JSON.stringify(base[k]));});});
   if(third&&third.activityData&&!third.activityData.realSourceUrl){third.activityData.realSourceUrl=SCENE_ONE_THREE_SOURCE_URL;third.activityData.realSourceLabel='Air4Thai · กรมควบคุมมลพิษ';third.activityData.realSourceTask='เปิดข้อมูลจริง แล้วตรวจชื่อสถานี วันที่ และค่า PM2.5 ล่าสุดก่อนกลับมาตอบ ตัวเลขจริงเปลี่ยนตามเวลาและอาจไม่เท่ากับตัวเลขจำลองในเรื่อง';}
 }
@@ -5398,18 +5401,21 @@ function pretestCompleted() {
   var s = currentStudent();
   return !!(s && s.assessments && s.assessments.pre && s.assessments.pre.done);
 }
-var UNIT_ONE_TEST_OPEN = true; // Temporary testing access; disable before classroom release.
+var UNIT_ONE_TEST_OPEN = false;
+function lessonCompletedForUnlock(index) {
+  var p = normalizeLessonProgress(lessonProgress[index]);
+  return !!(p.quizDone && scenarioCompleted(index));
+}
 function lessonUnlocked(index) {
-  if(index===0 && UNIT_ONE_TEST_OPEN)return true;
-  if (!pretestCompleted()) return false;
+  if (index === 0) return true;
   for (var i = 0; i < index; i++) {
-    if (!normalizeLessonProgress(lessonProgress[i]).quizDone) return false;
+    if (!lessonCompletedForUnlock(i)) return false;
   }
   return index >= 0 && index < lessons.length;
 }
 function allLessonsCompleted() {
-  return lessonProgress.length === lessons.length && lessonProgress.every(function(p){
-    return normalizeLessonProgress(p).quizDone;
+  return lessonProgress.length === lessons.length && lessonProgress.every(function(_, index){
+    return lessonCompletedForUnlock(index);
   });
 }
 function posttestUnlocked() {
@@ -5418,7 +5424,7 @@ function posttestUnlocked() {
 function startAssessment(mode) {
   mode = mode === 'post' ? 'post' : 'pre';
   if (mode === 'post' && !posttestUnlocked()) {
-    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาทำแบบทดสอบระหว่างบทให้ครบทั้ง ' + lessons.length + ' บทก่อน');
+    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาเรียน ทำแบบทดสอบ และผ่านโบนัสให้ครบทั้ง ' + lessons.length + ' บทก่อน');
     return;
   }
   var saved = currentStudent();
@@ -5630,9 +5636,9 @@ function renderLessonList() {
     var p = lessonProgress[i];
     var unlocked = p.quizDone || lessonUnlocked(i);
     var status;
-    if (p.quizDone) status = 'ทำข้อสอบแล้ว ' + lessonAssessmentLabel(p, 'post') + ' · บันทึกคะแนนและรางวัลแล้ว';
-    else if (!unlocked && !pretestCompleted()) status = '🔒 ต้องทำแบบทดสอบก่อนเรียนก่อน';
-    else if (!unlocked) status = '🔒 ทำข้อสอบบทที่ ' + i + ' ให้เสร็จก่อน';
+    if (p.quizDone && scenarioCompleted(i)) status = '✅ เรียนครบแล้ว · ได้เหรียญตราและสิทธิ์สุ่ม BOT';
+    else if (p.quizDone) status = '🎁 ทำโบนัสท้ายบทเพื่อปลดล็อกบทถัดไป';
+    else if (!unlocked) status = '🔒 เรียนบทที่ ' + i + ' และทำโบนัสให้ครบก่อน';
     else if (lessonMediaCompleted(p)) status = i === 1 && totalPromptStars() === 0
       ? 'เรียนรู้จากสถานการณ์แล้ว · ไปฝึกเขียนพรอมต์ในบทที่ 2'
       : 'เรียนรู้จากสถานการณ์แล้ว · พร้อมทำแบบทดสอบระหว่างบท';
@@ -5670,7 +5676,7 @@ function renderLessonList() {
     '</div>' +
     '<div class="body-area scroll">' +
       '<div class="pcard yellow" style="margin-bottom:14px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: ทำแบบทดสอบก่อนเรียน แล้วเรียนรู้จากสถานการณ์ชีวิตจริงของแต่ละบทให้จบ จึงทำแบบทดสอบระหว่างบทได้ 1 ครั้ง ดาวและเหรียญเป็นรางวัลความคืบหน้า ไม่ใช้คะแนน 80% เพื่อล็อกบทถัดไป เมื่อครบ 5 บทจึงทำแบบทดสอบหลังเรียน</p>' +
+        '<p class="small" style="font-weight:600">📌 กติกา: เริ่มต้นเปิดเฉพาะบทที่ 1 ต้องเรียนสถานการณ์ ทำแบบทดสอบ และผ่านโบนัสท้ายบทให้ครบ จึงปลดล็อกบทถัดไปตามลำดับ เหรียญตราและสิทธิ์สุ่ม BOT ยังคงได้รับตามเดิม</p>' +
       '</div>' +
       rewardCriteriaHtml('student') +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>ทุกบทเรียนใช้สถานการณ์ชีวิตจริงเป็นฐาน แล้วนำไปคิดในแบบทดสอบ</p></div><span class="chip">สถานการณ์เป็นฐาน</span></div>' +
@@ -5683,8 +5689,7 @@ function openLesson(i) {
   if (!lessons[i]) return;
   var p = normalizeLessonProgress(lessonProgress[i]);
   if (!p.quizDone && !lessonUnlocked(i)) {
-    if (!pretestCompleted()) alert('กรุณาทำแบบทดสอบก่อนเรียนให้เสร็จก่อนเริ่มบทที่ 1');
-    else alert('บทนี้ยังไม่ปลดล็อก กรุณาทำแบบทดสอบบทที่ ' + i + ' ให้เสร็จก่อน');
+    alert('บทนี้ยังไม่ปลดล็อก กรุณาเรียนบทที่ ' + i + ' ทำแบบทดสอบ และผ่านโบนัสท้ายบทให้ครบก่อน');
     return;
   }
   state.currentLesson = i;
@@ -5872,7 +5877,7 @@ function lessonDrawRewardHtml(p){
 }
 function unitOneEndHtml(){
  if(UNIT_ONE_TEST_OPEN&&unitOneFlow().reviewOnly)return '<section class="u1-end"><h2>🧪 ทดสอบบทที่ 1 ครบแล้ว</h2><p>คะแนน เหรียญตรา และของสะสมเดิมยังอยู่ครบ</p><button class="btn blueb" onclick="unitOneReview()">เริ่มทดสอบใหม่</button></section>';
- var p=lessonProgress[0];return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div>'+lessonDrawRewardHtml(p)+'<p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions"><button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button><button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
+ var p=lessonProgress[0],bonusDone=scenarioCompleted(0);return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div>'+lessonDrawRewardHtml(p)+'<p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions">'+(bonusDone?'<button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button>':'<button class="btn pinkb" onclick="openLessonBonus()">🎁 ทำโบนัสท้ายบทเพื่อปลดล็อกบทที่ 2</button>')+'<button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
 }
 function unitOneHtml(ls){
  var f=unitOneFlow();if((lessonProgress[0].quizDone&&!f.reviewOnly)||f.stage==='end')return unitOneEndHtml();
@@ -6585,9 +6590,13 @@ function renderQuizResult() {
     : 'ระบบบันทึกคะแนนครั้งแรกเรียบร้อยแล้ว สามารถกลับไปทบทวนบทเรียนเพิ่มเติมได้';
   var nextStepButton = '';
   if (i < lessons.length - 1) {
-    nextStepButton = '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>';
+    nextStepButton = scenarioCompleted(i)
+      ? '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>'
+      : '<button onclick="openLessonBonus()" class="btn mintb sm">🔒 ผ่านโบนัสเพื่อปลดล็อกบทที่ ' + (i + 2) + '</button>';
   } else {
-    nextStepButton = '<button onclick="startAssessment(\'post\')" class="btn mintb sm">🏁 พร้อมแล้ว ทำแบบทดสอบหลังเรียน</button>';
+    nextStepButton = scenarioCompleted(i)
+      ? '<button onclick="startAssessment(\'post\')" class="btn mintb sm">🏁 พร้อมแล้ว ทำแบบทดสอบหลังเรียน</button>'
+      : '<button onclick="openLessonBonus()" class="btn mintb sm">🔒 ผ่านโบนัสบทที่ 5 ก่อน</button>';
   }
 
   appEl.innerHTML =
@@ -6656,7 +6665,7 @@ function renderDashboard() {
   var lessonsDone = lessonsCompleted();
   var journey = journeySteps();
   var earnedAchievements = earnedAchievementBadges(student);
-  var nextLesson = lessons.findIndex(function(_, i){ return !(lessonProgress[i] || {}).quizDone; });
+  var nextLesson = lessons.findIndex(function(_, i){ return !lessonCompletedForUnlock(i); });
   var promptsDone = PROMPT_CHALLENGES.filter(function(_, i){ return (sessionPStars[i] || 0) > 0; }).length;
   var scenariosDone = completedScenarioCount();
   var taskTotal = lessons.length + PROMPT_CHALLENGES.length + scenarios.length + 2;
@@ -6672,9 +6681,12 @@ function renderDashboard() {
     nextNote = 'ทำครั้งเดียว เพื่อเปรียบเทียบความรู้ก่อนและหลังเรียน';
     nextAction = '<button onclick="startAssessment(\'pre\')" class="btn blueb sm">🧭 ทำแบบทดสอบก่อนเรียน</button>';
   } else if (nextLesson >= 0) {
-    nextTitle = 'พร้อมเรียนต่อบทที่ ' + (nextLesson + 1);
-    nextNote = lessons[nextLesson].short + ' · เรียนจากสถานการณ์ แล้วเลือกทำแบบทดสอบเมื่อพร้อม';
-    nextAction = '<button onclick="openLesson(' + nextLesson + ')" class="btn pinkb sm">📚 ไปบทที่ ' + (nextLesson + 1) + '</button>';
+    var nextProgress = normalizeLessonProgress(lessonProgress[nextLesson]);
+    nextTitle = nextProgress.quizDone ? 'ทำโบนัสท้ายบทที่ ' + (nextLesson + 1) + ' ให้ครบ' : 'พร้อมเรียนต่อบทที่ ' + (nextLesson + 1);
+    nextNote = nextProgress.quizDone ? 'ผ่านโบนัสเพื่อรับเหรียญตรา สิทธิ์สุ่ม BOT และปลดล็อกบทถัดไป' : lessons[nextLesson].short + ' · เรียนจากสถานการณ์ แล้วเลือกทำแบบทดสอบเมื่อพร้อม';
+    nextAction = nextProgress.quizDone
+      ? '<button onclick="openLesson(' + nextLesson + ');setTimeout(openLessonBonus,0)" class="btn pinkb sm">🎁 ไปทำโบนัสบทที่ ' + (nextLesson + 1) + '</button>'
+      : '<button onclick="openLesson(' + nextLesson + ')" class="btn pinkb sm">📚 ไปบทที่ ' + (nextLesson + 1) + '</button>';
   } else if (!postDone && postReady) {
     nextTitle = 'เรียนครบ ' + lessons.length + ' บทแล้ว';
     nextNote = 'พร้อมทำแบบทดสอบหลังเรียนเพื่อดูพัฒนาการของตนเอง';
