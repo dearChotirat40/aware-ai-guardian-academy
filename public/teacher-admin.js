@@ -90,7 +90,11 @@
   };
   function resetData(d,scope) {
     var fresh=emptyStudentFromRoster(d); fresh.nickname=d.nickname || '';d=copy(d);
-    if(scope==='all') d=Object.assign(d,fresh,{chatQuestions:[],buddyAvatar:''});
+    var keptPre=d.assessments && d.assessments.pre && d.assessments.pre.done ? copy(d.assessments.pre) : null;
+    if(scope==='all') {
+      d=Object.assign(d,fresh,{chatQuestions:[],buddyAvatar:''});
+      if(keptPre) d.assessments.pre=keptPre;
+    }
     if(scope==='lessons') d.lp=fresh.lp;
     if(scope==='prompts') d.pStars=fresh.pStars;
     if(scope==='assessments') d.assessments=fresh.assessments;
@@ -106,7 +110,7 @@
     var ids=all?Object.keys(db.students):(id?[id]:[]);
     if(!ids.length){alert('ยังไม่มีนักเรียนให้จัดการ');return;}
     if(!confirm('รีเซ็ต '+scopeLabel(scope)+' ของ '+(all?'นักเรียนทุกคน ('+ids.length+' คน)':'บัญชีที่เลือก')+' ในฐานข้อมูล?'))return;
-    var ops=ids.map(function(id){return operation(id,resetData(db.students[id],scope),'reset',Object.assign({scope:scope},scope==='all'||scope==='cabinet'?{wallet:{prizes:[],bonus_tickets:0}}:{}));});
+    var ops=ids.map(function(id){return operation(id,resetData(db.students[id],scope),'reset',Object.assign({scope:scope},scope==='all'?{wallet:{prizes:[],bonus_tickets:5}}:scope==='cabinet'?{wallet:{prizes:[],bonus_tickets:0}}:{}));});
     return batch(ops,'รีเซ็ต '+scopeLabel(scope)+' จำนวน '+ids.length+' บัญชีแล้ว');
   };
   var scopes={all:'ความคืบหน้าทั้งหมดและตู้สุ่ม',lessons:'บทเรียน คะแนน และดาว',prompts:'ผลฝึกพรอมต์',assessments:'แบบทดสอบก่อน–หลังเรียน',badges:'เหรียญภารกิจและคะแนนภารกิจ',cabinet:'ของสะสมและสิทธิ์พิเศษตู้สุ่ม',chat:'รายการคำถามเก่า (ก่อนระบบประวัติแชท)'};
