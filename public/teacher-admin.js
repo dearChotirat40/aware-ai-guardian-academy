@@ -147,7 +147,7 @@
     return '<section class="pcard mint noprint teacher-control-center" id="teacher-admin-panel"><div class="teacher-control-head"><div><span class="teacher-eyebrow">TEACHER CONTROL</span><h2>🧑‍🏫 เมนูครู</h2><p>เลือกงานที่ต้องการได้ทันที · มีนักเรียนในฐานข้อมูล '+count+' บัญชี</p></div>'+button('↻ โหลดข้อมูลล่าสุด','refreshTeacherSupabaseDashboard()','whiteb')+'</div>'+
       '<div class="teacher-quick-grid">'+
         '<button type="button" class="teacher-quick report" onclick="openReportArchive(true)"><span>📊</span><b>รายงานทั้งหมด</b><small>ผลเรียน กิจกรรม แชท และรางวัล</small></button>'+
-        '<button type="button" class="teacher-quick students" onclick="teacherJumpTo(\'teacher-roster-anchor\')"><span>👥</span><b>จัดการนักเรียน</b><small>เพิ่ม แก้ไข และนำเข้ารายชื่อ</small></button>'+
+        '<button type="button" class="teacher-quick students" onclick="teacherJumpTo(\'teacher-roster-panel\')"><span>👥</span><b>จัดการนักเรียน</b><small>เพิ่ม แก้ไข และนำเข้ารายชื่อ</small></button>'+
         '<button type="button" class="teacher-quick content" onclick="teacherJumpTo(\'teacher-content-menu\')"><span>✏️</span><b>แก้เนื้อหา</b><small>บทเรียน สื่อ คำถาม และรางวัล</small></button>'+
         '<button type="button" class="teacher-quick rewards" onclick="teacherJumpTo(\'teacher-reset-tools\')"><span>🎁</span><b>รีเซ็ตและรางวัล</b><small>คงก่อนเรียนและเติมสิทธิ์สุ่ม</small></button>'+
       '</div><p id="teacher-admin-status" class="teacher-save-status" role="status">'+esc(notice || 'ฐานข้อมูลพร้อมใช้งาน เลือกเมนูด้านบนได้เลย')+'</p>'+
