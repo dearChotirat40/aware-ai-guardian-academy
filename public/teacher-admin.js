@@ -84,6 +84,17 @@
     var d=existing ? copy(existing):emptyStudentFromRoster({code:code,num:num});d.code=code;d.num=num;
     await batch([operation(id,d,existing?'edit':'create',existing?{expected:existing._updatedAt || 0}:{})],'บันทึกบัญชีและรหัสนักเรียนแล้ว');
   };
+  window.teacherSetStudentPassword = async function () {
+    var select=document.getElementById('admin-student-select'),input=document.getElementById('admin-new-password');
+    var id=select&&select.value,newCode=(input&&input.value||'').trim(),student=id&&db.students[id];
+    if(!student){alert('กรุณาเลือกบัญชีนักเรียน');return;}
+    if(!/^[0-9A-Za-zก-๙_-]{4,20}$/.test(newCode)){alert('รหัสใหม่ต้องมี 4–20 ตัว ใช้ภาษาไทย อังกฤษ ตัวเลข _ หรือ -');return;}
+    if(newCode===String(student.code||'')){alert('รหัสใหม่ต้องไม่ซ้ำกับรหัสเดิม');return;}
+    if(db.students['roster_'+newCode]){alert('รหัสใหม่นี้มีบัญชีอื่นใช้อยู่แล้ว');return;}
+    if(!confirm('ตั้งรหัสใหม่ให้ '+studentAlias(student)+' เป็น “'+newCode+'” ?\nคะแนน ชื่อเล่น ผลก่อนเรียน และของสะสมจะคงเดิม'))return;
+    var updated=copy(student);updated.code=newCode;
+    await batch([operation(id,updated,'edit',{expected:student._updatedAt||0})],'ตั้งรหัสใหม่แล้ว นักเรียนใช้รหัส '+newCode+' เข้าสู่ระบบได้ทันที');
+  };
   window.teacherRemoveRosterStudent = function (index) {
     var r=activeRoster()[index]; if(!r || !confirm('ลบบัญชีรหัส '+r.code+' พร้อมความคืบหน้าและของสะสมจากฐานข้อมูล?')) return;
     return batch([{kind:'delete',id:'roster_'+r.code}],'ลบบัญชีจากฐานข้อมูลแล้ว');
@@ -151,7 +162,8 @@
         '<button type="button" class="teacher-quick content" onclick="teacherJumpTo(\'teacher-content-menu\')"><span>✏️</span><b>แก้เนื้อหา</b><small>บทเรียน สื่อ คำถาม และรางวัล</small></button>'+
         '<button type="button" class="teacher-quick rewards" onclick="teacherJumpTo(\'teacher-reset-tools\')"><span>🎁</span><b>รีเซ็ตและรางวัล</b><small>คงก่อนเรียนและเติมสิทธิ์สุ่ม</small></button>'+
       '</div><p id="teacher-admin-status" class="teacher-save-status" role="status">'+esc(notice || 'ฐานข้อมูลพร้อมใช้งาน เลือกเมนูด้านบนได้เลย')+'</p>'+
-      '<div id="teacher-reset-tools" class="teacher-tool-box"><h3>🎁 รีเซ็ตและจัดการรางวัล</h3><div class="teacher-tool-row"><label><span>เลือกบัญชี</span><select class="inp" id="admin-student-select">'+Object.keys(db.students).map(function(id){return '<option value="'+esc(id)+'">'+esc(studentAlias(db.students[id])+' · '+db.students[id].code)+'</option>';}).join('')+'</select></label>'+button('เปิดข้อมูลบัญชี','teacherAdminStudent()','blueb')+'</div>'+
+      '<div id="teacher-reset-tools" class="teacher-tool-box"><h3>🔑 รหัสผ่านและรางวัล</h3><div class="teacher-tool-row"><label><span>เลือกบัญชี</span><select class="inp" id="admin-student-select">'+Object.keys(db.students).map(function(id){return '<option value="'+esc(id)+'">'+esc(studentAlias(db.students[id])+' · '+db.students[id].code)+'</option>';}).join('')+'</select></label>'+button('เปิดข้อมูลบัญชี','teacherAdminStudent()','blueb')+'</div>'+
+      '<div class="teacher-tool-row teacher-password-reset"><label><span>ตั้งรหัสผ่านใหม่ให้นักเรียน</span><div class="password-wrap"><input id="admin-new-password" class="inp" type="password" minlength="4" maxlength="20" autocomplete="new-password" placeholder="รหัสใหม่ 4–20 ตัว"><button type="button" class="password-eye" aria-label="ดูรหัสผ่าน" aria-pressed="false" onclick="togglePasswordVisibility(\'admin-new-password\',this)">👁️</button></div></label>'+button('🔑 บันทึกรหัสใหม่','teacherSetStudentPassword()','blueb')+'</div><p class="soft tiny">เปลี่ยนเฉพาะรหัสเข้าเรียน คะแนน ชื่อเล่น รายงาน ผลก่อนเรียน เหรียญ และ BOT จะอยู่ครบ</p>'+
       '<div class="teacher-tool-row"><label><span>เลือกข้อมูลที่จะรีเซ็ต</span><select class="inp" id="admin-reset-scope">'+Object.keys(scopes).map(function(k){return '<option value="'+k+'">'+scopes[k]+'</option>';}).join('')+'</select></label>'+button('รีเซ็ตบัญชีที่เลือก',"teacherAdminReset(document.getElementById('admin-reset-scope').value,false)",'pinkb')+button('รีเซ็ตทุกบัญชี',"teacherAdminReset(document.getElementById('admin-reset-scope').value,true)",'pinkb')+'</div><p class="soft tiny">เมื่อรีเซ็ตทั้งหมด ระบบคงผลก่อนเรียนและเติมสิทธิ์สุ่ม BOT 5 ครั้งให้ทุกบัญชี</p></div><div id="teacher-admin-editor"></div></section>';
   }
   window.rewardCriteriaHtml=function(){return '<section class="pcard plain"><h3>เกณฑ์คะแนนและรางวัลปัจจุบัน</h3><p>บทเรียน '+lessons.length+' บท · คะแนนเต็มบทละ '+UNIT_POINTS+' · รวม '+maxLessonPoints()+' คะแนน</p><p>พรอมต์ '+PROMPT_CHALLENGES.length+' โจทย์ · โจทย์ละ 0–3 ดาว · ดาวพรอมต์ × 5 คะแนนอันดับ</p><p>ภารกิจ '+scenarios.length+' ด่าน · ด่านละ 2 คะแนนและ 1 เหรียญ · 1 เหรียญ = 1 สิทธิ์สุ่ม</p><p>เส้นทางรวม '+journeyTotal()+' ดาว · '+GEM_LEVELS.map(function(g){return esc(g.name)+' เริ่ม '+g.min+' ดาว โบนัส '+g.bonus;}).join(' · ')+'</p><p>เหรียญรายบท: ทอง 80% ขึ้นไป · เงิน 60–79% · ทองแดงต่ำกว่า 60%</p></section>';};
