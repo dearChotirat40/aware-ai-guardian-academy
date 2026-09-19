@@ -5740,6 +5740,8 @@ function unitOneCheck(){
   a.wrongCardCounts=a.wrongCardCounts||{};
   cards.forEach(function(c,i){if(a.picks[i]===c[1])correct++;else{counts[a.picks[i]]++;a.wrongCardCounts[i]=(a.wrongCardCounts[i]||0)+1;}});
   var passCount=unitOneConfig().passCount||cards.length;a.done=correct>=passCount;
+  a.attemptLog=a.attemptLog||[];
+  a.attemptLog.push({attempt:a.attemptLog.length+1,attemptInRound:a.attempts,checkedAt:new Date().toISOString(),correct:correct,total:cards.length,passed:a.done,placements:cards.map(function(c,i){return {card:c[0],selectedGroup:unitOneConfig().groups[a.picks[i]],correctGroup:unitOneConfig().groups[c[1]],correct:a.picks[i]===c[1]};})});
   a.feedback=a.done?'✓ ผ่านกิจกรรมแล้ว · จัดถูก '+correct+' จาก '+cards.length+' ใบ':counts.map(function(n,i){return 'ช่อง '+(i+1)+' ผิด '+n+' ใบ';}).join(' · ');
   if(!a.done&&Object.keys(a.wrongCardCounts).some(function(i){return a.wrongCardCounts[i]>=2;}))a.feedback+=' · ❓ ลองคิดว่า สิ่งที่ตอบมีอยู่จริงไหม เคยถูกต้องในอดีตไหม หรือแค่ขาดบางกลุ่มไป';
   if(!a.done&&a.attempts===unitOneAttemptLimit())a.feedback+=' · ครบจำนวนครั้งที่กำหนดแล้ว อ่านเฉลยแล้วเริ่มฝึกใหม่ได้';
@@ -7104,7 +7106,7 @@ function makeChoice(choiceIndex) {
 <script src="./public/teacher-admin.js?v=20260918-save-all"></script>
 <script src="./public/google-login.js"></script>
 <script src="./public/chat-history.js?v=stable-20260916-friendly"></script>
-<script src="./public/student-reports.js?v=20260917-flow"></script>
+<script src="./public/student-reports.js?v=20260919-attempts"></script>
 <script src="./public/teacher-workspace.js?v=20260918-phone-menu"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
