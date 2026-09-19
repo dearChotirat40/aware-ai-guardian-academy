@@ -3143,7 +3143,7 @@ function teacherRosterHtml() {
       '<button type="button" onclick="document.getElementById(\'roster-csv-input\').click()" class="btn blueb sm">📥 นำเข้ารายชื่อ CSV</button>' +
       '<input id="roster-csv-input" type="file" accept=".csv,text/csv" style="display:none" onchange="importRosterCSV(this)">' +
       '<button type="button" onclick="exportRosterCSV()" class="btn whiteb sm">ดาวน์โหลดรายชื่อ CSV</button>' +
-      '<button type="button" onclick="teacherResetAllProgress()" class="btn pinkb sm">↺ รีเซ็ตดาวและคะแนนทุกคน</button>' +
+      '<button type="button" onclick="teacherResetAllProgress()" class="btn pinkb sm">↺ คงก่อนเรียน · รีเซ็ตที่เหลือ · เติม 5 สิทธิ์สุ่ม</button>' +
       '<button type="button" onclick="teacherResetRoster()" class="btn pinkb sm">🗑 ล้างรายชื่อทั้งหมด</button>' +
     '</div>' +
     '<div class="twrap" style="margin-top:10px"><table class="ttable">' +
@@ -3234,24 +3234,43 @@ function teacherRemoveRosterStudent(index) {
 function teacherResetAllProgress() {
   var roster = activeRoster();
   if (!roster.length) { alert('ยังไม่มีรายชื่อนักเรียน'); return; }
-  if (!confirm('ยืนยันรีเซ็ตดาว คะแนน แบบทดสอบ ตรา และความคืบหน้าของนักเรียนทุกคน?\nรายชื่อและรหัสประจำตัวจะยังอยู่')) return;
+  if (!confirm('ยืนยันคงผลแบบทดสอบก่อนเรียนไว้ แล้วรีเซ็ตบทเรียน ดาว คะแนน พรอมต์ โบนัส ตรา และ BOT ที่เคยสุ่มทั้งหมด?\nระบบจะเติมสิทธิ์สุ่ม BOT ใหม่ 5 ครั้งต่อคน')) return;
   var ids = [];
+  var operations = [];
   roster.forEach(function(r) {
     var id = 'roster_' + r.code;
-    var nickname = cleanNickname(db.students[id] && db.students[id].nickname);
+    var previous = db.students[id] || {};
+    var nickname = cleanNickname(previous.nickname);
     var fresh = emptyStudentFromRoster(r);
     if (nickname) fresh.nickname = nickname;
+    if (validProfilePhoto(previous.profilePhoto)) fresh.profilePhoto = previous.profilePhoto;
+    if (previous.assessments && previous.assessments.pre && previous.assessments.pre.done) {
+      fresh.assessments.pre = JSON.parse(JSON.stringify(previous.assessments.pre));
+    }
     fresh._updatedAt = Date.now();
     db.students[id] = fresh;
     ids.push(id);
+    operations.push({kind:'reset',id:id,scope:'all',data:fresh,points:0,wallet:{prizes:[],bonus_tickets:5}});
   });
   saveDB();
-  if (firebaseBackend) ids.forEach(function(id) {
-    firebaseBackend.saveStudent(id, db.students[id]).catch(function(err){ console.warn('Supabase reset progress:', err); });
-  });
+  if (firebaseBackend && firebaseBackend.teacherManage) {
+    firebaseBackend.teacherManage('batch',{operations:operations}).then(function(cloud){
+      db.students = cloud.students || db.students;
+      if (Array.isArray(cloud.roster)) db.roster = cloud.roster;
+      saveDB();
+      state.teacherDetailId = null;
+      render();
+      alert('รีเซ็ตข้อมูลหลังแบบทดสอบก่อนเรียนของนักเรียน ' + ids.length + ' คนแล้ว และเติมสิทธิ์สุ่ม BOT คนละ 5 ครั้ง ✅');
+    }).catch(function(err){
+      console.warn('Supabase reset progress:', err);
+      alert('ยังบันทึกการรีเซ็ตลงฐานข้อมูลไม่สำเร็จ กรุณาโหลดข้อมูลล่าสุดแล้วลองใหม่');
+    });
+    return;
+  }
+  if (firebaseBackend) ids.forEach(function(id) { firebaseBackend.saveStudent(id, db.students[id]).catch(function(err){ console.warn('Supabase reset progress:', err); }); });
   state.teacherDetailId = null;
   render();
-  alert('รีเซ็ตดาวและคะแนนของนักเรียน ' + ids.length + ' คนแล้ว');
+  alert('รีเซ็ตความคืบหน้าแล้ว แต่ยังเติมสิทธิ์สุ่มในฐานข้อมูลไม่ได้ กรุณาเชื่อมต่อโหมดครูแล้วกดอีกครั้ง');
 }
 function teacherResetRoster() {
   var roster = activeRoster();
