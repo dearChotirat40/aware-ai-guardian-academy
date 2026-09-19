@@ -7145,7 +7145,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
 
     function buildBackend(session) {
       var user = session && session.user;
-      var isTeacher = !!(user && !user.is_anonymous && String(user.email || '').toLowerCase() === 'cpaenathai@gmail.com');
+      var isTeacher = !!(user && !user.is_anonymous && String(user.email || '').toLowerCase() === 'cpaenthai@gmail.com');
       var teacherPin = null;
       return {
       isTeacher: isTeacher,
@@ -7156,7 +7156,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
           return response.json();
         }).then(function(settings) {
           if (!settings.external || !settings.external.google) throw new Error("Google provider not enabled");
-          return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin + window.location.pathname,queryParams:{prompt:"select_account"}}}).then(check);
+          return supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:new URL('./', window.location.href).href.split(/[?#]/)[0],queryParams:{prompt:"select_account"}}}).then(check);
         });
       },
       teacherManage: function(action, payload) {
@@ -7217,7 +7217,7 @@ if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONF
       },
       requestTeacherLogin: function() {
         return supabase.auth.signInWithOtp({
-          email:'cpaenathai@gmail.com',
+          email:'cpaenthai@gmail.com',
           options:{ emailRedirectTo:window.location.href.split('#')[0] }
         }).then(check);
       },

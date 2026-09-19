@@ -15,7 +15,7 @@ create or replace function public.is_teacher()
 returns boolean language sql stable security definer set search_path = public
 as $$
   select coalesce((auth.jwt()->>'is_anonymous')::boolean, true) is false
-    and lower(coalesce(auth.jwt()->>'email','')) = 'cpaenathai@gmail.com';
+    and lower(coalesce(auth.jwt()->>'email','')) = 'cpaenthai@gmail.com';
 $$;
 
 create policy "student reads own row" on public.students for select to authenticated
