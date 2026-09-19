@@ -1616,6 +1616,7 @@ body #app .teacher-trigger span:first-child{font-size:24px}
 
 <div id="app"></div>
 
+<script src="./public/supabase.min.js?v=2.116.0"></script>
 <script>
 /* =====================================================
    ⚙️ ส่วนตั้งค่าสำหรับคุณครู
@@ -7114,7 +7115,8 @@ render();
 <script type="module">
 window.googleOAuthError = /(?:[?#&])error(?:_description)?=/.test(window.location.href);
 if (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url && window.SUPABASE_CONFIG.publishableKey) {
-  import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm").then(function(supabaseSdk) {
+  Promise.resolve(window.supabase).then(function(supabaseSdk) {
+    if (!supabaseSdk || !supabaseSdk.createClient) throw new Error('Supabase library did not load');
     var supabase = supabaseSdk.createClient(
       window.SUPABASE_CONFIG.url,
       window.SUPABASE_CONFIG.publishableKey,
