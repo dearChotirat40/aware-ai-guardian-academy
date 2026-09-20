@@ -5775,6 +5775,7 @@ function unitOneWord(){
 function unitOneSource(value,keepPage){var a=unitOneSession();if(unitOneFlow().stage!=='activity')return;if(value==='open'){a.opened=true;a.feedback='เปิดแหล่งข้อมูลแล้ว กลับมากรอกสิ่งที่ตรวจพบให้ครบ 3 ช่อง';}unitOnePersist();if(keepPage)setTimeout(render,0);else render();}
 function unitOneSourceSubmit(){
   var a=unitOneSession();if(unitOneFlow().stage!=='activity'||!a.opened)return;
+  a.sourceAttempts=(a.sourceAttempts||0)+1;
   var station=String((document.getElementById('u1-source-station')||{}).value||'').trim();
   var date=String((document.getElementById('u1-source-date')||{}).value||'').trim();
   var value=Number((document.getElementById('u1-source-value')||{}).value);
@@ -7133,7 +7134,7 @@ function makeChoice(choiceIndex) {
 <script src="./public/teacher-admin.js?v=20260920-password-only"></script>
 <script src="./public/google-login.js?v=20260920-short-help"></script>
 <script src="./public/chat-history.js?v=stable-20260916-friendly"></script>
-<script src="./public/student-reports.js?v=20260920-report-views"></script>
+<script src="./public/student-reports.js?v=20260920-position-attempts"></script>
 <script src="./public/teacher-workspace.js?v=20260920-simple-menu"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
