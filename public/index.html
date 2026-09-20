@@ -2266,7 +2266,7 @@ function enrichLessonCMS(items){
   unit.flowSettings.initialOpenLessons=1;
   unit.flowSettings.unitOneSubsectionsInitiallyOpen=true;
   unit.flowSettings.requirePreviousCompletion=true;
-  unit.flowSettings.requireBonusForNext=true;
+  unit.flowSettings.requireBonusForNext=false;
   (unit.situations || []).forEach(function(s,i){var base=UNIT_ONE_CMS_DEFAULTS[i];if(!base)return;['storyScenes','activityData'].forEach(function(k){if(!s[k])s[k]=JSON.parse(JSON.stringify(base[k]));});});
   if(third&&third.activityData&&!third.activityData.realSourceUrl){third.activityData.realSourceUrl=SCENE_ONE_THREE_SOURCE_URL;third.activityData.realSourceLabel='Air4Thai · กรมควบคุมมลพิษ';third.activityData.realSourceTask='เปิดข้อมูลจริง แล้วตรวจชื่อสถานี วันที่ และค่า PM2.5 ล่าสุดก่อนกลับมาตอบ ตัวเลขจริงเปลี่ยนตามเวลาและอาจไม่เท่ากับตัวเลขจำลองในเรื่อง';}
 }
@@ -5459,7 +5459,7 @@ var UNIT_ONE_TEST_OPEN = false;
 var UNIT_ONE_SUBSECTIONS_OPEN = true;
 function lessonCompletedForUnlock(index) {
   var p = normalizeLessonProgress(lessonProgress[index]);
-  return !!(p.quizDone && scenarioCompleted(index));
+  return !!p.quizDone;
 }
 function lessonUnlocked(index) {
   if (index === 0) return true;
@@ -5479,7 +5479,7 @@ function posttestUnlocked() {
 function startAssessment(mode) {
   mode = mode === 'post' ? 'post' : 'pre';
   if (mode === 'post' && !posttestUnlocked()) {
-    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาเรียน ทำแบบทดสอบ และผ่านโบนัสให้ครบทั้ง ' + lessons.length + ' บทก่อน');
+    alert('แบบทดสอบหลังเรียนยังไม่ปลดล็อก กรุณาเรียนและทำแบบทดสอบให้ครบทั้ง ' + lessons.length + ' บทก่อน');
     return;
   }
   var saved = currentStudent();
@@ -5692,8 +5692,8 @@ function renderLessonList() {
     var unlocked = p.quizDone || lessonUnlocked(i);
     var status;
     if (p.quizDone && scenarioCompleted(i)) status = '✅ เรียนครบแล้ว · ได้เหรียญตราและสิทธิ์สุ่ม BOT';
-    else if (p.quizDone) status = '🎁 ทำโบนัสท้ายบทเพื่อปลดล็อกบทถัดไป';
-    else if (!unlocked) status = '🔒 เรียนบทที่ ' + i + ' และทำโบนัสให้ครบก่อน';
+    else if (p.quizDone) status = '✅ เรียนครบแล้ว · โบนัสท้ายบทยังทำเพิ่มได้';
+    else if (!unlocked) status = '🔒 เรียนบทที่ ' + i + ' ให้ครบก่อน';
     else if (lessonMediaCompleted(p)) status = i === 1 && totalPromptStars() === 0
       ? 'เรียนรู้จากสถานการณ์แล้ว · ไปฝึกเขียนพรอมต์ในบทที่ 2'
       : 'เรียนรู้จากสถานการณ์แล้ว · พร้อมทำแบบทดสอบระหว่างบท';
@@ -5731,7 +5731,7 @@ function renderLessonList() {
     '</div>' +
     '<div class="body-area scroll">' +
       '<div class="pcard yellow" style="margin-bottom:14px">' +
-        '<p class="small" style="font-weight:600">📌 กติกา: เริ่มต้นเปิดเฉพาะบทที่ 1 ต้องเรียนสถานการณ์ ทำแบบทดสอบ และผ่านโบนัสท้ายบทให้ครบ จึงปลดล็อกบทถัดไปตามลำดับ เหรียญตราและสิทธิ์สุ่ม BOT ยังคงได้รับตามเดิม</p>' +
+        '<p class="small" style="font-weight:600">📌 กติกา: เริ่มต้นเปิดเฉพาะบทที่ 1 เมื่อเรียนสถานการณ์ 1.1–1.4 และตอบคำถามครบแล้ว บทที่ 2 จะปลดล็อก เหรียญตรา โบนัส และสิทธิ์สุ่ม BOT ยังคงได้รับตามเดิม</p>' +
       '</div>' +
       '<div class="lesson-submenu-heading"><div><h3 class="ink">เลือกบทเรียน</h3><p>ทุกบทเรียนใช้สถานการณ์ชีวิตจริงเป็นฐาน แล้วนำไปคิดในแบบทดสอบ</p></div><span class="chip">สถานการณ์เป็นฐาน</span></div>' +
       '<div class="lesson-submenu-grid">' + listHtml + '</div>' +
@@ -5743,7 +5743,7 @@ function openLesson(i) {
   if (!lessons[i]) return;
   var p = normalizeLessonProgress(lessonProgress[i]);
   if (!p.quizDone && !lessonUnlocked(i)) {
-    alert('บทนี้ยังไม่ปลดล็อก กรุณาเรียนบทที่ ' + i + ' ทำแบบทดสอบ และผ่านโบนัสท้ายบทให้ครบก่อน');
+    alert('บทนี้ยังไม่ปลดล็อก กรุณาเรียนบทที่ ' + i + ' และตอบคำถามให้ครบก่อน');
     return;
   }
   state.currentLesson = i;
@@ -5934,7 +5934,7 @@ function lessonDrawRewardHtml(p){
 }
 function unitOneEndHtml(){
  if(UNIT_ONE_TEST_OPEN&&unitOneFlow().reviewOnly)return '<section class="u1-end"><h2>🧪 ทดสอบบทที่ 1 ครบแล้ว</h2><p>คะแนน เหรียญตรา และของสะสมเดิมยังอยู่ครบ</p><button class="btn blueb" onclick="unitOneReview()">เริ่มทดสอบใหม่</button></section>';
- var p=lessonProgress[0],bonusDone=scenarioCompleted(0);return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div>'+lessonDrawRewardHtml(p)+'<p>ผ่านการเรียนรู้เรื่องประเภท AI การสร้างคำตอบ การตรวจสอบต้นทาง และข้อจำกัดของ AI</p><div class="u1-actions">'+(bonusDone?'<button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button>':'<button class="btn pinkb" onclick="openLessonBonus()">🎁 ทำโบนัสท้ายบทเพื่อปลดล็อกบทที่ 2</button>')+'<button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
+ var p=lessonProgress[0],bonusDone=scenarioCompleted(0);return '<section class="u1-end"><span class="u1-kicker">ภารกิจหน่วยที่ 1 สำเร็จ</span><div class="u1-trophy" aria-hidden="true">🏆</div><h2>'+escChat(lessons[0].flowSettings.awardTitle)+'</h2><p>ความรู้พื้นฐานเกี่ยวกับปัญญาประดิษฐ์</p><div class="u1-scorecards"><div><b>'+p.postScore+'/'+p.postTotal+'</b><span>คำตอบถูก</span></div><div><b>'+lessonRewardPoints(p)+'/'+UNIT_POINTS+'</b><span>คะแนนบทเรียน</span></div><div><b>⭐ '+p.stars+'</b><span>ดาวประจำบท</span></div></div>'+lessonDrawRewardHtml(p)+'<p>เรียนครบสถานการณ์ 1.1–1.4 แล้ว บทที่ 2 ปลดล็อกเรียบร้อย</p><div class="u1-actions"><button class="btn blueb" onclick="openLesson(1)">🚀 เริ่มต้นหน่วยที่ 2: การเลือกและใช้ AI อย่างเหมาะสม</button>'+(bonusDone?'':'<button class="btn pinkb sm" onclick="openLessonBonus()">🎁 ทำโบนัสท้ายบท</button>')+'<button class="btn whiteb sm" onclick="changeView(\'quizresult\')">🎁 ดูรางวัลและไอเทมประจำบท</button><button class="btn whiteb sm" onclick="unitOneReview()">ทบทวนทั้ง 4 สถานการณ์</button></div></section>';
 }
 function unitOneHtml(ls){
  var f=unitOneFlow();if((lessonProgress[0].quizDone&&!f.reviewOnly)||f.stage==='end')return unitOneEndHtml();
@@ -6651,13 +6651,9 @@ function renderQuizResult() {
   if (!passed) {
     nextStepButton = '<button onclick="startQuiz(\'mid\','+i+')" class="btn mintb sm">🔁 ทำแบบทดสอบอีกครั้ง</button>';
   } else if (i < lessons.length - 1) {
-    nextStepButton = scenarioCompleted(i)
-      ? '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>'
-      : '<button onclick="openLessonBonus()" class="btn mintb sm">🔒 ผ่านโบนัสเพื่อปลดล็อกบทที่ ' + (i + 2) + '</button>';
+    nextStepButton = '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>';
   } else {
-    nextStepButton = scenarioCompleted(i)
-      ? '<button onclick="startAssessment(\'post\')" class="btn mintb sm">🏁 พร้อมแล้ว ทำแบบทดสอบหลังเรียน</button>'
-      : '<button onclick="openLessonBonus()" class="btn mintb sm">🔒 ผ่านโบนัสบทที่ 5 ก่อน</button>';
+    nextStepButton = '<button onclick="startAssessment(\'post\')" class="btn mintb sm">🏁 พร้อมแล้ว ทำแบบทดสอบหลังเรียน</button>';
   }
 
   appEl.innerHTML =
@@ -6743,11 +6739,9 @@ function renderDashboard() {
     nextAction = '<button onclick="startAssessment(\'pre\')" class="btn blueb sm">🧭 ทำแบบทดสอบก่อนเรียน</button>';
   } else if (nextLesson >= 0) {
     var nextProgress = normalizeLessonProgress(lessonProgress[nextLesson]);
-    nextTitle = nextProgress.quizDone ? 'ทำโบนัสท้ายบทที่ ' + (nextLesson + 1) + ' ให้ครบ' : 'พร้อมเรียนต่อบทที่ ' + (nextLesson + 1);
-    nextNote = nextProgress.quizDone ? 'ผ่านโบนัสเพื่อรับเหรียญตรา สิทธิ์สุ่ม BOT และปลดล็อกบทถัดไป' : lessons[nextLesson].short + ' · เรียนจากสถานการณ์ แล้วเลือกทำแบบทดสอบเมื่อพร้อม';
-    nextAction = nextProgress.quizDone
-      ? '<button onclick="openLesson(' + nextLesson + ');setTimeout(openLessonBonus,0)" class="btn pinkb sm">🎁 ไปทำโบนัสบทที่ ' + (nextLesson + 1) + '</button>'
-      : '<button onclick="openLesson(' + nextLesson + ')" class="btn pinkb sm">📚 ไปบทที่ ' + (nextLesson + 1) + '</button>';
+    nextTitle = 'พร้อมเรียนต่อบทที่ ' + (nextLesson + 1);
+    nextNote = lessons[nextLesson].short + ' · เรียนจากสถานการณ์ แล้วเลือกทำแบบทดสอบเมื่อพร้อม';
+    nextAction = '<button onclick="openLesson(' + nextLesson + ')" class="btn pinkb sm">📚 ไปบทที่ ' + (nextLesson + 1) + '</button>';
   } else if (!postDone && postReady) {
     nextTitle = 'เรียนครบ ' + lessons.length + ' บทแล้ว';
     nextNote = 'พร้อมทำแบบทดสอบหลังเรียนเพื่อดูพัฒนาการของตนเอง';

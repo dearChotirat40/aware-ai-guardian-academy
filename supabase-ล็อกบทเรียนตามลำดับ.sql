@@ -1,4 +1,4 @@
--- ชื่อคำสั่ง: บทเรียน — เปิดทีละบทและผ่านโบนัสก่อนปลดล็อกบทถัดไป
+-- ชื่อคำสั่ง: บทเรียน — เปิดบทถัดไปเมื่อเรียนบทก่อนหน้าครบ
 begin;
 
 update public.app_curriculum
@@ -14,7 +14,7 @@ set data = jsonb_set(
                'initialOpenLessons', 1,
                'unitOneSubsectionsInitiallyOpen', true,
                'requirePreviousCompletion', true,
-               'requireBonusForNext', true
+               'requireBonusForNext', false
              ),
              true
            ),
