@@ -3162,8 +3162,6 @@ function teacherRosterHtml() {
       '<button type="button" onclick="document.getElementById(\'roster-csv-input\').click()" class="btn blueb sm">📥 นำเข้ารายชื่อ CSV</button>' +
       '<input id="roster-csv-input" type="file" accept=".csv,text/csv" style="display:none" onchange="importRosterCSV(this)">' +
       '<button type="button" onclick="exportRosterCSV()" class="btn whiteb sm">ดาวน์โหลดรายชื่อ CSV</button>' +
-      '<button type="button" onclick="teacherResetAllProgress()" class="btn pinkb sm">↺ คงก่อนเรียน · รีเซ็ตที่เหลือ · เติม 5 สิทธิ์สุ่ม</button>' +
-      '<button type="button" onclick="teacherResetRoster()" class="btn pinkb sm">🗑 ล้างรายชื่อทั้งหมด</button>' +
     '</div>' +
     '<div class="twrap" style="margin-top:10px"><table class="ttable">' +
       '<tr><th>เลขที่</th><th>ชื่อเล่น</th><th>เลขประจำตัวนักเรียน</th><th>จัดการ</th></tr>' +
@@ -4789,7 +4787,6 @@ function renderTeacher() {
       '<td class="soft tiny">' + (s.last || '-') + '</td>' +
       '<td class="noprint"><div class="teacher-row-actions">' +
         '<button type="button" class="iconbtn" title="ดูความคืบหน้ารายบุคคล" onclick="teacherShowStudentById(\'' + safeId + '\')">◉</button>' +
-        '<button type="button" class="iconbtn" title="ล้างข้อมูลความคืบหน้า" onclick="delStudent(\'' + safeId + '\')">↺</button>' +
       '</div></td>' +
     '</tr>';
   }).join('');
@@ -7133,7 +7130,7 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./teacher-admin.js?v=20260920-simple-menu"></script>
+<script src="./teacher-admin.js?v=20260920-password-only"></script>
 <script src="./google-login.js?v=20260920-short-help"></script>
 <script src="./chat-history.js?v=stable-20260916-friendly"></script>
 <script src="./student-reports.js?v=20260920-report-views"></script>
