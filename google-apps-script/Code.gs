@@ -26,7 +26,10 @@ function doPost(e) {
       'ดาวบทที่ 4', 'คะแนนระหว่างบทที่ 4',
       'ดาวบทที่ 5', 'คะแนนระหว่างบทที่ 5', 'ดาวพรอมต์',
       'คะแนนก่อนเรียนรวม', 'คะแนนหลังเรียนรวม', 'โบนัสภารกิจ', 'ด่านที่ผ่าน',
-      'ตราสถานการณ์', 'ตราสัญลักษณ์รวม', 'ความคืบหน้า (%)', 'อัปเดตล่าสุด'
+      'ตราสถานการณ์', 'ตราสัญลักษณ์รวม', 'ความคืบหน้า (%)', 'เรียนค้างที่',
+      'ความพยายาม 1.1', 'ความพยายาม 1.2', 'ความพยายาม 1.3', 'ความพยายาม 1.4',
+      'รายละเอียดความพยายาม', 'เข้าใช้ครั้งแรก', 'เข้าใช้ล่าสุด', 'ใช้งานล่าสุด',
+      'จำนวนครั้งที่เข้า', 'อัปเดตล่าสุด'
     ];
 
     sh.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -37,7 +40,11 @@ function doPost(e) {
       d.journeyStars || 0, d.stars || 0, d.done || 0, d.unitPoints || 0, d.lessonMedals || 0,
       d.l1, d.l1post, d.l2, d.l2post, d.l3, d.l3post, d.l4, d.l4post, d.l5, d.l5post,
       d.pstars || 0, d.pretest || '', d.posttest || '', d.score || 0, d.game || 0,
-      d.badges || 0, d.achievements || 0, d.pct || 0,
+      d.badges || 0, d.achievements || 0, d.pct || 0, d.progressPosition || '',
+      d.activity11Attempts || 0, d.activity12Attempts || 0,
+      d.activity13Attempts || 0, d.activity14Attempts || 0,
+      d.activityAttemptDetails || '', d.firstLoginAt || '', d.lastLoginAt || '',
+      d.lastActiveAt || '', d.loginCount || 0,
       d.last || new Date().toLocaleString('th-TH')
     ];
 

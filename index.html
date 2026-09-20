@@ -1700,12 +1700,12 @@ var APPS_SCRIPT_CODE = [
 "    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
 "    'ดาวบทที่ 4','คะแนนระหว่างบทที่ 4',",
 "    'ดาวบทที่ 5','คะแนนระหว่างบทที่ 5','ดาวพรอมต์',",
-"    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','โบนัสภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','อัปเดตล่าสุด'];",
+"    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','โบนัสภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','เรียนค้างที่','ความพยายาม 1.1','ความพยายาม 1.2','ความพยายาม 1.3','ความพยายาม 1.4','รายละเอียดความพยายาม','เข้าใช้ครั้งแรก','เข้าใช้ล่าสุด','ใช้งานล่าสุด','จำนวนครั้งที่เข้า','อัปเดตล่าสุด'];",
 "    sh.getRange(1, 1, 1, headers.length).setValues([headers]);",
 "    sh.setFrozenRows(1);",
 "    var row = [String(d.code || ''), d.nickname || '', d.num || '', d.gem || '', d.levelBonus || '', d.journeyStars || 0, d.stars || 0, d.done || 0, d.unitPoints || 0, d.lessonMedals || 0,",
 "    d.l1, d.l1post, d.l2, d.l2post, d.l3, d.l3post, d.l4, d.l4post, d.l5, d.l5post,",
-"    d.pstars || 0, d.pretest || '', d.posttest || '', d.score || 0, d.game || 0, d.badges || 0, d.achievements || 0, d.pct || 0, d.last || new Date().toLocaleString('th-TH')];",
+"    d.pstars || 0, d.pretest || '', d.posttest || '', d.score || 0, d.game || 0, d.badges || 0, d.achievements || 0, d.pct || 0, d.progressPosition || '', d.activity11Attempts || 0, d.activity12Attempts || 0, d.activity13Attempts || 0, d.activity14Attempts || 0, d.activityAttemptDetails || '', d.firstLoginAt || '', d.lastLoginAt || '', d.lastActiveAt || '', d.loginCount || 0, d.last || new Date().toLocaleString('th-TH')];",
 "    var last = sh.getLastRow();",
 "    var rowIndex = 0;",
 "    if (last >= 2) {",
@@ -3568,6 +3568,27 @@ var sheetLastSent = '';
 function sheetConfigured() {
   return !!(GOOGLE_SHEET.webAppUrl && GOOGLE_SHEET.webAppUrl.indexOf('http') === 0);
 }
+function sheetProgressDetails(s) {
+  var lesson = (s.lp || [])[0] || {}, flow = lesson.unitOneFlow || {};
+  var items = Array.isArray(flow.items) ? flow.items : [];
+  var attempts = [0,1,2,3].map(function(i){
+    var item = items[i] || {}, logs = Array.isArray(item.attemptLog) ? item.attemptLog : [];
+    if (i === 1) return Number(item.asks || 0);
+    if (i === 2) return Number(item.sourceAttempts || 0) || (item.checked ? 1 : 0);
+    return Math.max(Number(item.attempts || 0), logs.length);
+  });
+  var position = 'ยังไม่เริ่มบทที่ 1';
+  if (lesson.quizDone || flow.stage === 'end') position = 'จบบทที่ 1 แล้ว';
+  else if (flow.started) {
+    var n = Math.max(0, Math.min(3, Number(flow.index || 0)));
+    var stage = {welcome:'หน้าแนะนำ',media:'ดูสื่อ',activity:'ทำกิจกรรม',assessment:'ตอบคำถาม',feedback:'ดูเฉลย'}[flow.stage] || 'กำลังเรียน';
+    position = '1.' + (n + 1) + ' · ' + stage;
+  }
+  return { position: position, attempts: attempts, details: JSON.stringify(items.map(function(item, i){
+    item = item || {};
+    return { situation:'1.'+(i+1), attempts:attempts[i], done:!!item.done, asks:Number(item.asks||0), words:Array.isArray(item.words)?item.words.length:0, logs:Array.isArray(item.attemptLog)?item.attemptLog:[] };
+  })) };
+}
 function sheetPayload() {
   var s = currentStudent();
   if (!s) return null;
@@ -3575,6 +3596,7 @@ function sheetPayload() {
   var lp = s.lp || [];
   var journeyStars = studentJourneyStars(s);
   var gem = gemLevelForStars(journeyStars);
+  var progress = sheetProgressDetails(s);
   return {
     code: s.code || '', nickname: cleanNickname(s.nickname) || studentAlias(s), num: s.num || '-',
     gem: gem.name, levelBonus: gem.bonus, journeyStars: journeyStars,
@@ -3590,6 +3612,12 @@ function sheetPayload() {
     pstars: st.pstars,
     pretest: assessmentLabel(s, 'pre'), posttest: assessmentLabel(s, 'post'),
     score: s.score || 0, game: st.game, badges: st.badges, achievements: st.achievements, pct: st.pct,
+    progressPosition: progress.position,
+    activity11Attempts: progress.attempts[0], activity12Attempts: progress.attempts[1],
+    activity13Attempts: progress.attempts[2], activity14Attempts: progress.attempts[3],
+    activityAttemptDetails: progress.details,
+    firstLoginAt: s.firstLoginAt || '', lastLoginAt: s.lastLoginAt || '',
+    lastActiveAt: s.lastActiveAt || '', loginCount: Number(s.loginCount || 0),
     last: new Date().toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' })
   };
 }
