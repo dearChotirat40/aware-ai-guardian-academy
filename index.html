@@ -1694,49 +1694,7 @@ var SUPABASE_CONFIG = {
   publishableKey: "sb_publishable_5qnVISqtwdU8jUtVkr-9qQ_G15r0SJH"
 };
 
-var APPS_SCRIPT_CODE = [
-"function doGet() {",
-"  return json_({ ok: true, service: 'Aware AI student report' });",
-"}",
-"",
-"function doPost(e) {",
-"  try {",
-"    if (!e || !e.postData || !e.postData.contents) throw new Error('ต้องส่งข้อมูล JSON แบบ POST');",
-"    var d = JSON.parse(e.postData.contents);",
-"    var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];",
-"  var headers = ['เลขประจำตัวนักเรียน','ชื่อเล่น','เลขที่','ระดับอัญมณี','โบนัสระดับ','ดาวเดินทาง','ดาวบทเรียน','บทที่เรียนจบ','คะแนน E1 ระหว่างเรียน (เต็ม 20)','จำนวนเหรียญหน่วย (เต็ม 5)',",
-"    'ดาวบทที่ 1','คะแนนระหว่างบทที่ 1',",
-"    'ดาวบทที่ 2','คะแนนระหว่างบทที่ 2',",
-"    'ดาวบทที่ 3','คะแนนระหว่างบทที่ 3',",
-"    'ดาวบทที่ 4','คะแนนระหว่างบทที่ 4',",
-"    'ดาวบทที่ 5','คะแนนระหว่างบทที่ 5','ดาวพรอมต์',",
-"    'คะแนนก่อนเรียนรวม','คะแนนหลังเรียนรวม','โบนัสภารกิจ','ด่านที่ผ่าน','ตราสถานการณ์','ตราสัญลักษณ์รวม','ความคืบหน้า (%)','เรียนค้างที่','ความพยายาม 1.1','ความพยายาม 1.2','ความพยายาม 1.3','ความพยายาม 1.4','รายละเอียดความพยายาม','เข้าใช้ครั้งแรก','เข้าใช้ล่าสุด','ใช้งานล่าสุด','จำนวนครั้งที่เข้า','อัปเดตล่าสุด'];",
-"    sh.getRange(1, 1, 1, headers.length).setValues([headers]);",
-"    sh.setFrozenRows(1);",
-"    var row = [String(d.code || ''), d.nickname || '', d.num || '', d.gem || '', d.levelBonus || '', d.journeyStars || 0, d.stars || 0, d.done || 0, d.unitPoints || 0, d.lessonMedals || 0,",
-"    d.l1, d.l1post, d.l2, d.l2post, d.l3, d.l3post, d.l4, d.l4post, d.l5, d.l5post,",
-"    d.pstars || 0, d.pretest || '', d.posttest || '', d.score || 0, d.game || 0, d.badges || 0, d.achievements || 0, d.pct || 0, d.progressPosition || '', d.activity11Attempts || 0, d.activity12Attempts || 0, d.activity13Attempts || 0, d.activity14Attempts || 0, d.activityAttemptDetails || '', d.firstLoginAt || '', d.lastLoginAt || '', d.lastActiveAt || '', d.loginCount || 0, d.last || new Date().toLocaleString('th-TH')];",
-"    var last = sh.getLastRow();",
-"    var rowIndex = 0;",
-"    if (last >= 2) {",
-"      var codes = sh.getRange(2, 1, last - 1, 1).getValues();",
-"      for (var i = 0; i < codes.length; i++) {",
-"        if (String(codes[i][0]) === String(d.code || '')) { rowIndex = i + 2; break; }",
-"      }",
-"    }",
-"    if (rowIndex) sh.getRange(rowIndex, 1, 1, row.length).setValues([row]);",
-"    else { sh.appendRow(row); rowIndex = sh.getLastRow(); }",
-"    return json_({ ok: true, row: rowIndex });",
-"  } catch (err) {",
-"    return json_({ ok: false, error: String(err && err.message || err) });",
-"  }",
-"}",
-"",
-"function json_(data) {",
-"  return ContentService.createTextOutput(JSON.stringify(data))",
-"    .setMimeType(ContentService.MimeType.JSON);",
-"}"
-].join('\n');
+var APPS_SCRIPT_CODE = "/**\n * Aware AI Guardian Academy — Student progress report endpoint\n *\n * Paste this file into Extensions > Apps Script of the teacher's Google Sheet,\n * then deploy it as a Web app.  It records only student progress reports.\n */\nfunction doGet() {\n  return json_({ ok: true, service: 'Aware AI student report' });\n}\n\nfunction doPost(e) {\n  try {\n    if (!e || !e.postData || !e.postData.contents) {\n      throw new Error('ต้องส่งข้อมูล JSON แบบ POST');\n    }\n\n    var d = JSON.parse(e.postData.contents);\n    var sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];\n    var headers = [\n      'เลขประจำตัวนักเรียน', 'ชื่อเล่น', 'เลขที่', 'ระดับอัญมณี', 'โบนัสระดับ',\n      'ดาวเดินทาง', 'ดาวบทเรียน', 'บทที่เรียนจบ',\n      'คะแนนบทเรียนรวม (เต็ม 20)', 'จำนวนเหรียญหน่วย (เต็ม 5)',\n      'ดาวบทที่ 1', 'คะแนนระหว่างบทที่ 1',\n      'ดาวบทที่ 2', 'คะแนนระหว่างบทที่ 2',\n      'ดาวบทที่ 3', 'คะแนนระหว่างบทที่ 3',\n      'ดาวบทที่ 4', 'คะแนนระหว่างบทที่ 4',\n      'ดาวบทที่ 5', 'คะแนนระหว่างบทที่ 5', 'ดาวพรอมต์',\n      'คะแนนก่อนเรียนรวม', 'คะแนนหลังเรียนรวม', 'โบนัสภารกิจ', 'ด่านที่ผ่าน',\n      'ตราสถานการณ์', 'ตราสัญลักษณ์รวม', 'ความคืบหน้า (%)', 'เรียนค้างที่',\n      'ความพยายาม 1.1', 'ความพยายาม 1.2', 'ความพยายาม 1.3', 'ความพยายาม 1.4',\n      'รายละเอียดความพยายาม', 'เกณฑ์ผ่านรายบท', 'จำนวนคำถามน้องชวนคิด', 'คำถามล่าสุดที่ถามน้องชวนคิด', 'เข้าใช้ครั้งแรก', 'เข้าใช้ล่าสุด', 'ใช้งานล่าสุด',\n      'จำนวนครั้งที่เข้า', 'อัปเดตล่าสุด'\n    ];\n\n    sh.getRange(1, 1, 1, headers.length).setValues([headers]);\n    sh.setFrozenRows(1);\n\n    var row = [\n      String(d.code || ''), d.nickname || '', d.num || '', d.gem || '', d.levelBonus || '',\n      d.journeyStars || 0, d.stars || 0, d.done || 0, d.unitPoints || 0, d.lessonMedals || 0,\n      d.l1, d.l1post, d.l2, d.l2post, d.l3, d.l3post, d.l4, d.l4post, d.l5, d.l5post,\n      d.pstars || 0, d.pretest || '', d.posttest || '', d.score || 0, d.game || 0,\n      d.badges || 0, d.achievements || 0, d.pct || 0, d.progressPosition || '',\n      d.activity11Attempts || 0, d.activity12Attempts || 0,\n      d.activity13Attempts || 0, d.activity14Attempts || 0,\n      d.activityAttemptDetails || '', d.lessonCriteria || '', d.chatQuestionCount || 0, d.latestChatQuestion || '', d.firstLoginAt || '', d.lastLoginAt || '',\n      d.lastActiveAt || '', d.loginCount || 0,\n      d.last || new Date().toLocaleString('th-TH')\n    ];\n\n    var last = sh.getLastRow();\n    var rowIndex = 0;\n    if (last >= 2) {\n      var codes = sh.getRange(2, 1, last - 1, 1).getValues();\n      for (var i = 0; i < codes.length; i++) {\n        if (String(codes[i][0]) === String(d.code || '')) {\n          rowIndex = i + 2;\n          break;\n        }\n      }\n    }\n\n    if (rowIndex) {\n      sh.getRange(rowIndex, 1, 1, row.length).setValues([row]);\n    } else {\n      sh.appendRow(row);\n      rowIndex = sh.getLastRow();\n    }\n    return json_({ ok: true, row: rowIndex });\n  } catch (err) {\n    return json_({ ok: false, error: String(err && err.message || err) });\n  }\n}\n\nfunction json_(data) {\n  return ContentService.createTextOutput(JSON.stringify(data))\n    .setMimeType(ContentService.MimeType.JSON);\n}\n";
 
 /* =====================================================
    👥 บัญชีนักเรียน
@@ -3626,6 +3584,9 @@ function sheetPayload() {
     activity11Attempts: progress.attempts[0], activity12Attempts: progress.attempts[1],
     activity13Attempts: progress.attempts[2], activity14Attempts: progress.attempts[3],
     activityAttemptDetails: progress.details,
+    lessonCriteria: JSON.stringify(lessons.map(function(l,i){return {lesson:i+1, criteria:l.criteriaText||'', quizPassCount:Number(l.quizPassCount||0)};})),
+    chatQuestionCount: Array.isArray(s.chatQuestions)?s.chatQuestions.length:0,
+    latestChatQuestion: Array.isArray(s.chatQuestions)&&s.chatQuestions.length?String(s.chatQuestions[s.chatQuestions.length-1].question||''):'',
     firstLoginAt: s.firstLoginAt || '', lastLoginAt: s.lastLoginAt || '',
     lastActiveAt: s.lastActiveAt || '', loginCount: Number(s.loginCount || 0),
     last: new Date().toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' })
