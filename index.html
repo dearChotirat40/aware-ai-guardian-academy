@@ -5827,8 +5827,8 @@ function unitOneMove(i){
   unitOneStage(f.items[i].answers.length===2?'feedback':f.items[i].done?'assessment':f.items[i].mediaDone?'activity':'media');
 }
 function unitOnePick(i,value){var a=unitOneSession();if(unitOneFlow().stage!=='activity'||a.done||a.attempts>=unitOneAttemptLimit())return;a.picks[i]=Number(value);unitOnePersist();var card=document.getElementById('u1-card-'+i);if(card)card.hidden=Number(value)>=0;unitOneUpdateGroups();}
-function unitOneUnpick(i){var a=unitOneSession();if(unitOneFlow().stage!=='activity'||a.done||a.attempts>=unitOneAttemptLimit())return;a.picks[i]=-1;a.checkedPicks=null;a.feedback='';unitOnePersist();render();}
-function unitOneDrop(event,group){event.preventDefault();var text=event.dataTransfer.getData('text/plain');if(!/^\d+$/.test(text))return;var i=Number(text);if(i>=unitOneCardList().length)return;unitOnePick(i,group);render();}
+function unitOneUnpick(i){var a=unitOneSession();if(unitOneFlow().stage!=='activity'||a.done||a.attempts>=unitOneAttemptLimit())return;a.picks[i]=-1;a.checkedPicks=null;a.feedback='';unitOnePersist();var card=document.getElementById('u1-card-'+i);if(card)card.hidden=false;unitOneUpdateGroups();}
+function unitOneDrop(event,group){event.preventDefault();var text=event.dataTransfer.getData('text/plain');if(!/^\d+$/.test(text))return;var i=Number(text);if(i>=unitOneCardList().length)return;unitOnePick(i,group);}
 function unitOneCheck(){
   var a=unitOneSession(),cards=unitOneCardList();
   if(unitOneFlow().stage!=='activity'||a.done||(a.attempts>=unitOneAttemptLimit()))return;
