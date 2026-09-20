@@ -160,7 +160,7 @@
         '<button type="button" class="teacher-quick report" onclick="openReportArchive(true)"><span>📊</span><b>รายงานทั้งหมด</b><small>ผลเรียน กิจกรรม แชท และรางวัล</small></button>'+
         '<button type="button" class="teacher-quick students" onclick="teacherJumpTo(\'teacher-roster-panel\')"><span>👥</span><b>จัดการนักเรียน</b><small>เพิ่ม แก้ไข และนำเข้ารายชื่อ</small></button>'+
         '<button type="button" class="teacher-quick content" onclick="teacherJumpTo(\'teacher-content-menu\')"><span>✏️</span><b>แก้เนื้อหา</b><small>บทเรียน สื่อ คำถาม และรางวัล</small></button>'+
-        '<button type="button" class="teacher-quick criteria" onclick="teacherAdminUnitOneCriteria()"><span>🎯</span><b>เกณฑ์กิจกรรม 1.4</b><small>ข้อความ จำนวนข้อผ่าน และจำนวนครั้ง</small></button>'+
+        '<button type="button" class="teacher-quick criteria" onclick="teacherAdminAllCriteria()"><span>🎯</span><b>เกณฑ์ทุกบททุกข้อ</b><small>เกณฑ์กิจกรรม จำนวนข้อผ่าน และเฉลย</small></button>'+
         '<button type="button" class="teacher-quick rewards" onclick="teacherJumpTo(\'teacher-reset-tools\')"><span>♻️</span><b>บัญชีและรีเซ็ต</b><small>รหัสผ่าน รีเซ็ตรายคน หรือทั้งห้อง</small></button>'+
       '</div><p id="teacher-admin-status" class="teacher-save-status" role="status">'+esc(notice || 'ฐานข้อมูลพร้อมใช้งาน เลือกเมนูด้านบนได้เลย')+'</p>'+
       '<div id="teacher-reset-tools" class="teacher-tool-box"><h3>🔑 รหัสผ่านและรางวัล</h3><div class="teacher-tool-row"><label><span>เลือกบัญชี</span><select class="inp" id="admin-student-select">'+Object.keys(db.students).map(function(id){return '<option value="'+esc(id)+'">'+esc(studentAlias(db.students[id])+' · '+db.students[id].code)+'</option>';}).join('')+'</select></label>'+button('เปิดข้อมูลบัญชี','teacherAdminStudent()','blueb')+'</div>'+
@@ -185,11 +185,12 @@
     if(index<0||index>=value.length)return;
     selectDraft({type:'content',key:'lessons',value:value,base:s,focus:'lesson',lessonIndex:index});
   };
-  window.teacherAdminUnitOneCriteria=function(){
+  window.teacherAdminAllCriteria=function(){
     var s=snapshot();enrichLessonCMS(s.lessons);
     var value=copy(s.lessons);value.forEach(function(l,i){l.video=VIDEO_LINKS[i] || '';l.media=l.media || [];});
-    selectDraft({type:'content',key:'lessons',value:value,base:s,focus:'unit-one-criteria'});
+    selectDraft({type:'content',key:'lessons',value:value,base:s,focus:'all-criteria'});
   };
+  window.teacherAdminUnitOneCriteria=window.teacherAdminAllCriteria;
   window.teacherAdminCriteriaValue=function(key,input){
     if(busy||!edit||edit.key!=='lessons')return;
     var a=edit.value[0].situations[3].activityData;
@@ -240,14 +241,26 @@
   function drawEditor(){
     var host=document.getElementById('teacher-admin-editor');if(!host)return;if(!edit){host.innerHTML='';return;}
     paths=[];var h='<h3 style="margin-top:16px">'+esc(edit.type==='student'?'แก้ข้อมูลบัญชี '+edit.base.code:moduleNames[edit.key])+'</h3><p class="soft tiny">การแก้ไขยังไม่ส่งถึงนักเรียนจนกดบันทึก</p><p data-teacher-save-status role="status">'+esc(draftNotice())+'</p>';
-    if(edit.type==='content'&&edit.focus==='unit-one-criteria'){
-      var criteria=edit.value[0].situations[3].activityData;
-      h+='<section class="innerbox teacher-criteria-editor" style="padding:18px;margin:14px 0"><h3>🎯 เกณฑ์ผ่านกิจกรรม 1.4</h3>'+
-        '<label style="display:block;margin:12px 0">ข้อความที่นักเรียนเห็น<textarea class="inp" rows="3" style="width:100%;resize:vertical" oninput="teacherAdminCriteriaValue(\'criteriaText\',this)">'+esc(criteria.criteriaText||'')+'</textarea></label>'+
-        '<div class="teacher-tool-row"><label><span>ตอบถูกอย่างน้อยกี่ใบ</span><input class="inp" type="number" min="1" max="'+criteria.cards.length+'" value="'+esc(criteria.passCount)+'" oninput="teacherAdminCriteriaValue(\'passCount\',this)"></label>'+
-        '<label><span>ตรวจได้กี่ครั้ง</span><input class="inp" type="number" min="1" max="100" value="'+esc(criteria.maxAttempts)+'" oninput="teacherAdminCriteriaValue(\'maxAttempts\',this)"></label></div>'+
-        '<label style="display:block;margin:12px 0"><input type="checkbox" '+(criteria.trackWrongCards?'checked':'')+' onchange="teacherAdminCriteriaValue(\'trackWrongCards\',this)"> บันทึกการ์ดที่นักเรียนตอบผิดในรายงานครู</label>'+
-        '<p class="soft small">กิจกรรมนี้มี '+criteria.cards.length+' การ์ด ระบบจะใช้ตัวเลขที่บันทึกเพื่อตรวจผ่านจริง</p></section>';
+    if(edit.type==='content'&&edit.focus==='all-criteria'){
+      h+='<section class="innerbox teacher-criteria-editor" style="padding:18px;margin:14px 0"><h3>🎯 เกณฑ์ผ่านทุกบท ทุกกิจกรรม และทุกข้อ</h3><p class="soft small">ตัวเลขเกณฑ์รายบทใช้ตรวจผ่านจริง ส่วนเฉลย คำใบ้ และคำอธิบายใช้กับคำถามของนักเรียนโดยตรง</p>';
+      edit.value.forEach(function(lesson,li){
+        h+='<details '+(li===0?'open':'')+' class="innerbox" style="padding:12px;margin:12px 0"><summary><b>บทที่ '+(li+1)+' · '+esc(lesson.title)+'</b></summary>'+
+          field(lesson.criteriaText,[li,'criteriaText'],'ข้อความเกณฑ์ผ่านของบท')+
+          field(lesson.quizPassCount,[li,'quizPassCount'],'จำนวนข้อที่ต้องถูกเพื่อผ่าน (0 = ตอบครบ)');
+        (lesson.situations||[]).forEach(function(situation,si){
+          h+='<details class="innerbox" style="padding:10px;margin:10px 0"><summary><b>กิจกรรม '+(situation.id||((li+1)+'.'+(si+1)))+' · '+esc(situation.title||'สถานการณ์')+'</b></summary>'+
+            field(situation.criteriaText,[li,'situations',si,'criteriaText'],'ข้อความเกณฑ์ผ่านกิจกรรม');
+          var activity=situation.activityData||{};
+          if(Object.prototype.hasOwnProperty.call(activity,'passCount'))h+=field(activity.passCount,[li,'situations',si,'activityData','passCount'],'จำนวนรายการที่ต้องถูกเพื่อผ่าน');
+          if(Object.prototype.hasOwnProperty.call(activity,'maxAttempts'))h+=field(activity.maxAttempts,[li,'situations',si,'activityData','maxAttempts'],'จำนวนครั้งที่ตรวจได้ (0 = ไม่จำกัด)');
+          if(Object.prototype.hasOwnProperty.call(activity,'trackWrongCards'))h+=field(activity.trackWrongCards,[li,'situations',si,'activityData','trackWrongCards'],'บันทึกรายการที่ตอบผิดในรายงานครู');
+          h+='</details>';
+        });
+        h+='<details open class="innerbox" style="padding:10px;margin:10px 0"><summary><b>คำถามทุกข้อ ('+lesson.quiz.length+')</b></summary>';
+        lesson.quiz.forEach(function(q,qi){h+='<details class="innerbox" style="padding:10px;margin:8px 0"><summary><b>ข้อ '+(qi+1)+' · '+esc(q.q)+'</b></summary>'+field(q.answer,[li,'quiz',qi,'answer'],'เฉลยที่ถูกต้อง')+field(q.hint||'',[li,'quiz',qi,'hint'],'คำใบ้')+field(q.explain||'',[li,'quiz',qi,'explain'],'คำอธิบายหลังตอบ')+'</details>';});
+        h+='</details></details>';
+      });
+      h+='</section>';
     } else if(edit.type==='content'&&edit.focus==='lesson'){
       var li=edit.lessonIndex,lesson=edit.value[li];
       h+='<section class="innerbox" style="padding:18px;margin:14px 0"><h3>📘 บทที่ '+(li+1)+' · '+esc(lesson.title)+'</h3><p class="soft small">แก้ไขทุกส่วนของบทนี้ได้ด้านล่าง รวมเกณฑ์ผ่านและข้อสอบทุกข้อ</p>'+field(lesson,[li],'เนื้อหาและเกณฑ์ทั้งหมดของบทที่ '+(li+1))+'</section>';
@@ -257,7 +270,7 @@
     }
     if(edit.type==='student') {
       h+='<div class="teacher-field-groups">'+Object.keys(edit.value).map(function(k){return '<section class="teacher-field-group">'+field(edit.value[k],[k],labels[k] || k)+'</section>';}).join('')+'</div>';
-    } else if(edit.focus!=='unit-one-criteria'&&edit.focus!=='lesson') {
+    } else if(edit.focus!=='all-criteria'&&edit.focus!=='lesson') {
       if(edit.key==='lessons'){
         h+='<section class="innerbox" style="padding:18px;margin:16px 0"><h3>🎬 วิดีโอแยกสถานการณ์ · ทุกฐาน</h3><p>วางลิงก์ YouTube, Google Drive หรือไฟล์ .mp4 / .webm (https://) แล้วกด “บันทึกลงฐานข้อมูล” เพื่อบันทึกทุกฐานในครั้งเดียว</p><p class="soft small">เว้นว่างเพื่อใส่คลิปภายหลัง · ขยายรายการบทเรียนด้านล่างเพื่อแก้เนื้อเรื่อง กิจกรรม คำถาม เฉลย คำใบ้ และ Did you know?</p>';
         edit.value.forEach(function(l,li){h+='<details '+(li===0?'open':'')+'><summary>'+esc(l.title)+'</summary>';(l.situations || []).forEach(function(s,i){h+=field(s.videoUrl,[li,'situations',i,'videoUrl'],s.id+' '+s.title);});h+='</details>';});
@@ -312,7 +325,7 @@
       });
     }
 
-    c.lessons.forEach(function(l){(l.situations || []).forEach(function(s){s.videoUrl=String(s.videoUrl || '').trim();assert(!s.videoUrl || unitOneVideoSource(s.videoUrl),'วิดีโอ '+(s.id || '')+': ใช้ลิงก์ YouTube, Google Drive หรือไฟล์ .mp4 / .webm แบบ https:// หรือเว้นว่าง');});});
+    c.lessons.forEach(function(l){(l.situations || []).forEach(function(s){assert(typeof s.criteriaText==='string'&&s.criteriaText.trim(),'กรอกข้อความเกณฑ์ผ่านของทุกกิจกรรม');s.videoUrl=String(s.videoUrl || '').trim();assert(!s.videoUrl || unitOneVideoSource(s.videoUrl),'วิดีโอ '+(s.id || '')+': ใช้ลิงก์ YouTube, Google Drive หรือไฟล์ .mp4 / .webm แบบ https:// หรือเว้นว่าง');});});
     assert(c.lessons.length>0 && c.lessons.length<=30,'ต้องมีบทเรียน 1–30 บท');
     function questions(list){assert(Array.isArray(list)&&list.length>0,'ต้องมีข้อสอบอย่างน้อย 1 ข้อ');list.forEach(function(q){assert(q.q && Array.isArray(q.choices)&&q.choices.length>=2&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.choices.length,'ตรวจคำถาม ตัวเลือก และหมายเลขเฉลย');});}
     c.lessons.forEach(function(l){assert(typeof l.criteriaText==='string'&&l.criteriaText.trim(),'กรอกข้อความเกณฑ์ผ่านของทุกบท');assert(Number.isInteger(l.quizPassCount)&&l.quizPassCount>=0&&l.quizPassCount<=l.quiz.length,'จำนวนข้อสอบที่ต้องถูกต้องอยู่ระหว่าง 0 ถึงจำนวนข้อสอบของบท');assert(l.title && l.short && Array.isArray(l.slides)&&l.slides.length && l.simulation && l.simulation.context,'บทเรียนต้องมีชื่อ ชื่อย่อ สไลด์ และสถานการณ์');questions(l.quiz);(l.media || []).forEach(function(x){assert(/^https:\/\//.test(x.url),'สื่อต้องใช้ลิงก์ https://');});});
