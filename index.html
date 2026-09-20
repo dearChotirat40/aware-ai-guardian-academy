@@ -2289,7 +2289,7 @@ SCENE_ONE_TWO_UPDATE.learning = 'Generative AI เรียนรู้รูป
 SCENE_ONE_TWO_UPDATE.activity = 'ทดลองถามข้อความเดิม 3 ครั้ง แล้วเติมประโยคเดิม 5 ครั้ง เปรียบเทียบผลเพื่อสังเกตการทำนาย token ถัดไปตามบริบท';
 SCENE_ONE_TWO_UPDATE.contentRevision = 3;
 function enrichLessonCMS(items){
-  items.forEach(function(l){(l.situations || []).forEach(function(s){if(typeof s.videoUrl!=='string')s.videoUrl='';});});
+  items.forEach(function(l){if(typeof l.criteriaText!=='string')l.criteriaText='เรียนรู้จากสื่อและกิจกรรมให้ครบ แล้วตอบแบบทดสอบครบทุกข้อ';if(!Number.isInteger(l.quizPassCount))l.quizPassCount=0;(l.situations || []).forEach(function(s){if(typeof s.videoUrl!=='string')s.videoUrl='';if(typeof s.criteriaText!=='string')s.criteriaText=s.activity||'ทำกิจกรรมตามขั้นตอนให้ครบ';});});
   var unit=items[0];if(!unit)return;
   if(unit.unitOneStructureRevision!==5){(unit.situations||[]).forEach(function(s,i){var spec=UNIT_ONE_NAMES_OBJECTIVES[i];if(spec){s.title=spec.title;s.objective=spec.objective;}});unit.unitOneStructureRevision=5;}
   var third=unit.situations&&unit.situations[2];if(third&&third.contentRevision!==3)Object.assign(third,JSON.parse(JSON.stringify(SCENE_ONE_THREE_UPDATE)));
@@ -3751,7 +3751,7 @@ function lessonRewardText(p) {
   p = normalizeLessonProgress(p);
   if (!p.quizDone) return '0/' + UNIT_POINTS + ' คะแนนบทเรียน · ☆ 0 ดาว · ◯ ยังไม่มีเหรียญ';
   var medal = unitMedalInfo(p);
-  return lessonRewardPoints(p) + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ 1 ดาว · ' + medal.icon + ' ' + medal.name;
+  return lessonRewardPoints(p) + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ ' + (passed?1:0) + ' ดาว · ' + medal.icon + ' ' + medal.name;
 }
 function rewardCriteriaHtml(audience) {
   var intro = audience === 'teacher'
@@ -6429,8 +6429,9 @@ function nextQuestion() {
     p.postScore = qz.correct;
     p.postTotal = ls.quiz.length;
     p.quizAttempted = true;
-    p.quizDone = true;
-    p.stars = 1;
+    var requiredCorrect = Math.max(0, Math.min(ls.quiz.length, Number(ls.quizPassCount) || 0));
+    p.quizDone = requiredCorrect === 0 || qz.correct >= requiredCorrect;
+    p.stars = p.quizDone ? 1 : 0;
     qz.completed = true;
     markJourneyStep(beforeJourney);
     saveProgress();
@@ -6672,12 +6673,14 @@ function renderQuizResult() {
   var pct = Math.round(got / total * 100);
   var unitPoints = lessonRewardPoints(p);
   var unitMedal = unitMedalInfo(p);
-  var face = pct >= 80 ? '🏆' : (got >= 1 ? '💪' : '🌱');
-  var msg = pct >= 80
-    ? 'ทำได้ดีมาก ระบบบันทึกคะแนนครั้งแรกเรียบร้อยแล้ว'
-    : 'ระบบบันทึกคะแนนครั้งแรกเรียบร้อยแล้ว สามารถกลับไปทบทวนบทเรียนเพิ่มเติมได้';
+  var requiredCorrect = Math.max(0, Math.min(total, Number(ls.quizPassCount) || 0));
+  var passed = !!p.quizDone;
+  var face = passed ? (pct >= 80 ? '🏆' : '💪') : '🌱';
+  var msg = passed ? 'ผ่านเกณฑ์ของบทนี้และบันทึกผลเรียบร้อยแล้ว' : 'ยังไม่ผ่านเกณฑ์ ตอบให้ถูกอย่างน้อย '+requiredCorrect+' ข้อ แล้วลองใหม่ได้';
   var nextStepButton = '';
-  if (i < lessons.length - 1) {
+  if (!passed) {
+    nextStepButton = '<button onclick="startQuiz(\'mid\','+i+')" class="btn mintb sm">🔁 ทำแบบทดสอบอีกครั้ง</button>';
+  } else if (i < lessons.length - 1) {
     nextStepButton = scenarioCompleted(i)
       ? '<button onclick="openLesson(' + (i + 1) + ')" class="btn mintb sm">🔓 ไปบทที่ ' + (i + 2) + '</button>'
       : '<button onclick="openLessonBonus()" class="btn mintb sm">🔒 ผ่านโบนัสเพื่อปลดล็อกบทที่ ' + (i + 2) + '</button>';
@@ -6693,13 +6696,13 @@ function renderQuizResult() {
       '<h2 class="t-mint" style="font-size:24px;font-weight:700">ส่งแบบทดสอบระหว่างบทแล้ว!</h2>' +
     '</div>' +
     '<div class="center-view">' +
-      '<div class="pop" style="font-size:34px;margin-bottom:10px">🎯 ' + unitPoints + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ 1 ดาว · ' + unitMedal.icon + ' ' + unitMedal.name + '</div>' +
-      '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% → บันทึกผลครั้งแรกเรียบร้อยแล้ว</p>' +
+      '<div class="pop" style="font-size:34px;margin-bottom:10px">🎯 ' + unitPoints + '/' + UNIT_POINTS + ' คะแนนบทเรียน · ⭐ ' + (passed?1:0) + ' ดาว · ' + unitMedal.icon + ' ' + unitMedal.name + '</div>' +
+      '<p class="ink" style="font-size:20px;font-weight:700;margin-bottom:6px">ตอบถูก ' + got + ' / ' + total + ' ข้อ · ' + pct + '% · เกณฑ์ '+(requiredCorrect?requiredCorrect+' ข้อ':'ตอบครบทุกข้อ')+'</p>' +
       '<p class="soft" style="margin-bottom:6px">' + msg + '</p>' +
-      '<p class="soft tiny" style="margin-bottom:24px">(แบบทดสอบระหว่างบททำได้บทละ 1 ครั้ง และไม่สามารถทำคะแนนใหม่ได้)</p>' +
-      lessonDrawRewardHtml(p) +
+      '<p class="soft tiny" style="margin-bottom:24px">'+escChat(ls.criteriaText||'เรียนรู้และตอบแบบทดสอบให้ครบ')+'</p>' +
+      (passed?lessonDrawRewardHtml(p):'') +
       '<div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">' +
-        '<button onclick="openLessonBonus()" class="btn pinkb sm">🎁 ทำโบนัสภารกิจท้ายบท</button>' +
+        (passed?'<button onclick="openLessonBonus()" class="btn pinkb sm">🎁 ทำโบนัสภารกิจท้ายบท</button>':'') +
         nextStepButton +
         '<button onclick="openLesson(' + i + ')" class="btn whiteb sm">📖 ทบทวนบทเรียน</button>' +
         '<button onclick="changeView(\'lessons\')" class="btn blueb sm">🎯 กลับห้องเรียน</button>' +
@@ -7210,7 +7213,7 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./public/teacher-admin.js?v=20260920-working-reset"></script>
+<script src="./public/teacher-admin.js?v=20260920-all-lesson-editor"></script>
 <script src="./public/google-login.js?v=20260920-login-times"></script>
 <script src="./public/chat-history.js?v=stable-20260916-friendly"></script>
 <script src="./public/student-reports.js?v=20260920-login-times"></script>
