@@ -3659,13 +3659,6 @@ function totalStars() {
 function maxStars() { return lessons.length; }
 var UNIT_POINTS = 4;
 function maxLessonPoints() { return lessons.length * UNIT_POINTS; }
-var RESEARCH_CONTENT_AREAS = [
-  { competency:'การรู้และเข้าใจ AI', focus:'ความหมาย หลักการทำงาน ประเภท ความสามารถ ข้อจำกัด และตัวอย่าง AI ในชีวิตประจำวัน' },
-  { competency:'การใช้งานและประยุกต์ใช้', focus:'การเลือกเครื่องมือให้ตรงงาน การเขียนพรอมต์ และการใช้ AI เป็นผู้ช่วยโดยมนุษย์ยังตรวจสอบผลงาน' },
-  { competency:'การประเมินข้อมูล', focus:'การตรวจสอบข้อเท็จจริง แหล่งข้อมูล อคติ และการสร้างข้อมูลคลาดเคลื่อน (Hallucination)' },
-  { competency:'จริยธรรมและความรับผิดชอบ', focus:'ความซื่อสัตย์ทางวิชาการ ลิขสิทธิ์ ความเป็นธรรม ความโปร่งใส และผลกระทบต่อผู้อื่น' },
-  { competency:'ความเป็นส่วนตัวและความปลอดภัย', focus:'ข้อมูลส่วนบุคคล ข้อมูลอ่อนไหว การทำข้อมูลให้ไม่ระบุตัวตน และการป้องกันความเสี่ยง' }
-];
 function lessonScorePercent(p) {
   p = normalizeLessonProgress(p);
   if (!p.quizDone) return 0;
@@ -3731,22 +3724,6 @@ function rewardCriteriaHtml(audience) {
       '<div class="innerbox"><p class="small" style="font-weight:700">🏆 คะแนนกระดานผู้นำ</p><p class="soft tiny" style="line-height:1.8">คะแนนบทเรียนเต็ม 20 + ดาวพรอมต์ × 5 (เต็ม 45) + โบนัสภารกิจเต็ม 10 + โบนัสระดับ</p></div>' +
       '<div class="innerbox"><p class="small" style="font-weight:700">🏁 คะแนนหลังเรียน</p><p class="soft tiny" style="line-height:1.8">ใช้ดูพัฒนาการก่อนและหลังเรียน แยกออกจากคะแนนแข่งขันและรางวัลทั้งหมด</p></div>' +
     '</div>' +
-  '</section>';
-}
-function teacherContentBlueprintHtml() {
-  var cards = lessons.map(function(ls, i){
-    var area = RESEARCH_CONTENT_AREAS[i] || { competency:'สมรรถนะประจำบท', focus:ls.title };
-    return '<div class="innerbox" style="margin-bottom:10px">' +
-      '<p class="small ' + themeList[i % themeList.length].deep + '" style="font-weight:700">บทที่ ' + (i + 1) + ' · ' + area.competency + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8"><b>สาระสำหรับใส่:</b> ' + area.focus + '</p>' +
-      '<p class="soft tiny" style="line-height:1.8"><b>พื้นที่เรียนรู้ในแอป:</b> สถานการณ์ชีวิตจริง 4 เรื่อง · ประเด็นคิดวิเคราะห์ · เนื้อหาสำคัญ · แบบทดสอบระหว่างบท ' + ls.quiz.length + ' ข้อ พร้อมคำใบ้และข้อมูลย้อนกลับ</p>' +
-    '</div>';
-  }).join('');
-  return '<section class="pcard pink noprint" style="margin-bottom:20px">' +
-    '<div class="tape tape-pink"></div>' +
-    '<h3 class="t-pink" style="font-weight:700;margin-bottom:6px">🗂️ โครงสร้างสำหรับใส่เนื้อหาตามเล่มวิจัย</h3>' +
-    '<p class="soft small" style="line-height:1.8;margin-bottom:12px">แต่ละบทจัดพื้นที่ไว้ครบตามขอบเขตงานวิจัย: เนื้อหาสั้น วิดีโอ สไลด์/อินโฟกราฟิก สถานการณ์ชีวิตจริง กิจกรรม และแบบทดสอบระหว่างเรียน</p>' +
-    '<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">' + cards + '</div>' +
   '</section>';
 }
 function lessonsCompleted() {
@@ -4841,7 +4818,6 @@ function renderTeacher() {
       '<section data-teacher-pane="overview">' + teacherStudentDetailHtml() + '</section>' +
       '<section data-teacher-pane="students">' + teacherRosterHtml() + '</section>' +
       teacherContentEditorHtml() +
-      '<section data-teacher-pane="content">' + teacherContentBlueprintHtml() + '</section>' +
       rewardCriteriaHtml('teacher') +
       '<section data-teacher-pane="content">' + teacherMissionPlanHtml() + '</section>' +
       '<section data-teacher-pane="content">' + teacherLessonMissionGuideHtml() + '</section>' +
