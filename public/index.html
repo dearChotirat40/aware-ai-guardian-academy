@@ -1624,9 +1624,10 @@ body #app .teacher-trigger span:first-child{font-size:24px}
 .teacher-tool-row,.teacher-report-actions{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:10px 0}.teacher-tool-row label{display:grid;gap:5px;min-width:min(100%,280px);flex:1}.teacher-tool-row label>span{font-weight:800;font-size:.85rem}
 .teacher-report-home{margin-bottom:16px;padding:22px;border:2px solid #83bfe8;background:linear-gradient(135deg,#eef8ff,#fff)}.teacher-report-home>div:first-child{flex:1;min-width:260px}.teacher-report-actions{align-items:stretch;max-width:370px}.teacher-report-actions .btn{flex:1 1 100%;justify-content:center;min-height:46px}
 .teacher-report-table-block{flex:1 1 100%;width:100%;margin-top:14px;background:#fff;border:1px solid #b8d5e7;border-radius:18px;padding:14px}.teacher-report-table-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.teacher-report-table-title span{background:#e9f7ff;border-radius:999px;padding:6px 12px;font-weight:800;color:#24627f}
+.teacher-report-heading{flex:1;min-width:260px}.teacher-report-switch{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.teacher-individual-report{flex:1 1 100%;display:grid;grid-template-columns:minmax(210px,1fr) minmax(220px,1.2fr) auto;align-items:end;gap:12px;margin-top:14px;padding:16px;border:1px solid #e2b5ca;border-radius:18px;background:#fff5f9;scroll-margin-top:18px}.teacher-individual-report .inp{width:100%;min-height:46px}.teacher-individual-report .btn{min-height:46px}
 .teacher-progress-wrap{width:100%;overflow:auto;border:1px solid #d6e1e8;border-radius:14px}.teacher-progress-table{width:100%;min-width:1050px;border-collapse:separate;border-spacing:0;font-size:.86rem}.teacher-progress-table th{position:sticky;top:0;background:#eaf6ff;color:#194d68;text-align:left;padding:11px 9px;border-bottom:2px solid #bad6e6;white-space:nowrap}.teacher-progress-table td{padding:10px 9px;border-bottom:1px solid #e3eaee;vertical-align:middle}.teacher-progress-table tbody tr:hover{background:#fffbea}.teacher-progress-table td:first-child{min-width:175px}.teacher-progress-table small{display:block;margin-top:3px;color:#6b7e89}.attempt-pill{display:inline-block;white-space:nowrap;border-radius:999px;padding:5px 8px;font-weight:800}.attempt-pill.done{background:#dff8ec;color:#157653}.attempt-pill.trying{background:#fff0cf;color:#9a6200}.attempt-pill.idle{background:#edf1f4;color:#6c7780}
 #teacher-roster-panel,#teacher-content-menu,#teacher-reset-tools{scroll-margin-top:18px}
-@media(max-width:760px){.teacher-quick-grid{grid-template-columns:repeat(2,1fr)}.teacher-control-center{padding:14px}.teacher-quick{min-height:124px;padding:13px}.teacher-report-actions{width:100%;max-width:none}.teacher-report-table-block{padding:9px}}
+@media(max-width:760px){.teacher-quick-grid{grid-template-columns:repeat(2,1fr)}.teacher-control-center{padding:14px}.teacher-quick{min-height:124px;padding:13px}.teacher-report-actions{width:100%;max-width:none}.teacher-report-table-block{padding:9px}.teacher-individual-report{grid-template-columns:1fr}.teacher-report-switch .btn{flex:1 1 100%}}
 @media(max-width:420px){.teacher-quick-grid{grid-template-columns:1fr}.teacher-quick{min-height:auto}.teacher-tool-row .btn{width:100%}}
 </style>
 </head>
@@ -7135,7 +7136,7 @@ function makeChoice(choiceIndex) {
 <script src="./teacher-admin.js?v=20260920-simple-menu"></script>
 <script src="./google-login.js?v=20260920-short-help"></script>
 <script src="./chat-history.js?v=stable-20260916-friendly"></script>
-<script src="./student-reports.js?v=20260919-teacher-table"></script>
+<script src="./student-reports.js?v=20260920-report-views"></script>
 <script src="./teacher-workspace.js?v=20260920-simple-menu"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */
