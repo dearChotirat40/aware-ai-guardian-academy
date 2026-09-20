@@ -5843,7 +5843,8 @@ function unitOnePlay(){
   var account=currentId,index=state.slideIdx;
   unitOneMediaTimer=setTimeout(function(){if(currentId!==account||state.slideIdx!==index)return;unitOneMediaNext();if(state.view==='lesson'&&state.currentLesson===0&&state.lessonTab==='mission'&&unitOneFlow().stage==='media')unitOnePlay();},10000);
 }
-function unitOneMediaEnded(){if(unitOneFlow().stage!=='media')return;unitOneSession().mediaDone=true;unitOneStage('activity');}
+function unitOneReviewMedia(){var f=unitOneFlow(),a=unitOneSession();if(f.stage==='media')return;a.mediaReturnStage=f.stage;a.frame=0;unitOneStage('media');}
+function unitOneMediaEnded(){if(unitOneFlow().stage!=='media')return;var a=unitOneSession(),target=a.mediaReturnStage||'activity';delete a.mediaReturnStage;a.mediaDone=true;unitOneStage(target);}
 function unitOneTestQuestions(){if(!UNIT_ONE_TEST_OPEN||!unitOneFlow().reviewOnly)return;var a=unitOneSession();a.done=true;a.answers=[];unitOneStage('assessment');}
 function unitOneStartAssessment(){if(!unitOneSession().done)return;unitOneStage('assessment');}
 function unitOneAnswer(choice){
@@ -5942,6 +5943,7 @@ function unitOneHtml(ls){
  var stages=['media','activity','assessment','feedback'],labels=['ดูสื่อ','ทำกิจกรรม','ตอบคำถาม','สรุปความรู้'];
  var html='<section class="u1-shell u1-stage-'+stage+'"><nav class="u1-roadmap" aria-label="เส้นทางสถานการณ์">'+ls.situations.map(function(s,i){var locked=i>0&&!f.items[i-1].reviewed&&!UNIT_ONE_TEST_OPEN&&!UNIT_ONE_SUBSECTIONS_OPEN;return '<button '+(locked?'disabled':'')+' aria-current="'+(i===n?'step':'false')+'" onclick="unitOneMove('+i+')">'+(f.items[i].reviewed?'✓ ':locked?'🔒 ':'')+s.id+' '+escChat(s.title)+'</button>';}).join('')+'</nav><div class="u1-heading"><div><p class="u1-kicker">สถานการณ์ '+slide.id+' · ระดับ'+escChat(slide.difficulty)+'</p><h2>'+slide.emoji+' '+escChat(slide.title)+'</h2></div><span class="u1-total">ตอบถูกสะสม '+unitOneScore()+'/8</span></div>'+(slide.objective?'<p class="innerbox small" style="margin:0 0 14px;padding:11px 14px"><b>🎯 จุดประสงค์การเรียนรู้:</b> '+escChat(slide.objective)+'</p>':'')+'<ol class="u1-steps">'+stages.map(function(s,i){return '<li class="'+(stage===s?'active':'')+'">'+(i+1)+'. '+labels[i]+'</li>';}).join('')+'</ol><div class="u1-panel">';
  if(UNIT_ONE_TEST_OPEN)html+='<div class="u1-actions"><span>🧪 ทดสอบบทที่ 1 · ไม่เปลี่ยนคะแนนเดิม</span><button class="btn whiteb sm" onclick="unitOneStage(\'media\')">ดูสื่อ</button><button class="btn whiteb sm" onclick="unitOneStage(\'activity\')">กิจกรรม</button><button class="btn whiteb sm" onclick="unitOneTestQuestions()">ลองคำถาม</button></div>';
+ if(stage!=='media')html+='<div class="u1-actions" style="margin-bottom:14px"><button type="button" class="btn whiteb sm" onclick="unitOneReviewMedia()">← ย้อนกลับไปดูสื่อ</button><span class="soft tiny">คำตอบและความคืบหน้าจะไม่หาย</span></div>';
  if(stage==='media')html+=unitOneMediaHtml(slide,a);
  if(stage==='activity')html+='<h3>ลงมือทดลอง</h3><p>'+escChat(slide.activity)+'</p>'+unitOneActivity(n,a)+'<div id="u1-activity-status">'+unitOneActivityStatusHtml(a)+'</div>';
  if(stage==='assessment'){
