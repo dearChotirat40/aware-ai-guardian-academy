@@ -2799,6 +2799,7 @@ function saveProgress() {
   if (live && live.buddyAvatar) s.buddyAvatar = live.buddyAvatar;
   else delete s.buddyAvatar;
   s._updatedAt = Date.now();
+  s.lastActiveAt = new Date().toISOString();
   s.last = new Date().toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
   saveDB();
   scheduleFirebaseStudentSync(currentId);
@@ -2830,6 +2831,19 @@ function applyStudent(id) {
   scheduleSheetSync();
 }
 
+function recordStudentLogin(id) {
+  var s = db.students[id];
+  if (!s) return;
+  var now = new Date().toISOString();
+  if (!s.firstLoginAt) s.firstLoginAt = now;
+  s.lastLoginAt = now;
+  s.lastActiveAt = now;
+  s.loginCount = Math.max(0, Number(s.loginCount || 0)) + 1;
+  s._updatedAt = Date.now();
+  saveDB();
+  scheduleFirebaseStudentSync(id);
+}
+
 function previewStudent() {
   var sel = document.getElementById('sel-student');
   var img = document.getElementById('prev-av');
@@ -2859,6 +2873,7 @@ function doLogin() {
     db.students = {};
     db.students[row.id] = row.data;
     applyStudent(row.id);
+    recordStudentLogin(row.id);
     saveDB();
     setTimeout(function(){ stopLoginReaction(); changeView(hasNickname(row.data) ? 'home' : 'nickname'); }, 900);
   }).catch(function(err){
@@ -2873,6 +2888,7 @@ function doLogin() {
 function quickLogin(id) {
   if (!db.students[id]) return;
   applyStudent(id);
+  recordStudentLogin(id);
   changeView(hasNickname(db.students[id]) ? 'home' : 'nickname');
 }
 function logout() {
@@ -7132,9 +7148,9 @@ function makeChoice(choiceIndex) {
 
 </script>
 <script src="./teacher-admin.js?v=20260920-password-only"></script>
-<script src="./google-login.js?v=20260920-short-help"></script>
+<script src="./google-login.js?v=20260920-login-times"></script>
 <script src="./chat-history.js?v=stable-20260916-friendly"></script>
-<script src="./student-reports.js?v=20260920-position-attempts"></script>
+<script src="./student-reports.js?v=20260920-login-times"></script>
 <script src="./teacher-workspace.js?v=20260920-simple-menu"></script>
 <script>
 /* ==================== เริ่มต้นแอป ==================== */

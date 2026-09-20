@@ -78,6 +78,7 @@
       db.students = {};
       db.students[id] = cloud.students[id];
       applyStudent(id);
+      if(window.recordStudentLogin)recordStudentLogin(id);
       saveDB();
       changeView(hasNickname(cloud.students[id]) ? 'home' : 'nickname');
     }).catch(function () { status('โหลดบัญชีไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วโหลดหน้าใหม่'); });
