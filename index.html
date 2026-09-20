@@ -4214,6 +4214,11 @@ function renderSettings() {
           '<div class="field"><label>ยืนยันรหัสผ่านใหม่</label><div class="password-wrap"><input id="student-confirm-password" class="inp" type="password" minlength="4" maxlength="20" autocomplete="new-password" placeholder="กรอกรหัสใหม่อีกครั้ง" onkeydown="if(event.key===\'Enter\') changeStudentPassword()"><button type="button" class="password-eye" aria-label="ดูรหัสผ่าน" aria-pressed="false" onclick="togglePasswordVisibility(\'student-confirm-password\',this)">👁️</button></div></div>' +
           '<button id="student-password-button" onclick="changeStudentPassword()" class="btn blueb sm" style="width:100%">💾 บันทึกรหัสผ่านใหม่</button>' +
         '</div>' +
+        '<div class="pcard yellow" style="margin-bottom:18px">' +
+          '<h3 class="ink" style="font-weight:700;margin-bottom:10px">♻️ เริ่มบทเรียนใหม่</h3>' +
+          '<p class="soft small" style="margin-bottom:10px">คงบัญชี ชื่อเล่น และผลแบบทดสอบก่อนเรียนไว้ แล้วล้างบทเรียน คะแนน ดาว และเหรียญของบัญชีนี้</p>' +
+          '<button id="student-reset-button" onclick="studentResetProgress()" class="btn whiteb sm" style="width:100%">♻️ รีเซ็ตความคืบหน้าของฉัน</button>' +
+        '</div>' +
         '<div class="pcard pink">' +
           '<h3 class="ink" style="font-weight:700;margin-bottom:10px">🚪 ออกจากระบบ</h3>' +
           '<p class="soft small" style="margin-bottom:10px">ระบบจะบันทึกความคืบหน้าทั้งหมดให้อัตโนมัติก่อนออก</p>' +
@@ -4264,6 +4269,31 @@ function changeStudentPassword() {
     console.warn('Change student password:', err);
     if (button) { button.disabled = false; button.textContent = '💾 บันทึกรหัสผ่านใหม่'; }
     alert('เปลี่ยนรหัสผ่านไม่สำเร็จ รหัสใหม่อาจมีผู้ใช้งานแล้ว กรุณาลองรหัสอื่น');
+  });
+}
+
+function studentResetProgress() {
+  var s = currentStudent(), id = currentId;
+  if (!s || !id) return;
+  if (!firebaseBackend || !firebaseBackend.saveStudent) { alert('ยังเชื่อมต่อฐานข้อมูลไม่ได้ กรุณาลองใหม่'); return; }
+  if (!confirm('ยืนยันรีเซ็ตความคืบหน้าของบัญชีนี้? ระบบจะคงบัญชี ชื่อเล่น และผลแบบทดสอบก่อนเรียนไว้')) return;
+  var button = document.getElementById('student-reset-button');
+  if (button && button.disabled) return;
+  if (button) { button.disabled = true; button.textContent = 'กำลังรีเซ็ตและบันทึก...'; }
+  var old = JSON.parse(JSON.stringify(s));
+  var fresh = emptyStudentFromRoster(s);
+  var next = Object.assign({}, s, fresh, { chatQuestions:[], buddyAvatar:'', _updatedAt:Date.now(), lastActiveAt:new Date().toISOString() });
+  if (s.assessments && s.assessments.pre && s.assessments.pre.done) next.assessments.pre = JSON.parse(JSON.stringify(s.assessments.pre));
+  next.lp = next.lp.map(function(p){ return Object.assign({}, p, {clawPlayed:false,clawPrize:'',clawPlays:0,clawPrizes:[]}); });
+  sanitizeStudentRecord(next);
+  firebaseBackend.saveStudent(id, next).then(function(){
+    db.students[id] = next; saveDB(); applyStudent(id); resetSecureRank();
+    alert('รีเซ็ตและบันทึกลงฐานข้อมูลแล้ว ✅'); changeView('home');
+  }).catch(function(err){
+    db.students[id] = old; saveDB();
+    console.warn('Student reset:', err);
+    if (button) { button.disabled = false; button.textContent = '♻️ รีเซ็ตความคืบหน้าของฉัน'; }
+    alert('รีเซ็ตไม่สำเร็จ ข้อมูลเดิมยังอยู่ครบ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่');
   });
 }
 
@@ -7179,7 +7209,7 @@ function makeChoice(choiceIndex) {
 }
 
 </script>
-<script src="./public/teacher-admin.js?v=20260920-working-menu"></script>
+<script src="./public/teacher-admin.js?v=20260920-working-reset"></script>
 <script src="./public/google-login.js?v=20260920-login-times"></script>
 <script src="./public/chat-history.js?v=stable-20260916-friendly"></script>
 <script src="./public/student-reports.js?v=20260920-login-times"></script>
