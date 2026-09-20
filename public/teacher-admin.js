@@ -152,7 +152,7 @@
     }catch(e){alert('ยังไม่นำเข้าข้อมูล: '+e.message);}finally{input.value='';}
   };
   function button(label,action,cls){return '<button type="button" data-admin-action class="btn '+(cls||'whiteb')+' sm" onclick="'+action+'">'+label+'</button>';}
-  window.teacherJumpTo=function(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+  window.teacherJumpTo=function(id){var target=id==='teacher-content-menu'?'content':'students';if(typeof teacherPane==='function')teacherPane(target);var el=document.getElementById(id);if(el&&!el.hidden)el.scrollIntoView({behavior:'smooth',block:'start'});};
   function panel(){
     var count=Object.keys(db.students).length;
     return '<section class="pcard mint noprint teacher-control-center" id="teacher-admin-panel"><div class="teacher-control-head"><div><span class="teacher-eyebrow">TEACHER CONTROL</span><h2>🧑‍🏫 เมนูครู</h2><p>เลือกงานที่ต้องการได้ทันที · มีนักเรียนในฐานข้อมูล '+count+' บัญชี</p></div>'+button('↻ โหลดข้อมูลล่าสุด','refreshTeacherSupabaseDashboard()','whiteb')+'</div>'+
@@ -175,17 +175,20 @@
   };
   function selectDraft(next){if(busy)return;if(edit&&edit.type==='student'&&!confirm('ข้อมูลนักเรียนยังเปิดแก้ไขอยู่ ยกเลิกการแก้ไขนี้แล้วเปิดเมนูใหม่?'))return;stageDraft();if(next.type==='content'&&contentDrafts[next.key]){next.value=copy(contentDrafts[next.key].value);next.base=copy(contentDrafts[next.key].base);}edit=next;drawEditor();var el=document.getElementById('teacher-admin-editor');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
   window.teacherAdminContent=function(key){
+    if(typeof teacherPane==='function')teacherPane('content');
     var s=snapshot();enrichLessonCMS(s.lessons);var value=key==='lessons'?s.lessons:s.modules[key];
     if(key==='lessons')value.forEach(function(l,i){l.video=VIDEO_LINKS[i] || '';l.media=l.media || [];(l.situations || []).forEach(function(s){s.videoUrl=s.videoUrl || '';});});
     selectDraft({type:'content',key:key,value:copy(value),base:s});
   };
   window.teacherAdminLesson=function(index){
+    if(typeof teacherPane==='function')teacherPane('content');
     var s=snapshot();enrichLessonCMS(s.lessons);var value=copy(s.lessons);
     value.forEach(function(l,i){l.video=VIDEO_LINKS[i] || '';l.media=l.media || [];(l.situations || []).forEach(function(x){x.videoUrl=x.videoUrl || '';});});
     if(index<0||index>=value.length)return;
     selectDraft({type:'content',key:'lessons',value:value,base:s,focus:'lesson',lessonIndex:index});
   };
   window.teacherAdminAllCriteria=function(){
+    if(typeof teacherPane==='function')teacherPane('content');
     var s=snapshot();enrichLessonCMS(s.lessons);
     var value=copy(s.lessons);value.forEach(function(l,i){l.video=VIDEO_LINKS[i] || '';l.media=l.media || [];});
     selectDraft({type:'content',key:'lessons',value:value,base:s,focus:'all-criteria'});
@@ -198,6 +201,7 @@
     stageDraft();status();
   };
   window.teacherAdminStudent=async function(){
+    if(typeof teacherPane==='function')teacherPane('students');
     var id=document.getElementById('admin-student-select').value;if(!id)return;
     await run(async function(){
       accept(await firebaseBackend.teacherManage('load',{}));var s=db.students[id];if(!s)throw new Error('ไม่พบบัญชีนี้แล้ว');
