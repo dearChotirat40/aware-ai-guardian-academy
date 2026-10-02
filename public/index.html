@@ -2512,6 +2512,36 @@ function normalizeLessonProgress(p) {
 var SAVE_KEY = 'awareai_academy_test2_v1';
 var db = { students: {} };
 var currentId = null;
+var TEST_STUDENT_CODES = { '9001':'1', '9002':'2', '9003':'3' };
+
+function ensureLocalTestStudent(code) {
+  code = String(code || '').trim();
+  var num = TEST_STUDENT_CODES[code];
+  if (!num) return null;
+  var id = 'roster_' + code;
+  if (!db.students[id]) {
+    db.students[id] = sanitizeStudentRecord({
+      code:code, num:num, nickname:'', _testAccount:true,
+      score:0, unlockedLevel:0, badgeIds:[], pStars:PROMPT_CHALLENGES.map(function(){ return 0; }),
+      lp:newLessonProgress(), assessments:newAssessments(), _updatedAt:Date.now()
+    });
+  }
+  db.students[id].code = code;
+  db.students[id].num = num;
+  db.students[id]._testAccount = true;
+  saveDB();
+  return { id:id, data:db.students[id] };
+}
+function loginLocalTestStudent(code) {
+  var row = ensureLocalTestStudent(code);
+  if (!row) return false;
+  setLoginMascotState('success', 'เข้าสู่โหมดทดสอบในเครื่องแล้ว 🎉');
+  applyStudent(row.id);
+  recordStudentLogin(row.id);
+  saveDB();
+  setTimeout(function(){ stopLoginReaction(); changeView(hasNickname(row.data) ? 'home' : 'nickname'); }, 500);
+  return true;
+}
 
 function defaultRosterCopy() {
   return STUDENT_ROSTER.map(function(r){
@@ -2835,7 +2865,11 @@ function previewStudent() {
 function doLogin() {
   var code = (document.getElementById('inp-code').value || '').trim();
   if (!code) { alert('กรอกรหัสผ่านก่อนนะ'); return; }
-  if (!firebaseBackend) { alert('กำลังเชื่อมต่อห้องเรียน กรุณารอสักครู่แล้วลองใหม่'); return; }
+  if (!firebaseBackend) {
+    if (loginLocalTestStudent(code)) return;
+    alert('ฐานข้อมูลกลางยังเชื่อมต่อไม่สำเร็จ ขณะนี้ใช้ได้เฉพาะรหัสทดสอบ 9001–9003 ในเครื่องนี้');
+    return;
+  }
   // ยังไม่แสดงหน้ายิ้มจนกว่ารหัสจะถูกต้องจริง
   firebaseBackend.claimStudent(code).then(function(row){
     setLoginMascotState('success', 'เย้! รหัสถูกต้อง ยินดีต้อนรับนะ 🎉');
@@ -2849,8 +2883,9 @@ function doLogin() {
     setLoginMascotState('error', 'ฮือ... รหัสไม่ถูกต้อง ลองใหม่อีกครั้งนะ 😢');
     setTimeout(function(){
       var detail = String((err && err.message) || '');
-      if (/network|fetch|failed to fetch/i.test(detail)) alert('เชื่อมต่อฐานข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');
-      else alert('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสหรือติดต่อคุณครู');
+      if (/network|fetch|failed to fetch|timeout|connection/i.test(detail)) {
+        if (!loginLocalTestStudent(code)) alert('เชื่อมต่อฐานข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');
+      } else alert('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสหรือติดต่อคุณครู');
     }, 500);
   });
 }
